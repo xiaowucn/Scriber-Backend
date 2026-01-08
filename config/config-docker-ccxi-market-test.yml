@@ -1,0 +1,125 @@
+debug: False
+logging:
+  level: "info"
+
+app:
+  app_id: "scriber_ccxi_market"
+  secret_key: "hello_remarkable"
+  token_expire: 7200
+  session_expire: 7200  # session过期时间, 不配置默认600s
+  rate_limit_expire: 7200  # 接口访问频率限制时间, 不配默认60s(暂未启用)
+  max_fail_count: 100  # session有效期内最大尝试登录次数, 不配默认10次, 超过限制次数继续登录会被持续封禁
+  auth:
+    pdfinsight:
+      app_id: "pdfinsight"
+      secret_key: "show-me-the-money"
+      token_expire: 120
+      url: "http://192.168.1.50:28096"
+
+web:
+  http_port: 8080
+  domain: "scriber:8000"
+  user_system_provider: "self"
+  plugins:
+    - "fileapi"
+    - "debug"
+    - "ccxi"
+  classes:
+    answer_converter: "remarkable.converter.ccxi.CCXIContractConverter"  # 转换&推送答案
+  apis:
+    sso: "http://tl.paodingai.com/op/admin/login/subsys"
+    login_callback: "http://tl.paodingai.com/lrcapi/v1/user/login/by_token"
+    get_label_user: "http://tl.paodingai.com/adminuser/%d"
+    get_label_user_by_cn_list: "https://tl.paodingai.com/adminuser"
+  pdf_converter: "{project_root}/bin/converter/word2pdf.exe"
+  tmp_dir: "/data/tmp/"
+  data_dir: "{project_root}/data/files/"
+  default_question_health: 1
+  preset_answer: True
+  limit_of_preset_num: 10  # 限制预测答案的个数
+  limit_of_crude_elts: 5  # 限制读取预测元素块的个数
+  predict_from_memory:
+    switch: True
+    data_dir: "{project_root}/data/tbl_headers/"
+  model_manage: True
+  show_merge_answer: False
+  record_manual: True
+  mode_conflict_treatment: 3  # 冲突处理方式：1-人工处理、2-以最新为准、3-合并答案
+  mode_unlimited_answers: True  # 无限答题模式（答题次数不受限制）
+  model_abroad: True  # 模型接入（接入外部模型）
+  trust_routes:  # 跳过auth check的路由列表
+    - "/config"
+  enable_remote_model: True  # 提取模型配置中，启用对接远程模型选项
+  table_association: True  # 是否开启表格辅助标注功能
+
+  show_marker: True  # 显示标注人员信息
+  customer_answer: True # 生成客户定制化答案
+  allow_same_name_file_in_project: False
+  project_meta:
+    prj_type: "合同管理"
+  check_before_submit: True  # 点提交答案后,就对答案能否满足answer_converter里的要求进行检查
+
+data_flow:
+  post_pipe_after_preset: False # 预测完之后是否执行后处理
+
+db:
+  host: "postgres"
+  port: 5432
+  dbname: "scriber"
+  user: "postgres"
+  password: ""
+
+redis:
+  host: "redis"
+  port: 6379
+  db: 1
+  password: "scriber"
+
+client:
+  name: "ccxi_market" # hkex, szse
+  remark_progress_type: "level1" # all
+  language: "zh_CN" # en_US
+  hide_rough_fields: True
+  show_prompt_element_button: True
+  check_schema_base_type: False
+  
+  export_label_data: False  # 是否支持"导出标注json"
+  export_answer_csv: False  # 是否支持"导出答案csv"
+  stat_accuracy: True  # 是否支持统计模型正确率
+
+feature:  # 功能特性相关配置
+  batch_delete: True  # 批量删除功能
+  new_project_popup_default_molds: False  # 新建项目时选择默认Schema
+  additional_permissions:
+    ccxi_manage_contract:
+      name: "合同管理"
+
+worker:
+  app_name: "remarkable"
+  default_queue: "celery"
+
+prompter:
+  workers: 1
+  batch_size: 100
+  auto_build_ignores: "*"
+  answer_version: 2.2
+  training_data_status: "1, 2, 5, 10, 100"
+  mode: "v2"  # 定位模型版本: v1 or v2
+  use_syllabuses: True    # 是否使用目录信息
+  tokenization: "jieba"   # 分词方法，为 null 则按空白分词（英文）
+  context_length: 1       # 上下文范围
+
+
+prophet:
+  package_name: "ccxi_market_predictor"
+  config_map:
+    合同提取: "contract"
+
+build:
+  docker:
+    cli_pipe: # 部署命令
+      - 'inv op.import-schema --name=ccxi-market'
+
+      - 'inv op.deploy-model 合同提取 --name=ccxi_market_contract'
+_new_entry:
+  "prompter.training_data_status": "prompter.trainning_data_status"

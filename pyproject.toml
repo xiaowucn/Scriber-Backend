@@ -1,0 +1,239 @@
+[project]
+name = "scriber"
+version = "1.0.0"
+requires-python = ">=3.12,<3.13"
+
+dependencies = [
+    "numpy<2; sys_platform == 'darwin'",
+    "tornado==6.5.2",
+    "pdfparser==2.3.77; sys_platform == 'linux'",
+    "palladium==0.5.28; sys_platform == 'linux'",
+    "pdfparser==2.3.24; sys_platform == 'darwin'",
+    "palladium==0.5.7; sys_platform == 'darwin'",
+    "opencc==1.1.9; sys_platform == 'darwin'",
+    "alembic~=1.8.1",
+    "SQLAlchemy>=1.3,<1.4",
+    "attrs==21.4.0",
+    "peewee-async~=0.10.0",
+    "aiopg~=1.4.0",
+    "aiomysql~=0.2.0",
+    "pymysql==1.1.1",
+    "asyncpg~=0.29.0",
+    "babel==2.9.1",
+    "celery[redis]~=5.5.0",
+    "python-redis-lock~=3.7.0",
+    "scikit-learn~=1.3.2",
+    "imbalanced-learn~=0.12.3",
+    "pandas~=2.2.2",
+    "docopt",
+    "rjieba",
+    "webargs~=8.7.0",
+    "marshmallow~=4.0.0",
+    "pika==1.2.0",
+    "dateparser==1.1.1",
+    "gino==1.1.0rc1",
+    "pypinyin==0.42.0",
+    "xlutils",
+    "jsondiff",
+    "openpyxl~=3.1.0",
+    "aenum==3.1.16",
+    "xlrd~=2.0.1",
+    "gunicorn>=20.0.4",
+    "python-docx>=0.8,<0.9",
+    "click",
+    "cryptography~=39.0.0",
+    "beautifulsoup4",
+    "pdfkit==1.0.0",
+    "msgspec",
+    "aiofile",
+    "apispec",
+    "interval~=1.0.0",
+    "oracledb~=2.1.2",
+    "cx-Oracle~=8.3.0",
+    "openai~=1.55.3",
+    "traceback-with-variables~=2.0.4",
+    "pyparsing~=3.1.1",
+    "fastapi~=0.115.12",
+    "fastapi-permissions~=0.2.7",
+    "pydantic~=2.5.2",
+    "uvicorn[standard]~=0.34.3",
+    "uvicorn-worker~=0.3.0",
+    "pyjwt~=2.8.0",
+    "playwright~=1.43.0",
+    "magika~=0.6.2",
+    "skl2onnx~=1.17.0",
+    "tiktoken~=0.7.0",
+    "pgvector~=0.3.0",
+    "jinja2~=3.1.4",
+    "glom~=24.11.0",
+    "imapclient~=3.0.1",
+    "flashtext==2.7",
+    "python-statemachine==2.5.0",
+    "aipod~=1.3.1",
+    "farm",
+    "wordinsight==0.0.88",
+    "calliper-diff>=1.4.2",
+    "utensils[gmssl-python]>=0.1.92",
+    "speedy~=0.2.1",
+    "glazer_docx_convert~=0.3.34",
+    "invoke~=2.2.0",
+    "supervisor>=6.6.7",
+    "jinja2-cli",
+    "onnxconverter-common~=1.16.0",
+    "weasyprint~=62.3",
+    "user-agents~=2.2.0",
+    "email-validator~=2.2.0",
+    "a2wsgi==1.10.10",
+    "python-pptx~=1.0.2",
+    "xlsxwriter~=3.2.5",
+    "cython>=3.1.2",
+    "unoserver==2.0",  # must be 2.0 for compatibility with the server side version.
+    "json-repair>=0.52.0",
+]
+
+[dependency-groups]
+dev = [
+    "ruff~=0.9.7",
+    "pylint~=3.3.4",
+    "pytest~=8.3.3",
+    "pytest-asyncio~=0.24.0",
+    "pytest-xdist~=3.6.1",
+    "pytest-env~=1.1.4",
+    "check-requirements-txt~=1.4.0",
+    "pre-commit~=4.0.0",
+    "ast-grep-cli>=0.39.4",
+    "pandas-stubs",
+]
+
+[tool.uv]
+package = false
+no-binary-package = ["speedy", "utensils"]
+allow-insecure-host = ["100.64.0.1", "mirrors.tuna.tsinghua.edu.cn"]
+#concurrent-downloads = 4
+compile-bytecode = true
+
+[tool.uv.sources]
+utensils = { index = "pd" }
+supervisor = { index = "pd" }
+pdfparser = { index = "pd" }
+palladium = { index = "pd" }
+aipod = { index = "pd" }
+farm = { index = "pd" }
+wordinsight = { index = "pd" }
+calliper-diff = { index = "pd" }
+speedy = { index = "pd" }
+glazer_docx_convert = { index = "pd" }
+onnxconverter-common = { index = "pd" }
+invoke = { index = "pd" }
+gmssl-python = { index = "pd" }
+opencc = { url = "https://fm.paodingai.com/api/public/dl/TD_qaLC1/Soft/pypi/opencc-1.1.9-cp312-cp312-macosx_11_0_arm64.whl", marker = "sys_platform == 'darwin'" }
+
+#[[tool.uv.index]]
+#name = "tsinghua"
+#url = "http://mirrors.tuna.tsinghua.edu.cn/pypi/web/simple"
+
+[[tool.uv.index]]
+name = "pd"
+url = "http://100.64.0.1:3141/cheftin/pypi"
+explicit = true
+
+[[tool.uv.index]]
+name = "pd-dev"
+url = "http://100.64.0.1:3141/cheftin/dev"
+default = true
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+# TODO: take care of warning messages
+#addopts = "--maxfail=3 -n 0 --dist loadfile -rfEX"
+addopts = "--maxfail=3 --disable-warnings -n 0 --dist loadfile -rfEX"
+asyncio_default_fixture_loop_scope = "function"
+testpaths = ["tests"]
+## https://docs.pytest.org/en/stable/how-to/capture-warnings.html#controlling-warnings
+#filterwarnings = [
+#    # Treat Warning as Error
+#    "error",
+#    # https://github.com/boto/boto3/issues/3889#issuecomment-1855552804
+#    'ignore:datetime.datetime.utcnow\(\) is deprecated:DeprecationWarning',
+#]
+
+[tool.pytest_env]
+CI = true
+
+[tool.ruff]
+# Allow unused variables when underscore-prefixed.
+target-version = "py312"
+builtins = ["_"]
+line-length = 120
+exclude = [
+    "tests",
+    "template",
+    "scripts",
+    "docker",
+    "hkex_predictor",
+    "misc/gffunds",
+]
+
+[tool.ruff.lint]
+dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+ignore = [
+    "E501",   # line too long(ruff will fix it)
+    "B008",   # do not perform function calls in argument defaults
+    "C901",   # too complex
+    "B905",   # zip() strict parameter checking
+    "RET503", # missing explicit return
+    "RET504", # unnecessary assignment
+    "RET505", # unnecessary else/elif after return statement
+    "W191",   # indentation contains tabs(ruff will fix it)
+    "C416",   # rewrite comprehension
+]
+select = [
+    "E",     # pycodestyle errors
+    "W",     # pycodestyle warnings
+    "F",     # pyflakes
+    "I",     # isort
+    "C",     # flake8-comprehensions
+    "B",     # flake8-bugbear
+    "UP006", # use PEP 585 type annotations (list, dict, etc.)
+    "UP007", # use PEP 604 union type annotations (X | Y)
+]
+# Allow autofix for all enabled rules (when `--fix`) is provided.
+unfixable = []
+
+[tool.ruff.format]
+# Like Black, use double quotes for strings.
+quote-style = "double"
+# Like Black, indent with spaces, rather than tabs.
+indent-style = "space"
+# Like Black, automatically detect the appropriate line ending.
+line-ending = "auto"
+
+[tool.ruff.lint.isort]
+known-third-party = ["calliper_diff", "pdfparser", "speedy", "utensils"]
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["F401"]
+
+[tool.pylint.main]
+# List of plugins (as comma separated values of python module names) to load,
+# usually to register additional checkers.
+load-plugins = ["remarkable.optools.pylint_supper_in_comp_checker"]
+
+# Disable the message, report, category or checker with the given id(s). You can
+# either give multiple identifiers separated by comma (,) or put this option
+# multiple times (only on the command line, not in the configuration file where
+# it should appear only once). You can also use "--disable=all" to disable
+# everything first and then re-enable specific checks. For example, if you want
+# to run only the similarities checker, you can use "--disable=all
+# --enable=similarities". If you want to run only the classes checker, but have
+# no Warning level messages displayed, use "--disable=all --enable=classes
+# --disable=W".
+disable = ["all"]
+
+# Enable the message, report, category or checker with the given id(s). You can
+# either give multiple identifier separated by comma (,) or put this option
+# multiple time (only on the command line, not in the configuration file where it
+# should appear only once). See also the "--disable" option for examples.
+enable = [
+    "R9527", # do-not-use-super-in-comprehension
+]

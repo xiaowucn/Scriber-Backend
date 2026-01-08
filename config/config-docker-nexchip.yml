@@ -1,0 +1,190 @@
+debug: False
+logging:
+  level: "info"
+
+time_limit:
+  enable: True
+  offset: 28900
+  expire_at: "2025-12-31 23:59:59"
+  path: "/data/patch/patch_00.tar.gz"
+
+app:
+  app_id: "remarkable"
+  secret_key: "hello_remarkable"
+  jwt_secret_key: "a4d8f8f0de843dd27123c3c0fbeb619b"
+  token_expire: 120
+  session_expire: 7200 # session过期时间, 不配置默认600s
+  rate_limit_expire: 7200 # 接口访问频率限制时间, 不配默认60s(暂未启用)
+  max_fail_count: 1000 # session有效期内最大尝试登录次数, 不配默认10次, 超过限制次数继续登录会被持续封禁
+  multiprocessing: "disable"  # 多进程开关，enable/disable
+  auth:
+    label:
+      app_id: "internal"
+      secret_key: "show-me-the-money"
+      token_expire: 300
+    roster:
+      app_id: "cheftin-roster"
+      secret_key: "you-never-know-it"
+      token_expire: 300
+      url: "http://u.paodingai.com"
+    pdfinsight:
+      app_id: "pdfinsight"
+      secret_key: "show-me-the-money"
+      token_expire: 120
+      url: "http://pdfinsight:8096"
+    studio:
+      url: "http://100.64.0.6:51060"
+      api_key: "sk-t1iXFta6SkkmiD53kfDo6xpZFLpH79fdRXvSm6YoLkSqtVsm"
+      timeout: 60
+      upload: "/external/api/v1/uploads"
+      app: "/external/api/v1/extract/apps"
+      app_with_id: "/external/api/v1/extract/apps/{}"
+      app_upload: "/external/api/v1/extract/apps/{}/uploads"
+      app_remove_upload: "/external/api/v1/extract/apps/{}/uploads/{}"
+      app_extract_again: "/external/api/v1/extract/apps/{}/uploads/{}/extract-again"
+      app_upload_extraction: "/external/api/v1/extract/apps/{}/uploads/{}/extraction"
+      app_upload_trace: "/external/api/v1/extract/apps/{}/uploads/{}/trace"
+      app_hook: "/external/api/v1/app/webhooks"
+      llm_list: [ "gpt-4o-mini", "deepseek/deepseek-r1", "qwen/qwen3-next-80b-a3b-instruct" ]
+
+speedy:
+  expiration_timestamp: 1767196799 # 过期所有API
+
+web:
+  http_port: 8080
+  domain: "scriber:8000"
+  http_headers:
+    Server: "*"
+  plugins:
+    - "fileapi"
+    - "debug"
+    - "ext_api"
+    - "diff"
+    - "inspector"
+    - "cgs"
+  render_api_docs: True # 是否生成openapi文档
+  classes:
+    
+    answer_predictor:
+      科创板招股说明书信息抽取POC: "remarkable.plugins.sse.sse_predictor.SsePredictor"
+  apis:
+    sso: "http://tl.paodingai.com/op/admin/login/subsys"
+    login_callback: "http://tl.paodingai.com/lrcapi/v1/user/login/by_token"
+    get_label_user: "http://tl.paodingai.com/adminuser/%d"
+    get_label_user_by_cn_list: "https://tl.paodingai.com/adminuser"
+    sync_host: "https://szse.paodingai.com"
+  pdf_converter: "{project_root}/bin/converter/word2pdf.exe"
+  tmp_dir: "/data/tmp/"
+  data_dir: "{project_root}/data/files/"
+  default_question_health: 1
+  preset_answer: True
+  limit_of_preset_num: 10 # 限制预测答案的个数
+  limit_of_crude_elts: 5 # 限制读取预测元素块的个数
+  predict_from_memory:
+    switch: True
+    data_dir: "{project_root}/data/tbl_headers/"
+  model_manage: True
+  show_merge_answer: True
+  record_manual: True
+  mode_conflict_treatment: 3 # 冲突处理方式：1-人工处理、2-以最新为准、3-合并答案
+  mode_unlimited_answers: False # 无限答题模式（答题次数不受限制）
+  model_abroad: True # 模型接入（接入外部模型）
+  trust_routes: # 跳过auth check的路由列表
+    - "/config"
+  enable_remote_model: True # 提取模型配置中，启用对接远程模型选项
+  table_association: True # 是否开启表格辅助标注功能
+  chapter_assist: True # 是否开启章节辅助标注功能
+  binary_key: "hkx85vMOBSM7M7W" # 加密接口密钥
+  encrypted_routes:
+    - '/login'
+    - '/user'
+    - '/user/[0-9]+'
+  force_ocr_mold_list: ["中信DCM大模型"]
+  enable_llm_extract: True
+
+db:
+  host: "postgres"
+  port: 5432
+  dbname: "scriber"
+  user: "postgres"
+  password: ""
+
+redis:
+  host: redis
+  port: 6379
+  db: 1
+  password: "scriber"
+
+client:
+  name: "scriber"
+  remark_progress_type: "level1" # all
+  language: "zh_CN" # en_US
+  support_multiple_molds: True
+  hide_rough_fields: True
+  show_prompt_element_button: True
+  check_schema_base_type: False
+  show_ai_modules: True
+  export_label_data: False # 是否支持"导出标注json"
+  export_label_txt: False # 是否支持"导出标注txt"
+  export_answer_csv: True # 是否支持"导出答案csv"
+  stat_accuracy: True # 是否支持统计模型正确率
+  confirm_needed_cols:
+    - "*|收购标的情况|收购标的"
+  ocr: # ocr服务, 用于对扫描件进行标注画框
+    enable: True  # 默认不开启
+    service: "pai"
+
+data_flow:
+  post_pipe_after_preset: True
+  file_answer:
+    generate: True # 生成文件级的答案
+
+feature:
+  batch_delete: True  # 批量删除功能
+  basic_permissions:
+    - "browse"
+    - "remark"
+  additional_permissions:
+    customer_rule_participate:
+      name: "规则管理"
+      definition: "可创建自定义规则，对提取结果进行审核"
+    inspect:
+      name: "规则审核"
+      definition: "可查看规则审核的结果"
+
+worker:
+  app_name: "remarkable"
+  default_queue: "celery"
+
+prompter:
+  workers: 1
+  batch_size: 100
+  auto_build_ignores: "*"
+  answer_version: 2.2
+  training_data_status: "1, 2, 5, 10, 100"
+  mode: "v2" # 定位模型版本: v1 or v2
+  use_syllabuses: True # 是否使用目录信息
+  tokenization: "jieba" # 分词方法，为 null 则按空白分词（英文）
+  context_length: 1 # 上下文范围
+
+prophet:
+  multi_packages:
+    - "china_stock_predictor"
+    - "cmschina_predictor"
+    - "guosen_predictor"
+  config_map:
+    私募-运营操作备忘录: "private_operation"
+    公募招募说明书: "cmschina_prospectus"
+    资产证明: "asset_proof"
+
+inspector:
+  package_name: "default_checker"
+
+_new_entry:
+  "prompter.training_data_status": "prompter.trainning_data_status"
+
+ai:
+  openai:
+    base_url: "https://oneapi.cheftin.com/v1"
+    api_key: ""
+    model: "gpt-4o-mini"

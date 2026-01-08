@@ -1,0 +1,1096 @@
+[
+    {
+        "deleted_utc": 0,
+        "data": {
+            "schema_types": [
+                {
+                    "label": "是/否",
+                    "values": [
+                        {
+                            "isDefault": false,
+                            "name": "是"
+                        },
+                        {
+                            "isDefault": false,
+                            "name": "否"
+                        }
+                    ],
+                    "type": "enum"
+                },
+                {
+                    "label": "机构性质",
+                    "values": [
+                        {
+                            "isDefault": false,
+                            "name": "社会团体法人"
+                        },
+                        {
+                            "isDefault": false,
+                            "name": "事业单位"
+                        }
+                    ],
+                    "type": "enum"
+                },
+                {
+                    "label": "主体类型",
+                    "values": [
+                        {
+                            "isDefault": false,
+                            "name": "法人"
+                        },
+                        {
+                            "isDefault": false,
+                            "name": "自然人"
+                        },
+                        {
+                            "isDefault": false,
+                            "name": "其他"
+                        }
+                    ],
+                    "type": "enum"
+                },
+                {
+                    "label": "员工分类名",
+                    "values": [
+                        {
+                            "isDefault": false,
+                            "name": "员工人数及变化情况"
+                        },
+                        {
+                            "isDefault": false,
+                            "name": "员工专业结构"
+                        },
+                        {
+                            "isDefault": false,
+                            "name": "员工受教育程度"
+                        }
+                    ],
+                    "type": "enum"
+                },
+                {
+                    "label": "董监高核心人员标志",
+                    "values": [
+                        {
+                            "isDefault": false,
+                            "name": "董事"
+                        },
+                        {
+                            "isDefault": false,
+                            "name": "监事"
+                        },
+                        {
+                            "isDefault": false,
+                            "name": "高级管理人员"
+                        },
+                        {
+                            "isDefault": false,
+                            "name": "核心人员"
+                        }
+                    ],
+                    "type": "enum"
+                },
+                {
+                    "label": "有/无",
+                    "values": [
+                        {
+                            "isDefault": false,
+                            "name": "有"
+                        },
+                        {
+                            "isDefault": false,
+                            "name": "无"
+                        }
+                    ],
+                    "type": "enum"
+                }
+            ],
+            "schemas": [
+                {
+                    "orders": [
+                        "释义",
+                        "发行人基本情况",
+                        "控股股东简要情况",
+                        "股权结构",
+                        "发行人员工及结构情况",
+                        "发行人所处行业",
+                        "主要供应商",
+                        "专利",
+                        "董监高核心人员基本情况",
+                        "审计意见",
+                        "合并资产负债表",
+                        "基本财务指标",
+                        "非经常性损益情况",
+                        "预付账款",
+                        "存货减值",
+                        "净利润与经营活动净现金流量差异",
+                        "募集资金与运用",
+                        "重大诉讼事项"
+                    ],
+                    "schema": {
+                        "募集资金与运用": {
+                            "multi": true,
+                            "type": "募集资金与运用",
+                            "required": false
+                        },
+                        "主要供应商": {
+                            "multi": true,
+                            "type": "主要供应商",
+                            "required": false
+                        },
+                        "控股股东简要情况": {
+                            "multi": true,
+                            "type": "控股股东简要情况",
+                            "required": false
+                        },
+                        "合并资产负债表": {
+                            "multi": true,
+                            "type": "合并资产负债表",
+                            "required": false
+                        },
+                        "存货减值": {
+                            "multi": true,
+                            "type": "存货减值",
+                            "required": false
+                        },
+                        "非经常性损益情况": {
+                            "multi": true,
+                            "type": "非经常性损益情况",
+                            "required": false
+                        },
+                        "重大诉讼事项": {
+                            "multi": true,
+                            "type": "重大诉讼事项",
+                            "required": false
+                        },
+                        "发行人员工及结构情况": {
+                            "multi": true,
+                            "type": "发行人员工及结构情况",
+                            "required": false
+                        },
+                        "发行人所处行业": {
+                            "multi": true,
+                            "type": "发行人所处行业",
+                            "required": false
+                        },
+                        "股权结构": {
+                            "multi": true,
+                            "type": "股权结构",
+                            "required": false
+                        },
+                        "审计意见": {
+                            "multi": true,
+                            "type": "审计意见",
+                            "required": false
+                        },
+                        "专利": {
+                            "multi": true,
+                            "type": "专利",
+                            "required": false
+                        },
+                        "释义": {
+                            "multi": true,
+                            "type": "释义",
+                            "required": false
+                        },
+                        "预付账款": {
+                            "multi": true,
+                            "type": "预付账款",
+                            "required": false
+                        },
+                        "董监高核心人员基本情况": {
+                            "multi": true,
+                            "type": "董监高核心人员基本情况",
+                            "required": false
+                        },
+                        "净利润与经营活动净现金流量差异": {
+                            "multi": true,
+                            "type": "净利润与经营活动净现金流量差异",
+                            "required": false
+                        },
+                        "基本财务指标": {
+                            "multi": true,
+                            "type": "基本财务指标",
+                            "required": false
+                        },
+                        "发行人基本情况": {
+                            "multi": true,
+                            "type": "发行人基本情况",
+                            "required": false
+                        }
+                    },
+                    "name": "招股说明书信息抽取"
+                },
+                {
+                    "orders": [
+                        "简称",
+                        "全称"
+                    ],
+                    "schema": {
+                        "简称": {
+                            "multi": true,
+                            "type": "文本",
+                            "required": false
+                        },
+                        "全称": {
+                            "multi": true,
+                            "type": "文本",
+                            "required": false
+                        }
+                    },
+                    "name": "释义"
+                },
+                {
+                    "orders": [
+                        "主体名称",
+                        "法定代表人姓名",
+                        "统一社会信用代码",
+                        "组织机构代码",
+                        "成立日期",
+                        "注册资本",
+                        "注册地址",
+                        "办公地址",
+                        "联系电话",
+                        "传真号码",
+                        "电子邮箱",
+                        "邮政编码",
+                        "拟上市的板块代码",
+                        "拟上市的交易场所代码",
+                        "保荐人编码",
+                        "保荐代表人",
+                        "律师事务所",
+                        "经办律师姓名",
+                        "会计师事务所",
+                        "经办会计师姓名"
+                    ],
+                    "schema": {
+                        "联系电话": {
+                            "multi": true,
+                            "type": "文本",
+                            "required": false
+                        },
+                        "传真号码": {
+                            "multi": true,
+                            "type": "文本",
+                            "required": false
+                        },
+                        "成立日期": {
+                            "multi": true,
+                            "type": "文本",
+                            "required": false
+                        },
+                        "注册资本": {
+                            "multi": true,
+                            "type": "文本",
+                            "required": false
+                        },
+                        "经办会计师姓名": {
+                            "multi": true,
+                            "type": "文本",
+                            "required": false
+                        },
+                        "注册地址": {
+                            "multi": true,
+                            "type": "文本",
+                            "required": false
+                        },
+                        "邮政编码": {
+                            "multi": true,
+                            "type": "文本",
+                            "required": false
+                        },
+                        "统一社会信用代码": {
+                            "multi": true,
+                            "type": "文本",
+                            "required": false
+                        },
+                        "会计师事务所": {
+                            "multi": true,
+                            "type": "文本",
+                            "required": false
+                        },
+                        "主体名称": {
+                            "multi": true,
+                            "type": "文本",
+                            "required": false
+                        },
+                        "律师事务所": {
+                            "multi": true,
+                            "type": "文本",
+                            "required": false
+                        },
+                        "拟上市的板块代码": {
+                            "multi": true,
+                            "type": "文本",
+                            "required": false
+                        },
+                        "办公地址": {
+                            "multi": true,
+                            "type": "文本",
+                            "required": false
+                        },
+                        "保荐人编码": {
+                            "multi": true,
+                            "type": "文本",
+                            "required": false
+                        },
+                        "法定代表人姓名": {
+                            "multi": true,
+                            "type": "文本",
+                            "required": false
+                        },
+                        "组织机构代码": {
+                            "multi": true,
+                            "type": "文本",
+                            "required": false
+                        },
+                        "保荐代表人": {
+                            "multi": true,
+                            "type": "文本",
+                            "required": false
+                        },
+                        "拟上市的交易场所代码": {
+                            "multi": true,
+                            "type": "文本",
+                            "required": false
+                        },
+                        "经办律师姓名": {
+                            "multi": true,
+                            "type": "文本",
+                            "required": false
+                        },
+                        "电子邮箱": {
+                            "multi": true,
+                            "type": "文本",
+                            "required": false
+                        }
+                    },
+                    "name": "发行人基本情况"
+                },
+                {
+                    "orders": [
+                        "主体名称",
+                        "企业类型代码",
+                        "直接持股比例",
+                        "间接持股比例",
+                        "证件号码",
+                        "国家及地区代码",
+                        "机构性质",
+                        "主体类型"
+                    ],
+                    "schema": {
+                        "企业类型代码": {
+                            "multi": true,
+                            "type": "文本",
+                            "required": false
+                        },
+                        "主体名称": {
+                            "multi": true,
+                            "type": "文本",
+                            "required": false
+                        },
+                        "机构性质": {
+                            "multi": true,
+                            "type": "机构性质",
+                            "required": false
+                        },
+                        "证件号码": {
+                            "multi": true,
+                            "type": "文本",
+                            "required": false
+                        },
+                        "主体类型": {
+                            "multi": true,
+                            "type": "主体类型",
+                            "required": false
+                        },
+                        "直接持股比例": {
+                            "multi": true,
+                            "type": "文本",
+                            "required": false
+                        },
+                        "国家及地区代码": {
+                            "multi": true,
+                            "type": "文本",
+                            "required": false
+                        },
+                        "间接持股比例": {
+                            "multi": true,
+                            "type": "文本",
+                            "required": false
+                        }
+                    },
+                    "name": "控股股东简要情况"
+                },
+                {
+                    "orders": [
+                        "单位",
+                        "股东排名",
+                        "主体名称",
+                        "股份持有数量",
+                        "持股比例"
+                    ],
+                    "schema": {
+                        "主体名称": {
+                            "multi": true,
+                            "type": "文本",
+                            "required": false
+                        },
+                        "股东排名": {
+                            "multi": true,
+                            "type": "文本",
+                            "required": false
+                        },
+                        "股份持有数量": {
+                            "multi": true,
+                            "type": "数字",
+                            "required": false
+                        },
+                        "单位": {
+                            "multi": true,
+                            "type": "文本",
+                            "required": false
+                        },
+                        "持股比例": {
+                            "multi": true,
+                            "type": "数字",
+                            "required": false
+                        }
+                    },
+                    "name": "股权结构"
+                },
+                {
+                    "orders": [
+                        "分类名",
+                        "单位",
+                        "员工类型",
+                        "时间",
+                        "人数"
+                    ],
+                    "schema": {
+                        "时间": {
+                            "multi": true,
+                            "type": "日期",
+                            "required": false
+                        },
+                        "分类名": {
+                            "multi": true,
+                            "type": "员工分类名",
+                            "required": false
+                        },
+                        "人数": {
+                            "multi": true,
+                            "type": "数字",
+                            "required": false
+                        },
+                        "单位": {
+                            "multi": true,
+                            "type": "文本",
+                            "required": false
+                        },
+                        "员工类型": {
+                            "multi": true,
+                            "type": "文本",
+                            "required": false
+                        }
+                    },
+                    "name": "发行人员工及结构情况"
+                },
+                {
+                    "orders": [
+                        "行业分类标准",
+                        "行业分类代码",
+                        "行业分类名称"
+                    ],
+                    "schema": {
+                        "行业分类名称": {
+                            "multi": true,
+                            "type": "文本",
+                            "required": false
+                        },
+                        "行业分类代码": {
+                            "multi": true,
+                            "type": "文本",
+                            "required": false
+                        },
+                        "行业分类标准": {
+                            "multi": true,
+                            "type": "文本",
+                            "required": false
+                        }
+                    },
+                    "name": "发行人所处行业"
+                },
+                {
+                    "orders": [
+                        "货币单位",
+                        "供应商类型",
+                        "时间",
+                        "供应商名称",
+                        "采购内容",
+                        "采购额",
+                        "占总采购金额比例（%）",
+                        "公司关联方标识"
+                    ],
+                    "schema": {
+                        "供应商类型": {
+                            "multi": true,
+                            "type": "文本",
+                            "required": false
+                        },
+                        "时间": {
+                            "multi": true,
+                            "type": "日期",
+                            "required": false
+                        },
+                        "采购额": {
+                            "multi": true,
+                            "type": "数字",
+                            "required": false
+                        },
+                        "占总采购金额比例（%）": {
+                            "multi": true,
+                            "type": "数字",
+                            "required": false
+                        },
+                        "公司关联方标识": {
+                            "multi": true,
+                            "type": "是/否",
+                            "required": false
+                        },
+                        "供应商名称": {
+                            "multi": true,
+                            "type": "文本",
+                            "required": false
+                        },
+                        "货币单位": {
+                            "multi": true,
+                            "type": "文本",
+                            "required": false
+                        },
+                        "采购内容": {
+                            "multi": true,
+                            "type": "文本",
+                            "required": false
+                        }
+                    },
+                    "name": "主要供应商"
+                },
+                {
+                    "orders": [
+                        "专利类型",
+                        "专利名称",
+                        "专利号",
+                        "专利权人",
+                        "取得成本",
+                        "最近一期末账面价值",
+                        "取得日期",
+                        "使用期限",
+                        "是否存在权属纠纷"
+                    ],
+                    "schema": {
+                        "是否存在权属纠纷": {
+                            "multi": true,
+                            "type": "是/否",
+                            "required": false
+                        },
+                        "使用期限": {
+                            "multi": true,
+                            "type": "文本",
+                            "required": false
+                        },
+                        "专利名称": {
+                            "multi": true,
+                            "type": "文本",
+                            "required": false
+                        },
+                        "专利权人": {
+                            "multi": true,
+                            "type": "文本",
+                            "required": false
+                        },
+                        "取得日期": {
+                            "multi": true,
+                            "type": "日期",
+                            "required": false
+                        },
+                        "最近一期末账面价值": {
+                            "multi": true,
+                            "type": "数字",
+                            "required": false
+                        },
+                        "专利类型": {
+                            "multi": true,
+                            "type": "文本",
+                            "required": false
+                        },
+                        "取得成本": {
+                            "multi": true,
+                            "type": "数字",
+                            "required": false
+                        },
+                        "专利号": {
+                            "multi": true,
+                            "type": "文本",
+                            "required": false
+                        }
+                    },
+                    "name": "专利"
+                },
+                {
+                    "orders": [
+                        "董监高核心人员标志",
+                        "姓名",
+                        "国籍地区代码",
+                        "境外居留权",
+                        "性别代码",
+                        "出生日期",
+                        "学历代码",
+                        "职称",
+                        "担任职务",
+                        "任职日期",
+                        "离职日期"
+                    ],
+                    "schema": {
+                        "离职日期": {
+                            "multi": true,
+                            "type": "日期",
+                            "required": false
+                        },
+                        "担任职务": {
+                            "multi": true,
+                            "type": "文本",
+                            "required": false
+                        },
+                        "国籍地区代码": {
+                            "multi": true,
+                            "type": "文本",
+                            "required": false
+                        },
+                        "职称": {
+                            "multi": true,
+                            "type": "文本",
+                            "required": false
+                        },
+                        "姓名": {
+                            "multi": true,
+                            "type": "文本",
+                            "required": false
+                        },
+                        "任职日期": {
+                            "multi": true,
+                            "type": "日期",
+                            "required": false
+                        },
+                        "学历代码": {
+                            "multi": true,
+                            "type": "文本",
+                            "required": false
+                        },
+                        "董监高核心人员标志": {
+                            "multi": true,
+                            "type": "董监高核心人员标志",
+                            "required": false
+                        },
+                        "境外居留权": {
+                            "multi": true,
+                            "type": "有/无",
+                            "required": false
+                        },
+                        "出生日期": {
+                            "multi": true,
+                            "type": "日期",
+                            "required": false
+                        },
+                        "性别代码": {
+                            "multi": true,
+                            "type": "文本",
+                            "required": false
+                        }
+                    },
+                    "name": "董监高核心人员基本情况"
+                },
+                {
+                    "orders": [
+                        "审计机构",
+                        "审计意见类型",
+                        "审计意见对应年报时间",
+                        "审计意见说明"
+                    ],
+                    "schema": {
+                        "审计意见说明": {
+                            "multi": true,
+                            "type": "文本",
+                            "required": false
+                        },
+                        "审计机构": {
+                            "multi": true,
+                            "type": "文本",
+                            "required": false
+                        },
+                        "审计意见对应年报时间": {
+                            "multi": true,
+                            "type": "日期",
+                            "required": false
+                        },
+                        "审计意见类型": {
+                            "multi": true,
+                            "type": "文本",
+                            "required": false
+                        }
+                    },
+                    "name": "审计意见"
+                },
+                {
+                    "orders": [
+                        "报表日期",
+                        "货币单位",
+                        "项目",
+                        "金额"
+                    ],
+                    "schema": {
+                        "项目": {
+                            "multi": true,
+                            "type": "文本",
+                            "required": false
+                        },
+                        "金额": {
+                            "multi": true,
+                            "type": "数字",
+                            "required": false
+                        },
+                        "货币单位": {
+                            "multi": true,
+                            "type": "文本",
+                            "required": false
+                        },
+                        "报表日期": {
+                            "multi": true,
+                            "type": "日期",
+                            "required": false
+                        }
+                    },
+                    "name": "合并资产负债表"
+                },
+                {
+                    "orders": [
+                        "报表日期",
+                        "流动比率(倍)",
+                        "速动比率(倍)",
+                        "资产负债率（合并）",
+                        "资产负债率(母公司）",
+                        "无形资产（扣除土地使用权、水面养殖权和采矿权等后）占净资产的比例（%）",
+                        "应收账款周转率(次/年)",
+                        "存货周转率(次/年)",
+                        "总资产周转率(次/年)",
+                        "息税折旧摊销前利润(元)",
+                        "利息保障倍数(倍)",
+                        "扣除非经常性损益后的每股基本收益（元）",
+                        "每股经营活动产生的现金流量(元)",
+                        "每股净现金流量(元)",
+                        "加权平均净资产收益率"
+                    ],
+                    "schema": {
+                        "存货周转率(次/年)": {
+                            "multi": true,
+                            "type": "数字",
+                            "required": false
+                        },
+                        "每股净现金流量(元)": {
+                            "multi": true,
+                            "type": "数字",
+                            "required": false
+                        },
+                        "扣除非经常性损益后的每股基本收益（元）": {
+                            "multi": true,
+                            "type": "数字",
+                            "required": false
+                        },
+                        "加权平均净资产收益率": {
+                            "multi": true,
+                            "type": "数字",
+                            "required": false
+                        },
+                        "报表日期": {
+                            "multi": true,
+                            "type": "文本",
+                            "required": false
+                        },
+                        "资产负债率(母公司）": {
+                            "multi": true,
+                            "type": "数字",
+                            "required": false
+                        },
+                        "速动比率(倍)": {
+                            "multi": true,
+                            "type": "数字",
+                            "required": false
+                        },
+                        "无形资产（扣除土地使用权、水面养殖权和采矿权等后）占净资产的比例（%）": {
+                            "multi": true,
+                            "type": "数字",
+                            "required": false
+                        },
+                        "每股经营活动产生的现金流量(元)": {
+                            "multi": true,
+                            "type": "数字",
+                            "required": false
+                        },
+                        "资产负债率（合并）": {
+                            "multi": true,
+                            "type": "数字",
+                            "required": false
+                        },
+                        "息税折旧摊销前利润(元)": {
+                            "multi": true,
+                            "type": "数字",
+                            "required": false
+                        },
+                        "利息保障倍数(倍)": {
+                            "multi": true,
+                            "type": "数字",
+                            "required": false
+                        },
+                        "总资产周转率(次/年)": {
+                            "multi": true,
+                            "type": "数字",
+                            "required": false
+                        },
+                        "应收账款周转率(次/年)": {
+                            "multi": true,
+                            "type": "数字",
+                            "required": false
+                        },
+                        "流动比率(倍)": {
+                            "multi": true,
+                            "type": "数字",
+                            "required": false
+                        }
+                    },
+                    "name": "基本财务指标"
+                },
+                {
+                    "orders": [
+                        "单位",
+                        "项目",
+                        "时间",
+                        "金额"
+                    ],
+                    "schema": {
+                        "项目": {
+                            "multi": true,
+                            "type": "文本",
+                            "required": false
+                        },
+                        "金额": {
+                            "multi": true,
+                            "type": "数字",
+                            "required": false
+                        },
+                        "单位": {
+                            "multi": true,
+                            "type": "文本",
+                            "required": false
+                        },
+                        "时间": {
+                            "multi": true,
+                            "type": "日期",
+                            "required": false
+                        }
+                    },
+                    "name": "非经常性损益情况"
+                },
+                {
+                    "orders": [
+                        "单位",
+                        "账龄",
+                        "时间",
+                        "账面余额"
+                    ],
+                    "schema": {
+                        "时间": {
+                            "multi": true,
+                            "type": "日期",
+                            "required": false
+                        },
+                        "账面余额": {
+                            "multi": true,
+                            "type": "数字",
+                            "required": false
+                        },
+                        "账龄": {
+                            "multi": true,
+                            "type": "文本",
+                            "required": false
+                        },
+                        "单位": {
+                            "multi": true,
+                            "type": "文本",
+                            "required": false
+                        }
+                    },
+                    "name": "预付账款"
+                },
+                {
+                    "orders": [
+                        "货币单位",
+                        "项目名称",
+                        "时间",
+                        "账面余额",
+                        "跌价准备",
+                        "账面价值"
+                    ],
+                    "schema": {
+                        "时间": {
+                            "multi": true,
+                            "type": "日期",
+                            "required": false
+                        },
+                        "货币单位": {
+                            "multi": true,
+                            "type": "文本",
+                            "required": false
+                        },
+                        "跌价准备": {
+                            "multi": true,
+                            "type": "数字",
+                            "required": false
+                        },
+                        "项目名称": {
+                            "multi": true,
+                            "type": "文本",
+                            "required": false
+                        },
+                        "账面余额": {
+                            "multi": true,
+                            "type": "数字",
+                            "required": false
+                        },
+                        "账面价值": {
+                            "multi": true,
+                            "type": "数字",
+                            "required": false
+                        }
+                    },
+                    "name": "存货减值"
+                },
+                {
+                    "orders": [
+                        "单位",
+                        "项目",
+                        "时间",
+                        "金额"
+                    ],
+                    "schema": {
+                        "项目": {
+                            "multi": true,
+                            "type": "文本",
+                            "required": false
+                        },
+                        "金额": {
+                            "multi": true,
+                            "type": "数字",
+                            "required": false
+                        },
+                        "单位": {
+                            "multi": true,
+                            "type": "文本",
+                            "required": false
+                        },
+                        "时间": {
+                            "multi": true,
+                            "type": "日期",
+                            "required": false
+                        }
+                    },
+                    "name": "净利润与经营活动净现金流量差异"
+                },
+                {
+                    "orders": [
+                        "货币单位",
+                        "项目名称",
+                        "投资总额",
+                        "募集资金投资额",
+                        "募集资金投向"
+                    ],
+                    "schema": {
+                        "募集资金投向": {
+                            "multi": true,
+                            "type": "文本",
+                            "required": false
+                        },
+                        "项目名称": {
+                            "multi": true,
+                            "type": "文本",
+                            "required": false
+                        },
+                        "投资总额": {
+                            "multi": true,
+                            "type": "数字",
+                            "required": false
+                        },
+                        "货币单位": {
+                            "multi": true,
+                            "type": "文本",
+                            "required": false
+                        },
+                        "募集资金投资额": {
+                            "multi": true,
+                            "type": "文本",
+                            "required": false
+                        }
+                    },
+                    "name": "募集资金与运用"
+                },
+                {
+                    "orders": [
+                        "事项",
+                        "起诉(申请)方",
+                        "应诉(被申请)方",
+                        "承担连带责任方",
+                        "诉讼仲裁类型",
+                        "诉讼涉及金额",
+                        "预计负债金额"
+                    ],
+                    "schema": {
+                        "应诉(被申请)方": {
+                            "multi": true,
+                            "type": "文本",
+                            "required": false
+                        },
+                        "诉讼仲裁类型": {
+                            "multi": true,
+                            "type": "文本",
+                            "required": false
+                        },
+                        "起诉(申请)方": {
+                            "multi": true,
+                            "type": "文本",
+                            "required": false
+                        },
+                        "事项": {
+                            "multi": true,
+                            "type": "文本",
+                            "required": false
+                        },
+                        "预计负债金额": {
+                            "multi": true,
+                            "type": "数字",
+                            "required": false
+                        },
+                        "承担连带责任方": {
+                            "multi": true,
+                            "type": "文本",
+                            "required": false
+                        },
+                        "诉讼涉及金额": {
+                            "multi": true,
+                            "type": "数字",
+                            "required": false
+                        }
+                    },
+                    "name": "重大诉讼事项"
+                }
+            ]
+        }
+    }
+]

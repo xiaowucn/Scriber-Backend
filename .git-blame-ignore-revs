@@ -1,0 +1,42 @@
+# List of revisions that are hidden from git blame annotations.
+# This concerns massive code re-formatting, renaming, large changes
+# that were later reverted, etc.
+#
+# Configure your git so that it always ignores the revisions listed
+# in this file:
+#
+#     git config --local blame.ignoreRevsFile .git-blame-ignore-revs
+#
+# When adding a new revision to the list, please put its commit message
+# in a comment above it.
+
+# style: Format the source code by `ruff`
+08a1fc8ab4a926d90280e62704d1f98660630ea0
+b11a95857a7462804ed5077920233ba4295c058c
+18cb2e7a201653e27376989c67f4a7949eed8c18
+2c439077061eb82c43d489ca3cc2a9519d5ffc65
+6d5bce55a322635f73f3047c0524f897e39de21f
+40d166821b51bf8fad700eec8270b99708ea0ae9
+0325d5cdfe5cdb2eaccba1b53824196d591a9708
+6453b3f071bc07f657331c94c283b9a6374b3586
+3a80a06777ea38bc4685fc99a766b94e4e000784
+2124e6db7fff6b266e35f791a97d541fcef51c7d
+27507d54bfc9034567cff79be2bf5409307ec7b1
+c2900eb754cd24c783af96d61145742597680524
+d62992eb920161bce1dbd8590d8794a39b9fcba0
+# typo
+0e9af75d613a56f9a7697d0a90dd3bb04951af31
+9cd7fc09b99f0f843d8dffd43364335bbac52b53
+# rename
+89f3d399e2898e6754cd21de1faac7a3f41bcfbb
+# test: `JudgeByRegex` test case
+9b600b14f59d5733ddb8762499b4aea1cc49e1b7
+# style: remove all `pylint` qa comments
+928c848602e4afd91241b5dea384fbdd1f00d081
+# ci: Partial "ruff" replacement and fix lint errors
+64993ace0ad09b559afe5bf69d67eb9212c192c7
+# style: format code with ruff version `0.4.0`
+588045cb7bd468500b551e5e1005c705b326f52d
+# style(alembic): reformat migration version file with ruff
+73d393e353904452a4360a729f5edad909b09c24
+fd8a9e2c0ce9d149d78215b4ca3e81c64b91e834

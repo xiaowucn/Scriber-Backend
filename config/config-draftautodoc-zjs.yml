@@ -1,0 +1,100 @@
+debug: False
+logging:
+  level: "info"
+
+app:
+  app_id: "remarkable"
+  secret_key: "hello_remarkable"
+  token_expire: 120
+  session_expire: 7200 # session过期时间, 不配置默认600s
+  rate_limit_expire: 7200 # 接口访问频率限制时间, 不配默认60s(暂未启用)
+  max_fail_count: 100 # session有效期内最大尝试登录次数, 不配默认10次, 超过限制次数继续登录会被持续封禁
+  auth:
+    label:
+      app_id: "internal"
+      secret_key: "show-me-the-money"
+      token_expire: 300
+    roster:
+      app_id: "cheftin-roster"
+      secret_key: "you-never-know-it"
+      token_expire: 300
+      url: "http://u.paodingai.com"
+    pdfinsight:
+      app_id: "pdfinsight"
+      secret_key: "show-me-the-money"
+      token_expire: 120
+      url: "http://192.168.1.50:28096"
+    autodoc:
+      app_id: "autodoc"
+      secret_key: "show-me-the-money"
+      token_expire: 300
+      url: "http://100.64.0.7:78"
+
+web:
+  http_port: 8186
+  domain: "100.64.0.15:1600"
+  plugins:
+    - "fileapi"
+    - "rule"
+    - "debug"
+  classes:
+    answer_predictor: "remarkable.rule.csrc.predict.CompleteCsrcPredictor"
+    answer_inspector: "remarkable.rule.csrc.inspect.CompleteCsrcInspector"
+  apis:
+    sso: "http://tl.paodingai.com/op/admin/login/subsys"
+    login_callback: "http://tl.paodingai.com/lrcapi/v1/user/login/by_token"
+    get_label_user: "http://tl.paodingai.com/adminuser/%d"
+    get_label_user_by_cn_list: "https://tl.paodingai.com/adminuser"
+  inspect_rules: True
+  push_autodoc: True
+  parser:
+    mode: "pdf"
+  doc2docx_converter: "{project_root}/bin/converter/doc2docx.exe"
+  pdf_converter: "{project_root}/bin/converter/word2pdf.exe"
+  wordinsight: "{project_root}/bin/wordinsight/wordinsight.dll"
+  revision_tools: "{project_root}/bin/dr/docx_revision"
+  tmp_dir: "/data/tmp/"
+  data_dir: "{project_root}/data/files/"
+  default_question_health: 2
+  preset_answer: False
+  predict_crude_elements: True
+  show_merge_answer: True
+  record_manual: True
+db:
+  host: "localhost"
+  port: 35331
+  dbname: "draft"
+  user: "postgres"
+  password: ""
+redis:
+  host: "127.0.0.1"
+  port: 16379
+  db: 0
+  password: "scriber"
+client:
+  name: "autodoc" # hkex, szse
+  language: "zh_CN" # en_US
+  
+  show_prompt_element_button: True
+  export_label_data: False # 是否支持"导出标注json"
+  export_answer_csv: False # 是否支持"导出答案csv"
+  stat_accuracy: True # 是否支持统计模型正确率
+  show_all_predict_items: True
+
+worker:
+  app_name: "remarkable"
+  default_queue: "celery"
+
+prompter:
+  workers: 1
+  batch_size: 100
+  auto_build_ignores: "*"
+  training_data_status: "1, 2, 5, 10, 100"
+  answer_version: 2.2
+
+notification:
+  switch: True
+  channel: "prod-exception" # 发送对象, 可以是频道也可以是具体的人, 比如@张全蛋
+  mattermost: "http://mm.paodingai.com/hooks/zxg3ncokc3yuxfymyrco7zctta"
+_new_entry:
+  "prompter.training_data_status": "prompter.trainning_data_status"

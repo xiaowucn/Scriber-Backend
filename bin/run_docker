@@ -1,0 +1,55 @@
+#!/bin/bash
+
+PROJECT_ROOT=$(dirname $(cd `dirname $0`; pwd))
+cd ${PROJECT_ROOT}
+
+which docker > /dev/null 2>&1
+if [ $? -ne 0 ]; then
+    echo "please install docker, see https://docs.docker.com/engine/installation/"
+    exit 1
+fi
+
+echo "download image from docker registry or build in local ?"
+echo "(1) start server"
+echo "(2) download image from registry.cheftin.cn/p"
+echo "(3) build image in local"
+echo "-----------------------------"
+
+read -p "default 1: " input
+case ${input:=1} in
+    1)
+        if [ $(docker images |grep -e 'mark-pdf.*latest'|wc -l) -eq 0 ]; then
+            docker pull registry.cheftin.cn/p/mark-pdf:latest
+            if [ $? -ne 0 ]; then
+                echo "pull image from registry fail."
+                exit 1
+            fi
+            docker tag registry.cheftin.cn/p/mark-pdf:latest mark-pdf:latest
+        fi
+        ;;
+    2)
+        docker pull registry.cheftin.cn/p/mark-pdf:latest
+        if [ $? -ne 0 ]; then
+            echo "pull image from registry fail."
+            exit 1
+        fi
+        docker tag registry.cheftin.cn/p/mark-pdf:latest mark-pdf:latest
+        ;;
+    3)
+        docker build -t mark-pdf:latest .
+        if [ $? -ne 0 ]; then
+            echo "image build fail."
+            exit 1
+        fi
+        ;;
+    *)
+        exit 0
+        ;;
+esac
+
+mkdir logs > /dev/null 2>&1
+if [ $(docker ps -a -f=name=mark-pdf |wc -l) -gt 1 ]; then
+    docker start -i mark-pdf
+else
+    docker run -i -t --name=mark-pdf -v ${PROJECT_ROOT}:/opt/remarkable -v ${PROJECT_ROOT}/logs:/var/log/remarkable -p 8087:8087 mark-pdf:latest
+fi

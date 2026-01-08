@@ -1,0 +1,72 @@
+default_stages: [ pre-commit ]
+fail_fast: true
+
+repos:
+  - repo: local
+    hooks:
+      - id: ruff-format
+        name: ruff-format
+        entry: ruff format
+        args: [ --force-exclude, --respect-gitignore ]
+        language: system
+        types: [ python ]
+        description: "Ruff code formatter"
+
+      - id: ruff
+        name: ruff
+        description: "Ruff code checker"
+        entry: ruff check
+        args: [ --fix, --show-fixes, --exit-non-zero-on-fix, --force-exclude, --respect-gitignore ]
+        language: system
+        types: [ python ]
+
+      - id: check-requirements-txt
+        name: check-requirements-txt
+        description: Check the missing packages in requirements.txt.
+        entry: check-requirements-txt
+        args: [ '--dst_dir', 'remarkable', '--req-txt-path', 'pyproject.toml', '--ignore', 'mysql,pymupdf,remarkable,tests', ]
+        language: python
+        types: [ python ]
+
+      - id: check-untracked-alembic-migrations
+        name: check-untracked-alembic-migrations
+        description: Check the untracked alembic migrations.
+        entry: check-untracked-alembic-migrations
+        args: [ '-c', 'misc/alembic.ini' ]
+        language: python
+        types: [ python ]
+        pass_filenames: false  # don't pass filenames to the hook
+
+      - id: pylint
+        name: pylint
+        description: "Pylint code checker"
+        entry: env PYTHONPATH=. pylint
+        language: system
+        types: [ python ]
+        exclude: '^(?!remarkable/)'
+
+      - id: pytest
+        name: pytest
+        entry: bash -c 'bin/db_util.sh test; pytest; exit_code=$?; bin/db_util.sh test down; exit $exit_code'
+        language: system
+        stages: [ pre-push ]
+        pass_filenames: false
+
+      - id: ast-grep-lint
+        name: ast-grep-lint
+        description: "Run ast-grep linting rules (MySQL compatibility, no-match-case, devtools architecture boundaries)"
+        entry: ast-grep scan
+        language: system
+        types: [python]
+
+  - repo: https://github.com/commitizen-tools/commitizen
+    rev: v3.17.0
+    hooks:
+      - id: commitizen
+        stages: [ commit-msg ]
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.4.0
+    hooks:
+      - id: check-added-large-files
+        stages: [ pre-commit ]

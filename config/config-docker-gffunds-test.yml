@@ -1,0 +1,234 @@
+debug: False
+logging:
+  level: "info"
+
+app:
+  app_id: "remarkable"
+  secret_key: "hello_remarkable"
+  simple_token: "oLdU3pvF05rWbBVgzgzd"
+  token_expire: 120
+  session_expire: 7200 # session过期时间, 不配置默认600s
+  rate_limit_expire: 7200 # 接口访问频率限制时间, 不配默认60s(暂未启用)
+  max_fail_count: 100 # session有效期内最大尝试登录次数, 不配默认10次, 超过限制次数继续登录会被持续封禁
+  auth:
+    label:
+      app_id: ""
+      secret_key: ""
+      token_expire: 300
+    roster:
+      app_id: ""
+      secret_key: ""
+      token_expire: 300
+      url: ""
+    pdfinsight:
+      app_id: "pdfinsight"
+      secret_key: "show-me-the-money"
+      token_expire: 120
+      url: "http://pdfinsight:8096"
+      newline_mode: 2  # 传入2 保持原 word 中的换行
+    trident:
+      app_id: "trident"
+      secret_key: "show-me-the-money"
+      token_expire: 120
+      url: ""
+    autodoc:
+      app_id: "autodoc"
+      secret_key: "show-me-the-money"
+      token_expire: 120
+      url: ""
+web:
+  http_port: 8080
+  domain: "scriber:8000"
+  plugins:
+    - "fileapi"
+    - "cgs"
+    - "inspector"
+    - "ext_api"
+    - "debug"
+  classes:
+    
+    answer_converter: "remarkable.converter.gffunds.GFFundsWorkShop"
+    answer_predictor:
+  customer_answer: True
+  mode_unlimited_answers: True # 无限答题模式（答题次数不受限制）
+  apis:
+    sso: ""
+    login_callback: ""
+    get_label_user: ""
+    get_label_user_by_cn_list: ""
+    sync_file: ""
+    sync_host: ""
+  pdf_converter: "{project_root}/bin/converter/word2pdf.exe"
+  tmp_dir: "{project_root}/data/tmp/"
+  data_dir: "{project_root}/data/files/"
+  prompter_dir: "{project_root}/data/prompter/"
+  default_question_health: 1
+  readonly_mold_list: []
+  preset_answer: True
+  user_answer_black_list: "" # 这些用户的答案不会作为缓存答案(uid)
+  limit_of_preset_num: 10 # 限制预测答案的个数
+  limit_of_crude_elts: 5 # 限制读取预测元素块的个数
+  show_merge_answer: False # 前端是否显示"合并的答案"按钮
+  record_manual: False # 前端是否显示"采用答案"按钮
+  predict_from_memory:
+    switch: True
+    data_dir: "{project_root}/data/tbl_headers/"
+  show_export_answer: False # 显示/隐藏"导出的答案"按钮(上交所)
+  show_marker: False
+  model_manage: True # 模型版本管理
+  enable_remote_model: True # 提取模型配置中，启用对接远程模型选项
+  data_abroad: False # 数据生产（对接外部数据库）
+  model_abroad: False # 模型接入（接入外部模型）
+  chapter_assist: True # 是否开启章节辅助标注功能
+  table_association: True # 是否开启表格辅助标注功能
+  table_association_postfix: True  # 表格辅助标注时是否可标后缀
+  schema_manager_display_other_tabs:  # schema 管理界面展示其他的tab标签
+    '广发招募说明书':
+      - '导出目录结构'
+  predict_crude_elements: True
+db:
+  host: "postgres"
+  port: 5432
+  dbname: "scriber"
+  user: "postgres"
+  password: ""
+
+redis:
+  host: redis
+  port: 6379
+  db: 1
+  password: "scriber"
+
+client:
+  name: "gffund" # hkex, szse
+  remark_progress_type: "level1" # all
+  language: "zh_CN" # en_US
+  hide_rough_fields: True
+  show_prompt_element_button: True # 是否显示AI位置推荐按钮
+  check_schema_base_type: False
+  export_label_data: False # 是否支持"导出标注json"
+  export_label_txt: False  # 是否支持"导出标注txt"
+  export_answer_csv: True # 是否支持"导出答案csv"
+  export_single_answer: False # 是否显示导出标注/预测答案按钮
+  export_answer_csv_all_in_one: True
+  stat_accuracy: True # 是否支持统计模型正确率
+  show_all_predict_items: True
+  answer_default_display_level: 1 # 答案默认展开级别, 数字代表展开到第n级
+  ocr:
+    enable: False
+    service: "pai"
+
+worker:
+  app_name: "remarkable"
+  default_queue: "celery"
+
+feature:  # 功能特性相关配置
+  batch_delete: True  # 批量删除功能
+  supported_suffixes: ['.zip', '.doc', '.docx', '.jpeg', '.jpg', '.pdf', '.png', '.txt', '.tif', '.tiff']  # 支持的后缀
+  additional_permissions: # 额外添加的用户权限
+    customer_rule_participate:
+      name: "规则管理-自定义规则-经办"
+      definition: "可创建自定义规则，对提取结果进行审核"
+    customer_rule_review:
+      name: "规则管理-自定义规则-复核"
+      definition: "对自定义规则进行复核"
+    inspect:
+      name: "审核"
+      definition: "可查看规则审核的结果"
+  basic_permissions: # 默认拥有的权限
+    - 'browse'
+  export_inspect_result: True # 是否支持"导出审核结果" csv格式
+  show_develop_model_diff: True  # 是否展示定制模型的'查看版本差异'按钮
+  show_develop_model_test: True  # 是否展示定制模型的'查看准确率'按钮
+  rule_need_review: True
+
+
+prompter:
+  mode: "v2"
+  use_syllabuses: True
+  tokenization: "jieba"
+  context_length: 1
+  workers: 4
+  batch_size: 100
+  auto_build_ignores: "*"
+  answer_version: 2.2
+  training_data_status: "2, 5, 10, 100"
+
+prophet:
+  package_name: "gffunds_poc_predictor"
+  config_map:
+    广发业务申请表A: "business_application_a"
+    广发业务申请表B: "business_application_b"
+    广发业务申请表C: "business_application_c"
+    广发业务申请表D: "business_application_d"
+    广发业务申请表E: "business_application_e"
+    广发业务申请表F: "business_application_f"
+    广发业务申请表G: "business_application_g"
+    广发业务申请表模板: "business_application_template"
+    广发业务申请表其他模板: "business_application_other_template"
+    广发基金季报: "fund_quarterly"
+    广发基金季报1: "fund_quarterly_1"
+    广发基金年中报: "fund_annual_report"
+    广发招募说明书: "prospectus"
+
+inspector:
+  package_name: "gffunds_checker"
+
+
+build:
+  docker:
+    cli_pipe: # 部署命令
+      - "inv op.import-schema --name=gffund"
+      - 'inv op.deploy-model "广发业务申请表A" --name=gffund_business_application_a'
+      - 'inv op.deploy-model "广发业务申请表B" --name=gffund_business_application_b'
+      - 'inv op.deploy-model "广发业务申请表C" --name=gffund_business_application_c'
+      - 'inv op.deploy-model "广发业务申请表D" --name=gffund_business_application_d'
+      - 'inv op.deploy-model "广发业务申请表E" --name=gffund_business_application_e'
+      - 'inv op.deploy-model "广发业务申请表F" --name=gffund_business_application_f'
+      - 'inv op.deploy-model "广发业务申请表G" --name=gffund_business_application_g'
+      - 'inv op.deploy-model "广发业务申请表模板" --name=gffund_business_application_template'
+      - 'inv op.deploy-model "广发业务申请表其他模板" --name=gffund_business_application_other_template'
+      - 'inv op.deploy-model "广发基金季报1" --name=gffund_quarterly_1'
+      - 'inv op.deploy-model "广发基金年中报" --name=gffund_annual_report'
+      - 'inv op.deploy-model "广发招募说明书" --name=gffund_prospectus'
+
+
+data_flow: # 逐步把数据流相关的配置项挪过来
+  post_pipe_after_preset: True # 预测完之后是否执行后处理
+  file_answer:
+    generate: True # 生成文件级的答案
+
+customer_settings:
+  oracle:
+    user: "gffunds"
+    password: "gffunds"
+    dsn: "localhost/XE"
+  export_to_csv: False
+  ignore_insert_schema:
+    - "广发业务申请表A"
+    - "广发业务申请表B"
+    - "广发业务申请表C"
+    - "广发业务申请表D"
+    - "广发业务申请表E"
+    - "广发业务申请表F"
+    - "广发业务申请表G"
+    - "广发业务申请表模板"
+    - "广发业务申请表其他模板"
+  rsa_public_key: |-
+    -----BEGIN PUBLIC KEY-----
+    MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCbVW0i4YZGvCumQYJa0S/Q5BtwSQuZGtehxWAUObYDmBDix2ZE7ZPZxZv+yRtY+IB928PFwWtMvCkrSxc/h/Ondd4UBZqcGxbwMWXzKMXDnZgXn2YK2+0699irN/pBEsk0ZgU09yZKnPf3yTQEmpHiseBg5Uo1pBpG+0gXHrhTVwIDAQAB
+    -----END PUBLIC KEY-----
+  mm_notify: True
+  system_url: "http://10.88.115.6:8180/counter-service/wavefax-trade/orcBatch"
+  default_tree_name: "excel解析"
+  parse_excel: True # 广发excel解析入库
+  audit_system_url: "https://api-echo.ferstar.org/audit-ef1c63b3-e0e8-42d2-9647-d6b771d3cf4e"
+  db_notify_url: "https://api-echo.ferstar.org/db-notify-ef1c63b3-e0e8-42d2-9647-d6b771d3cf4e"
+
+notification:
+  switch: True
+  channel: "api-notify" # 发送对象, 可以是频道也可以是具体的人, 比如@张全蛋
+  mattermost: "https://mm.paodingai.com/hooks/sis38omszpg5tn5xx6amwast5r"
+  tail: ""
+_new_entry:
+  "prompter.training_data_status": "prompter.trainning_data_status"

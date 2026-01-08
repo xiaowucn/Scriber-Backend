@@ -1,0 +1,125 @@
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <style>
+            *{margin:0; padding:0; list-style: none;}
+            .main{ width: 100%; margin: 0 auto;}
+            .table-box{
+                width: 100%;
+                margin:20px auto;
+                font-family: Avenir,Helvetica,Arial,sans-serif;
+            }
+            table{
+                width: 100%;
+                border-collapse: collapse;
+                border-spacing: 0;
+                border:1px solid #474747;
+                outline: none;
+                color: #494b4f;
+            }
+            table tr{
+                vertical-align: middle;
+            }
+            table tr:first-child td{
+                text-align: center;
+            }
+            table td{
+                padding: 1px 3px;
+                height: 15px;
+                font-size: 12px;
+                border: 1px solid #9c9fa6;
+            }
+            .data-con{
+                font-size: 12px;
+                font-family: "SimSun";
+            }
+            .data-tit{
+                font-size: 12px;
+                font-family: "SimSun";
+                font-weight: bold;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="main">
+            % for block in all_block_list:
+                % if block[-1] == "table":
+                    <table>
+                        % for row in block[:-1]:
+                        <tr>
+                            % for cell in row:
+                                % if cell:
+                                    <%
+                                    block_style_list = []
+                                    if cell.get('rowspan'):
+                                        rowspan = '''rowspan="{}"'''.format(cell['rowspan'])
+                                    else:
+                                        rowspan = ''
+                                    if cell.get('colspan'):
+                                        colspan = '''colspan="{}"'''.format(cell['colspan'])
+                                    else:
+                                        colspan = ''
+
+                                    block_style_list.append("color:{}".format(cell.get('styles',{}).get('fontcolor', '#000000')))
+                                    block_style_list.append("font-style:{}".format(cell.get('styles',{}).get('italic','normal')))
+                                    block_style_list.append("background-color:{}".format(cell.get('styles',{}).get('bg_color', '#FFFFFF')))
+                                    block_style_list.append("font-family:{}".format(cell.get('styles',{}).get('fontname', 'SimSun')))
+                                    block_style = ';'.join(block_style_list)
+                                    %>
+                                    <td align=${cell.get('styles',{}).get('align','left')} ${rowspan} ${colspan} style="${block_style}">
+                                        <div>
+                                            <span>
+                                                % if cell.get('styles',{}).get('fontweight','bold') == 'bold':
+                                                    <%
+                                                    cell_text = cell.get('text') if cell.get('text') else cell.get('value', '')
+                                                    cell_text = cell_text.replace('\n', '<br>').replace(' ', '&nbsp;')
+                                                    %>
+                                                    <b>${cell_text}</b>
+                                                % else:
+                                                    <%
+                                                    cell_text = cell.get('text') if cell.get('text') else cell.get('value', '')
+                                                    cell_text = cell_text.replace('\n', '<br>').replace(' ', '&nbsp;')
+                                                    %>
+                                                    <b>${cell_text}</b>
+                                                % endif
+                                            </span>
+                                        </div>
+                                        </td>
+                                % endif
+                            % endfor
+                        </tr>
+                        % endfor
+                    </table>
+                    <br/>
+                % elif block[-1] in ['paragraphs', 'page_headers', 'page_footers']:
+                    <%
+                    block_style_list = []
+                    style_body = block[0]
+
+                    if style_body.get('italic'):
+                        block_style_list.append("font-style:italic")
+                    else:
+                        block_style_list.append("font-style:normal")
+                    block_style_list.append("font-family:{}".format(style_body.get('familyname')))
+                    if int(style_body.get('fontsize', '1')) < 12:
+                        block_style_list.append("font-size:{}".format(12))
+                    else:
+                        block_style_list.append("font-size:{}".format(style_body.get('fontsize')))
+                    block_style_list.append("margin: 10px auto")
+                    if style_body.get('bold'):
+                        block_style_list.append("font-weight:bold")
+                    if style_body.get('fontcolor'):
+                        block_style_list.append("color:{}".format(style_body.get('fontcolor')))
+
+                    block_style = ";".join(block_style_list)
+                    %>
+                    <p style="${block_style}">${block[1]}</p>
+                    <br/>
+                % elif block[-1] == 'image':
+                    <img src="${block[1]}">
+                    <br/>
+                % endif
+            % endfor
+        </div>
+    </body>
+</html>

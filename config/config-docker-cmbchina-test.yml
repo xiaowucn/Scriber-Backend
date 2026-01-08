@@ -1,0 +1,189 @@
+debug: True
+logging:
+  level: "info"
+
+app:
+  app_id: "remarkable"
+  secret_key: "hello_remarkable"
+  jwt_secret_key: "d03945e6d5cd4294a52fbb2cf718cad1"
+  token_expire: 120
+  session_expire: 172800 # session过期时间, 48h
+  rate_limit_expire: 7200 # 接口访问频率限制时间, 不配默认60s(暂未启用)
+  max_fail_count: 100 # session有效期内最大尝试登录次数, 不配默认10次, 超过限制次数继续登录会被持续封禁
+  auth:
+    label:
+      app_id: ""
+      secret_key: ""
+      token_expire: 300
+    roster:
+      app_id: ""
+      secret_key: ""
+      token_expire: 300
+      url: ""
+    pdfinsight:
+      app_id: "pdfinsight"
+      secret_key: "show-me-the-money"
+      token_expire: 120
+      url: "http://pdfinsight:8096"
+      docx_as_pdf: True
+
+web:
+  http_port: 8080
+  domain: "scriber:8000"
+  plugins:
+    - "fileapi"
+    - "ext_api"
+    - "cgs" # 银河证券
+    - "inspector" # 审核模块(审核模块的部分接口在cgs/handlers.py,启用inspector时,需同步启用cgs)
+    - "debug"
+    - "cmbchina"
+  apis:
+    sso: ""
+    login_callback: ""
+    get_label_user: ""
+    get_label_user_by_cn_list: ""
+    sync_file: ""
+    sync_host: ""
+  pdf_converter: "{project_root}/bin/converter/word2pdf.exe"
+  tmp_dir: "{project_root}/data/tmp/"
+  data_dir: "{project_root}/data/files/"
+  prompter_dir: "{project_root}/data/prompter/"
+  default_question_health: 1
+  default_mold_public: False
+  preset_answer: True
+  limit_of_preset_num: 10 # 限制预测答案的个数
+  limit_of_crude_elts: 5 # 限制读取预测元素块的个数
+  show_merge_answer: true # 前端是否显示"合并的答案"按钮
+  merge_empty_item: True    # 是否允许空答案合并进merged_answer
+  record_manual: False # 前端是否显示"采用答案"按钮
+  mode_unlimited_answers: True  # 无限答题模式（答题次数不受限制）
+  predict_from_memory:
+    switch: True
+    data_dir: "{project_root}/data/tbl_headers/"
+  show_export_answer: False # 显示/隐藏"导出的答案"按钮(上交所)
+  show_marker: False
+  model_manage: True # 模型版本管理
+  enable_remote_model: True # 提取模型配置中，启用对接远程模型选项
+  data_abroad: False # 数据生产（对接外部数据库）
+  model_abroad: False # 模型接入（接入外部模型）
+  chapter_assist: True # 是否开启章节辅助标注功能
+  table_association: True # 是否开启表格辅助标注功能
+  export_special_data: False # 下载转义结果 https://gitpd.paodingai.com/cheftin/docs_scriber/-/issues/1379#note_275972
+
+
+db:
+  host: "postgres"
+  port: 5432
+  dbname: "scriber"
+  user: "postgres"
+  password: "b9aWqSqJnE6z"
+
+redis:
+  host: redis
+  port: 6379
+  db: 1
+  password: "LxyQCRnM4qrK"
+
+client:
+  name: "cmbchina" # hkex, szse
+  remark_progress_type: "level1" # all
+  language: "zh_CN" # en_US
+  hide_rough_fields: True
+  support_multiple_molds: True
+  export_label_data: True # 是否支持"导出标注json"
+  export_label_txt: False  # 是否支持"导出标注txt"
+  export_answer_csv: True # 是否支持"导出答案csv"
+  show_prompt_element_button: True # 是否显示AI位置推荐按钮
+  check_schema_base_type: False
+  export_single_answer: False # 是否显示导出标注/预测答案按钮
+  stat_accuracy: True # 是否支持统计模型正确率
+
+  show_all_predict_items: True
+  answer_default_display_level: 1 # 答案默认展开级别, 数字代表展开到第n级
+  ocr:
+    enable: True
+    service: "pai"
+
+worker:
+  app_name: "remarkable"
+  default_queue: "celery"
+
+feature: # 功能特性相关配置
+  batch_delete: True  # 批量删除功能
+  show_develop_model_test: True  # 是否展示定制模型的'查看准确率'按钮
+  inspect_modules: True
+  additional_permissions:
+    customer_rule_participate:
+      name: "规则管理"
+      definition: "可创建自定义规则，对提取结果进行审核"
+    inspect:
+      name: "规则审核"
+      definition: "可查看规则审核的结果"
+
+prompter:
+  mode: "v2"
+  use_syllabuses: True
+  tokenization: "jieba"
+  context_length: 1
+  workers: 4
+  batch_size: 100
+  auto_build_ignores: "*"
+  answer_version: 2.2
+  training_data_status: "2, 5, 10, 100"
+
+prophet:
+  package_name: "cmbchina_predictor"
+  config_map:
+    招募说明书: "cmbchina_prospectus"
+    费率调整公告: "cmbchina_rate_adjustment"
+    升降级公告: "cmbchina_upgrade"
+    产品发售公告: "cmbchina_release"
+    调整募集期公告: "cmbchina_fundraising"
+    产品资料概要: "cmbchina_information"
+    申购调整公告: "cmbchina_subscription"
+    基金合同: "cmbchina_fund"
+    基金合同生效公告: "cmbchina_fund_effective"
+    基金清算报告: "cmbchina_fund_liquidate"
+
+inspector:
+  package_name: "default_checker"
+
+data_flow: # 逐步把数据流相关的配置项挪过来
+  post_pipe_after_preset: True # 预测完之后是否执行后处理
+  file_answer:
+    generate: True # 生成文件级的答案
+    merge_strategy: 'edited_first'  # 合并答案, 用户编辑过的的答案优先, 其次新答案
+
+build:
+  docker:
+    cli_pipe:
+      - "inv op.deploy-model 费率调整公告  --enable --name=cmbchina_rate_adjustment"
+      - "inv op.deploy-model 升降级公告  --enable --name=cmbchina_upgrade"
+      - "inv op.deploy-model 调整募集期公告  --enable --name=cmbchina_fundraising"
+      - "inv op.deploy-model 产品发售公告  --enable --name=cmbchina_release"
+      - "inv op.deploy-model 产品资料概要  --enable --name=cmbchina_information"
+      - "inv op.deploy-model 基金合同  --enable --name=cmbchina_fund"
+      - "inv op.deploy-model 申购调整公告  --enable --name=cmbchina_subscription"
+      - "inv op.deploy-model 招募说明书  --enable --name=cmbchina_prospectus"
+      - 'inv op.deploy-model 基金合同生效公告  --enable --name=cmbchina_fund_effective'
+      - 'inv op.deploy-model 基金清算报告  --enable --name=cmbchina_fund_liquidate'
+
+_new_entry:
+  "prompter.training_data_status": "prompter.trainning_data_status"
+
+cmbchina:
+#  answer_push_api: "http://100.64.0.57:9000/bms-product/product-notice/send"
+  answer_pull_api: "http://100.64.0.57:9000/bms-product/product-notice/compare-detail"
+  answer_update_api: "http://100.64.0.57:9000/bms-product/product-notice/submit"
+  basic_auth: "UERfdGVzdDpQRF90ZXN0QDIwMjQ="
+  submit_timeout: 10
+
+ai:
+  openai:
+    base_url: "https://openrouter.ai/api/v1"
+    api_key: "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"
+    model: "qwen/qwen-2.5-7b-instruct"
+    max_tokens: 8191
+    rate_limit: 
+      interval: 10
+      limit: 500

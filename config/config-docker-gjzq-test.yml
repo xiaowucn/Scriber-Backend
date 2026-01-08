@@ -1,0 +1,166 @@
+debug: False
+logging:
+  level: "info"
+
+app:
+  app_id: "remarkable"
+  secret_key: "hello_remarkable"
+  simple_token: "oLdU3pvF05rWbBVgzgzd"
+  jwt_secret_key: "14507134697f4ef2a5c07aa49e022c16"
+  token_expire: 120
+  session_expire: 7200 # session过期时间, 不配置默认600s
+  rate_limit_expire: 7200 # 接口访问频率限制时间, 不配默认60s(暂未启用)
+  max_fail_count: 100 # session有效期内最大尝试登录次数, 不配默认10次, 超过限制次数继续登录会被持续封禁
+  auth:
+    pdfinsight:
+      app_id: "pdfinsight"
+      secret_key: "show-me-the-money"
+      token_expire: 120
+      url: "http://pdfinsight:8096"
+      doc_as_docx : True
+    trident:
+      app_id: "trident"
+      secret_key: "show-me-the-money"
+      token_expire: 120
+      url: ""
+
+web:
+  http_port: 8080
+  domain: "scriber:8000"
+  trust_routes:  # 跳过auth&xsrf check的路由列表
+    - "/config"
+    - "/login"
+    - "/files/[0-9]+/hash/[0-9a-fA-F]+/preprocess_complete"
+  binary_key: 'hkx85vMOBSM7M7W'  # 加密接口密钥
+  encrypted_routes:  # 加密的接口
+    - '/login'
+    - '/user'
+    - '/user/[0-9]+/put'
+  plugins:
+    - "fileapi"
+    - "cgs"
+    - "inspector"
+    - "ext_api"
+    - "debug"
+    - "cmfchina"
+  classes:
+    answer_predictor:
+  customer_answer: True
+  mode_unlimited_answers: True # 无限答题模式（答题次数不受限制）
+  apis:
+    sso: ""
+    login_callback: ""
+    get_label_user: ""
+    get_label_user_by_cn_list: ""
+    sync_file: ""
+    sync_host: ""
+  pdf_converter: "{project_root}/bin/converter/word2pdf.exe"
+  tmp_dir: "{project_root}/data/tmp/"
+  data_dir: "{project_root}/data/files/"
+  prompter_dir: "{project_root}/data/prompter/"
+  default_question_health: 1
+  readonly_mold_list: []
+  preset_answer: True
+  user_answer_black_list: "" # 这些用户的答案不会作为缓存答案(uid)
+  limit_of_preset_num: 10 # 限制预测答案的个数
+  limit_of_crude_elts: 5 # 限制读取预测元素块的个数
+  show_merge_answer: False # 前端是否显示"合并的答案"按钮
+  record_manual: False # 前端是否显示"采用答案"按钮
+  predict_from_memory:
+    switch: True
+    data_dir: "{project_root}/data/tbl_headers/"
+  show_export_answer: False # 显示/隐藏"导出的答案"按钮(上交所)
+  show_marker: False
+  model_manage: True # 模型版本管理
+  enable_remote_model: True # 提取模型配置中，启用对接远程模型选项
+  data_abroad: False # 数据生产（对接外部数据库）
+  model_abroad: False # 模型接入（接入外部模型）
+  chapter_assist: True # 是否开启章节辅助标注功能
+  table_association: True # 是否开启表格辅助标注功能
+  table_association_postfix: True  # 表格辅助标注时是否可标后缀
+  predict_crude_elements: False
+  run_lock_expired: 60 # ~/run接口调用的间隔时间
+db:
+  host: "postgres"
+  port: 5432
+  dbname: "scriber"
+  user: "postgres"
+  password: ""
+
+redis:
+  host: redis
+  port: 6379
+  db: 1
+  password: "scriber"
+
+client:
+  name: "gjzq"
+  remark_progress_type: "level1" # all
+  language: "zh_CN" # en_US
+  file_size_limit: 50  # 文件大小限制(单位MB)
+  hide_rough_fields: True
+  support_multiple_molds: True
+  show_prompt_element_button: True # 是否显示AI位置推荐按钮
+  check_schema_base_type: False
+  export_label_data: False # 是否支持"导出标注json"
+  export_label_txt: False  # 是否支持"导出标注txt"
+  export_answer_csv: True # 是否支持"导出答案csv"
+  export_single_answer: False # 是否显示导出标注/预测答案按钮
+  stat_accuracy: True # 是否支持统计模型正确率
+  email_password_key: "TS-8iBAe-197um_HnJSOrcHdpg9AcJlOwo793WzEdyc="
+  
+  show_all_predict_items: True
+  answer_default_display_level: 1 # 答案默认展开级别, 数字代表展开到第n级
+  ocr:
+    enable: False
+    service: "pai"
+  cron_task_switch: # 定时任务开关
+    run_gjzq_sync_file_from_email: True
+
+worker:
+  app_name: "remarkable"
+  default_queue: "celery"
+
+feature:  # 功能特性相关配置
+  batch_delete: True  # 批量删除功能
+  supported_suffixes: [ '.doc', '.docx', '.jpeg', '.jpg', '.pdf', '.png', ".xls", ".xlsx"]
+  supported_zip_suffixes: ['.tar', '.zip', '.7z']
+  inspect_modules: True
+  enable_user_group: True  # 启用用户组功能
+  additional_permissions: # 额外添加的用户权限
+    customer_rule_participate:
+      name: "规则管理"
+      definition: "可创建自定义规则，对提取结果进行审核"
+    inspect:
+      name: "规则审核"
+      definition: "可查看规则审核的结果"
+
+prompter:
+  mode: "v2"
+  use_syllabuses: True
+  tokenization: "jieba"
+  context_length: 1
+  workers: 4
+  batch_size: 100
+  auto_build_ignores: "*"
+  answer_version: 2.2
+  training_data_status: "2, 5, 10, 100"
+
+prophet:
+  multi_packages:
+    - "china_stock_predictor"
+    - "gffunds_poc_predictor"
+  config_map:
+    公募-基金合同: "public_fund"
+    公募-基金合同-二: "public_fund_2"
+    私募-基金合同: "private_fund"
+    公募-资产管理合同: "public_asset_management"
+    公募-招募说明书: "prospectus"
+
+inspector:
+  package_name: "default_checker"
+
+data_flow: # 逐步把数据流相关的配置项挪过来
+  post_pipe_after_preset: True # 预测完之后是否执行后处理
+  file_answer:
+    generate: True # 生成文件级的答案

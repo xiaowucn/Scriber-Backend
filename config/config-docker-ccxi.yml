@@ -1,0 +1,227 @@
+debug: False
+logging:
+  level: "info"
+
+app:
+  app_id: "scriber_ccxi"
+  secret_key: "hello_remarkable"
+  token_expire: 7200
+  single_sign_limit: False
+  session_expire: 7200
+  rate_limit_expire: 7200
+  max_fail_count: 100
+  multiprocessing: "enable"
+  auth:
+    pdfinsight:
+      app_id: "pdfinsight"
+      secret_key: "show-me-the-money"
+      token_expire: 120
+      url: "http://pdfinsight:8096"
+    trident:
+      app_id: "trident"
+      secret_key: "show-me-the-money"
+      token_expire: 120
+      url: ""
+web:
+  http_port: 8080
+  domain: "scriber:8000"
+  redirect_subpath: "scriber/"
+  user_system_provider: "trident"
+  http_headers:
+    Server: "*"
+  plugins:
+    - "fileapi"
+    - "ext_api"
+    - "debug"
+    - "diff"
+    - "ccxi"
+  classes:
+    answer_converter: "remarkable.converter.ccxi.CCXIAnswerWorkShop"
+    
+  apis:
+    sso: ""
+    login_callback: ""
+    get_label_user: ""
+    get_label_user_by_cn_list: ""
+    sync_file: ""
+    sync_host: ""
+  pdf_converter: "{project_root}/bin/converter/word2pdf.exe"
+  tmp_dir: "/data/tmp/"
+  data_dir: "{project_root}/data/files/"
+  prompter_dir: "{project_root}/data/prompter/"
+  mode_unlimited_answers: True  # 无限答题模式（答题次数不受限制）
+  default_question_health: 1
+  preset_answer: True
+  preset_from_cache: False
+  user_answer_black_list: ""
+  limit_of_preset_num: 10
+  limit_of_crude_elts: 5
+  show_merge_answer: False
+  record_manual: False
+  table_association: True
+  predict_from_memory:
+    switch: True
+    data_dir: "{project_root}/data/tbl_headers/"
+  show_export_answer: False
+  show_marker: False
+  model_manage: True
+  enable_remote_model: True
+  model_abroad: True
+  customer_answer: True
+
+
+db:
+  host: "postgres"
+  port: 5432
+  dbname: "scriber"
+  user: "postgres"
+  password: ""
+
+redis:
+  host: redis
+  port: 6379
+  db: 1
+  password: "scriber"
+
+client:
+  name: "ccxi"
+  remark_progress_type: "level1"
+  language: "zh_CN"
+  hide_rough_fields: True
+  show_prompt_element_button: True
+  check_schema_base_type: False
+  export_label_data: False
+  export_label_txt: False
+  export_answer_csv: False
+  export_single_answer: False
+  stat_accuracy: True
+  
+  show_all_predict_items: True
+  answer_default_display_level: 1
+  ocr:
+    enable: False
+    service: "pai"
+
+feature:
+  batch_delete: True  # 批量删除功能
+  upload_popup: True  # 上传文件时打开自定义弹窗
+  secondary_submit: True  # 在「别人的答案」基础上提交答案
+  answer_diff: True  # 文档答案对比
+  file_list_page:  # 文件列表页相关
+    file_type_column: True  # 文件列表显示 【文件类型】列
+  customization_schema_fields: True  # 自定义schema字段
+
+
+worker:
+  app_name: "remarkable"
+  default_queue: "celery"
+
+prompter:
+  mode: "v2"
+  use_syllabuses: True
+  tokenization: "jieba"
+  context_length: 1
+  workers: 4
+  batch_size: 100
+  auto_build_ignores: "*"
+  answer_version: 2.2
+  training_data_status: "1, 2, 5, 10, 100"
+
+prophet:
+  package_name: "ccxi_predictor"
+  config_map:
+    主定义表: "primary"
+    信托合同: "fiduciary"
+    标准条款: "standard_terms"
+
+build:
+  docker:
+    cli_pipe: # 部署命令
+      - 'inv op.import-schema --name=ccxi --overwrite'
+
+      - 'inv op.deploy-model 主定义表 --name=ccxi_primary'
+
+      - 'inv op.deploy-model 信托合同 --name=ccxi_fiduciary'
+
+      - 'inv op.deploy-model 标准条款 --name=ccxi_standard_terms'
+
+ccxi:
+  molds_limit:
+    信贷ABS:
+      主定义表:
+        limit: 1
+        mutually_exclusive:
+          - "信托合同（含主定义表）"
+      信托合同:
+        limit: 1
+        mutually_exclusive:
+          - "信托合同（含主定义表）"
+      信托合同（含主定义表）:
+        limit: 1
+        mutually_exclusive:
+          - "主定义表"
+          - "信托合同"
+      服务合同:
+        limit: 1
+      保管合同:
+        limit: 1
+    ABN:
+      主定义表:
+        limit: 1
+        mutually_exclusive:
+          - "信托合同（含主定义表）"
+      信托合同:
+        limit: 1
+        mutually_exclusive:
+          - "信托合同（含主定义表）"
+      信托合同（含主定义表）:
+        limit: 1
+        mutually_exclusive:
+          - "主定义表"
+          - "信托合同"
+      服务合同:
+        limit: 1
+      保管合同:
+        limit: 1
+    企业ABS:
+      标准条款:
+        limit: 1
+        mutually_exclusive:
+          - "标准条款（不含主定义表）"
+          - "主定义表"
+      标准条款（不含主定义表）:
+        limit: 1
+        mutually_exclusive:
+          - "标准条款"
+      主定义表:
+        limit: 1
+        mutually_exclusive:
+          - "标准条款"
+      资产买卖协议:
+        limit: 1
+      服务协议:
+        limit: 1
+      托管协议:
+        limit: 1
+    非标:
+      主定义表:
+        limit: 1
+        mutually_exclusive:
+          - "信托合同（含主定义表）"
+      信托合同:
+        limit: 1
+        mutually_exclusive:
+          - "信托合同（含主定义表）"
+      信托合同（含主定义表）:
+        limit: 1
+        mutually_exclusive:
+          - "主定义表"
+          - "信托合同"
+      服务合同:
+        limit: 1
+      保管合同:
+        limit: 1
+      资产买卖协议/投资合同:
+        limit: 1
+_new_entry:
+  "prompter.training_data_status": "prompter.trainning_data_status"

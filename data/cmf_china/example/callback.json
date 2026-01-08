@@ -1,0 +1,22 @@
+{
+    "fid": 1087,//文件ID
+    "schema_id": 26,//场景ID
+    "audit_items": [
+        {
+            "name": "外部审核演示",//规则名称
+            "schema_field": [ 
+                "文件组-字段3"//提取的字段名称
+            ],
+            "is_compliance": false,//审核结果；true为审核通过、false为审核不通过
+            "suggestion": "请完善字段3的名称",//修改一键
+            "reasons": [
+                {
+                    "reason_text": "名称不完整，所以不通过"//不通过原因
+                }
+            ],
+            "fid": 1087,//文件ID
+            "qid": 9578,//答案ID
+            "schema_id": 26//场景ID
+        }
+    ]
+}

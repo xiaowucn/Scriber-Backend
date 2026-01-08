@@ -1,0 +1,31 @@
+#!/usr/bin/env python3
+import os
+
+import uvicorn
+
+from remarkable.config import get_config, project_root
+
+
+def main():
+    uvicorn.config.LOGGING_CONFIG["formatters"]["default"]["fmt"] = "%(asctime)s - %(levelprefix)s %(message)s"
+    uvicorn.run(
+        "remarkable.server:create_app",
+        host="0.0.0.0",
+        port=get_config("web.http_port", 8888),
+        workers=1,
+        log_level=get_config("logging.level"),
+        reload=True,
+        date_header=False,
+        loop="asyncio",
+        reload_dirs=[
+            os.path.join(project_root, "remarkable"),
+            os.path.join(project_root, "config"),
+        ],
+        reload_includes=["*.yml"],
+        reload_excludes=["*/__pycache__/*"],
+        factory=True,
+    )
+
+
+if __name__ == "__main__":
+    main()

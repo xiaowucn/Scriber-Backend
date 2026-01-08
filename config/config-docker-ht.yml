@@ -1,0 +1,165 @@
+debug: False
+logging:
+  level: "info"
+
+app:
+  app_id: "remarkable"
+  secret_key: "hello_remarkable"
+  simple_token: "9fpHf8pofUH3njF"
+  token_expire: 120
+  file_encrypt_key: 'BJA9ljFOK3PXjLlEYqd82ZRRuI71Y1VeMdEAQejNG1s='
+  single_sign_limit: False  # 单点登录限制，默认不限制
+  session_expire: 32400  # session过期时间，9小时
+  rate_limit_expire: 1800  # 登录频率限制时间, 如同IP在限制时间内访问登录接口超过5次即封禁之
+  max_fail_count: 100  # 会话有效期内最大允许的失败尝试次数
+  multiprocessing: "enable"
+  auth:
+    label:
+      app_id: ""
+      secret_key: ""
+      token_expire: 300
+    roster:
+      app_id: ""
+      secret_key: ""
+      token_expire: 300
+      url: ""
+    pdfinsight:
+      app_id: "pdfinsight"
+      secret_key: "show-me-the-money"
+      token_expire: 120
+      url: "http://pdfinsight:8096"
+    trident:
+      app_id: "trident"
+      secret_key: "show-me-the-money"
+      token_expire: 120
+      url: ""
+web:
+  redirect_subpath: ""
+  http_port: 8080
+  domain: "scriber:8000"
+  plugins:
+    - "diff"
+    - "fileapi"
+    - "rule"
+    - "ext_api"
+    - "debug"
+    - "ht"
+  classes:
+    answer_converter: "remarkable.converter.ht.HtSecAnswerWorkShop"  # 转换&推送答案
+    answer_predictor: "remarkable.predictor.ht_predictor.software_contract_predictor.predictor.HtPredictor"
+    answer_inspector:
+      default: "remarkable.rule.ht.ht_business_rules.inspector.HTCustomInspector"
+      私募类基金合同: "remarkable.rule.ht.ht_fund_rules.HTFundInspector"
+  apis:
+    sso: ""
+    login_callback: ""
+    get_label_user: ""
+    get_label_user_by_cn_list: ""
+  inspect_rules: True
+  doc2docx_converter: '{project_root}/bin/converter/doc2docx.exe'
+  pdf_converter: "{project_root}/bin/converter/word2pdf.exe"
+  pdf_convert_provider: pdfinsight
+  wordinsight: "{project_root}/bin/wordinsight/wordinsight.dll"
+  revision_tools: '{project_root}/bin/dr/docx_revision'
+  tmp_dir: "/data/tmp/"
+  data_dir: '{project_root}/data/files/'
+  prompter_dir: '{project_root}/data/prompter/'
+  default_question_health: 1
+  preset_answer: True
+  preset_from_cache: False
+  predict_crude_elements: True
+  folder_permission: True # 是否开启文件夹权限控制
+  independent_file_perm: True  # 是否开启文件权限控制
+  model_manage: True
+  push_preset_answer: True
+
+
+
+data_flow:  # 逐步把数据流相关的配置项挪过来
+  post_pipe_after_preset: True # 预测完之后是否执行后处理
+
+db:
+  host: "postgres"
+  port: 5432
+  dbname: "scriber"
+  user: "postgres"
+  password: "scriberht"
+redis:
+  host: "redis"
+  port: 6379
+  db: 1
+  password: "scriber"
+client:
+  name: "ht" # hkex, szse
+  language: "zh_CN" # en_US
+  
+  export_label_data: False  # 是否支持导出训练数据
+  stat_accuracy: True  # 是否支持统计模型正确率
+  show_all_predict_items: True
+  show_prompt_element_button: True
+feature:
+  batch_delete: True  # 批量删除功能
+  upload_popup: True  # 上传文件时打开自定义弹窗
+  schema_manage: # schema管理tab相关
+    rule_based_judgment: False  # 显示「规则判断」tab
+
+python_libs:
+  dirs: "./PDFParser"
+
+worker:
+  app_name: "remarkable"
+  default_queue: "celery"
+  broker: "redis://:scriber@redis:6379/1"
+
+prompter:
+  workers: 4
+  batch_size: 100
+  auto_build_ignores: "*"
+  answer_version: 2.2
+  training_data_status: "1, 2, 5, 10, 100"
+  mode: "v2"
+  use_syllabuses: True
+  tokenization: "jieba"
+  context_length: 1
+
+
+prophet:
+  package_name: "ht_predictor"
+  config_map:
+    私募类基金合同: "fund"
+
+ht_fund: False
+
+ht:
+  ignore_template: True
+  soft_show_formula_check: True # 是否展示审核界面的公式校验  软开环境
+  fund_show_formula_check: False # 是否展示审核界面的公式校验 基金合同环境
+  esb:
+    switch: True
+    url: "http://172.190.103.203:8880/htesb"
+    call_timeout: 10
+    interface_code: '410156'
+    consumer_code: '91'
+
+
+available_models:
+  config_in_code: True
+  partial_text: True
+
+build:
+  docker:
+    cli_pipe: # 部署命令
+      - "inv ht.add-default-mold-class"
+      - "inv ht.create-default-model-version"
+# 开启new_pdf_cache之后，需要披露重跑下所有文件cache 客户测试环境文件id大概是160左右 正式环境是30左右 没有加force参数 所有可以重复执行
+      - "inv op.make-pdf-cache -s 0 -e 200"
+#      - "inv op.import-schema --name=ht_fund"
+# 海通的模型在一个测试环境服务器上 生产环境部署时需要导出 手动执行以下命令来导入
+
+#      - "inv op.deploy-model '私募类基金合同' --name=ht_fund"
+    dot_ignore:
+#      - "!data/schema/ht_fund_schema.json"  # 导出Schema
+#      - "!data/model/ht_fund_*"  # 定位&提取模型
+      - "!bin/dr/*"  # 生成批注文件的dotnet依赖
+_new_entry:
+  "prompter.training_data_status": "prompter.trainning_data_status"

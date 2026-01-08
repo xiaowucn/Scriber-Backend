@@ -1,0 +1,17 @@
+#!/usr/bin/env python
+
+import os
+import sys
+
+
+def main():
+    sys.path.append(os.path.dirname(os.path.dirname(__file__)))
+    from aipod.rpc.server import serve
+    from remarkable.config import get_config
+    from remarkable.service.rpc import PIPELine
+
+    serve(PIPELine, get_config('web.rpc_port', 10051))
+
+
+if __name__ == '__main__':
+    main()

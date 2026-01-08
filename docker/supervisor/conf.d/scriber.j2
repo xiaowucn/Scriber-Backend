@@ -1,0 +1,158 @@
+{%- set env=environ('ENV') -%}
+{%- set logging_level=environ("LOGGING_LEVEL") or 'info' -%}
+{%- set supervisor_log_rotate=environ("SUPERVISOR_LOGFILE_BY_DATE") -%}
+{%- set supervisor_logfile_backups=environ("SUPERVISOR_LOGFILE_BACKUPS") -%}
+{%- set enable_stdout_log=environ("ENABLE_STDOUT_LOG") == "true" or (environ("KUBERNETES_SERVICE_HOST") and environ("DISABLE_K8S_LOG") != "true") -%}
+{%- set scriber_association_num=environ("SCRIBER_ASSOCIATION_NUM") or 4 -%}
+{%- set scriber_worker_num=environ("SCRIBER_WORKER_NUM") or 4 -%}
+{%- set scriber_worker_min_num=environ("SCRIBER_WORKER_MIN_NUM") or scriber_worker_num -%}
+{%- set scriber_worker_training_num=environ("SCRIBER_WORKER_TRAINING_NUM") or 4 -%}
+
+[group:scriber]
+programs=web,association,worker,worker-training,beat,nginx
+
+[program:web]
+directory=/opt/scriber
+command=/usr/bin/python3 /usr/local/bin/gunicorn -c python:remarkable.worker.gunicorn_conf
+autostart=true
+autorestart=true
+stopasgroup=true
+killasgroup=true
+startsecs=5
+startretries=10
+{% if enable_stdout_log -%}
+stderr_logfile=/dev/fd/1
+stdout_logfile=/dev/fd/1
+stderr_logfile_maxbytes=0
+stdout_logfile_maxbytes=0
+{%- else -%}
+{%- if supervisor_log_rotate -%}
+when={{ supervisor_log_rotate }}
+{%- endif %}
+stderr_logfile_backups={{ supervisor_logfile_backups }}
+stdout_logfile_backups={{ supervisor_logfile_backups }}
+stderr_logfile=/data/logs/scriber-web-stderr.log
+stdout_logfile=/data/logs/scriber-web-stdout.log
+{%- endif %}
+
+[program:association]
+directory=/opt/scriber
+command=/usr/bin/python3 /usr/local/bin/gunicorn -c python:remarkable.worker.gunicorn_conf -b 0.0.0.0:8082 -w {{ scriber_association_num }}
+autostart=true
+autorestart=true
+stopasgroup=true
+killasgroup=true
+startsecs=5
+startretries=10
+{% if enable_stdout_log -%}
+stderr_logfile=/dev/fd/1
+stdout_logfile=/dev/fd/1
+stderr_logfile_maxbytes=0
+stdout_logfile_maxbytes=0
+{%- else -%}
+{%- if supervisor_log_rotate -%}
+when={{ supervisor_log_rotate }}
+{%- endif %}
+stderr_logfile_backups={{ supervisor_logfile_backups }}
+stdout_logfile_backups={{ supervisor_logfile_backups }}
+stderr_logfile=/data/logs/scriber-association-stderr.log
+stdout_logfile=/data/logs/scriber-association-stdout.log
+{%- endif %}
+
+[program:worker]
+directory=/opt/scriber
+command=celery -A remarkable.worker.app worker -n 'norm-%%n@%%h' -l {{ logging_level }} --autoscale {{ scriber_worker_num }},{{ scriber_worker_min_num }} -Q celery
+
+autostart=true
+autorestart=true
+stopasgroup=true
+killasgroup=true
+startsecs=5
+startretries=10
+{% if enable_stdout_log -%}
+stderr_logfile=/dev/fd/1
+stdout_logfile=/dev/fd/1
+stderr_logfile_maxbytes=0
+stdout_logfile_maxbytes=0
+{%- else -%}
+{%- if supervisor_log_rotate -%}
+when={{ supervisor_log_rotate }}
+{%- endif %}
+stderr_logfile_backups={{ supervisor_logfile_backups }}
+stdout_logfile_backups={{ supervisor_logfile_backups }}
+stderr_logfile=/data/logs/scriber-worker-stderr.log
+stdout_logfile=/data/logs/scriber-worker-stdout.log
+{%- endif %}
+
+[program:worker-training]
+directory=/opt/scriber
+command=celery -A remarkable.worker.app worker -n 'training-%%n@%%h' -l {{ logging_level }} -c {{ scriber_worker_training_num }} -Q training
+autostart=true
+autorestart=true
+stopasgroup=true
+killasgroup=true
+startsecs=5
+startretries=10
+{% if enable_stdout_log -%}
+stderr_logfile=/dev/fd/1
+stdout_logfile=/dev/fd/1
+stderr_logfile_maxbytes=0
+stdout_logfile_maxbytes=0
+{%- else -%}
+{%- if supervisor_log_rotate -%}
+when={{ supervisor_log_rotate }}
+{%- endif %}
+stderr_logfile_backups={{ supervisor_logfile_backups }}
+stdout_logfile_backups={{ supervisor_logfile_backups }}
+stderr_logfile=/data/logs/scriber-worker-training-stderr.log
+stdout_logfile=/data/logs/scriber-worker-training-stdout.log
+{%- endif %}
+
+[program:beat]
+directory=/opt/scriber
+command=celery -A remarkable.worker.app beat -s /data/tmp/celerybeat-schedule --pidfile=/data/tmp/celerybeat.pid -l {{ logging_level }}
+autostart=true
+autorestart=true
+stopasgroup=true
+killasgroup=true
+startsecs=5
+startretries=10
+{% if enable_stdout_log -%}
+stderr_logfile=/dev/fd/1
+stdout_logfile=/dev/fd/1
+stderr_logfile_maxbytes=0
+stdout_logfile_maxbytes=0
+{%- else -%}
+{%- if supervisor_log_rotate -%}
+when={{ supervisor_log_rotate }}
+{%- endif %}
+stderr_logfile_backups={{ supervisor_logfile_backups }}
+stdout_logfile_backups={{ supervisor_logfile_backups }}
+stderr_logfile=/data/logs/scriber-beat-stderr.log
+stdout_logfile=/data/logs/scriber-beat-stdout.log
+{%- endif %}
+
+[program:nginx]
+directory=/etc/nginx/
+command=nginx -g "daemon off;" -c /etc/nginx/conf.d/scriber.conf
+autostart=true
+autorestart=true
+stopasgroup=true
+killasgroup=true
+startsecs=5
+startretries=3
+loglevel={{ logging_level }}
+{% if enable_stdout_log -%}
+stderr_logfile=/dev/fd/1
+stdout_logfile=/dev/fd/1
+stderr_logfile_maxbytes=0
+stdout_logfile_maxbytes=0
+{%- else -%}
+{%- if supervisor_log_rotate -%}
+when={{ supervisor_log_rotate }}
+{%- endif %}
+stderr_logfile_backups={{ supervisor_logfile_backups }}
+stdout_logfile_backups={{ supervisor_logfile_backups }}
+stderr_logfile=/data/logs/nginx-stderr.log
+stdout_logfile=/data/logs/nginx-stdout.log
+{%- endif %}

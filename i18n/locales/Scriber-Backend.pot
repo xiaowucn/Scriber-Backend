@@ -1,0 +1,375 @@
+# Translations template for PROJECT.
+# Copyright (C) 2018 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2018.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2018-09-29 11:04+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.6.0\n"
+
+msgid "Empty data cannot be saved."
+msgstr ""
+
+msgid ""
+"Answers could not added when question's status under already feedback or "
+"compare finished."
+msgstr ""
+
+msgid "No more answers can be added to which questions completed."
+msgstr ""
+
+msgid "Undefined question status."
+msgstr ""
+
+msgid ""
+"The question is not under the answer status therefore answers could not "
+"be saved."
+msgstr ""
+
+msgid "The status is not to be reviewed and feedback of the question."
+msgstr ""
+
+msgid "Invalid http code when getting group member"
+msgstr ""
+
+msgid "Invalid status when getting group member"
+msgstr ""
+
+msgid "The question does not exists."
+msgstr ""
+
+msgid ""
+"The question is unfinished, or the answer is not in conflict and could "
+"not be marked."
+msgstr ""
+
+msgid "The user has not given an answer to the question yet."
+msgstr ""
+
+msgid "The status user's answers to the question are invalid."
+msgstr ""
+
+msgid "Invalid input parameters."
+msgstr ""
+
+msgid "Invalid format input: "
+msgstr ""
+
+msgid "The id do not have corresponding questions: "
+msgstr ""
+
+msgid "Payload is not dict"
+msgstr ""
+
+msgid " is required"
+msgstr ""
+
+msgid "name should be str"
+msgstr ""
+
+msgid "empty name is not allowed"
+msgstr ""
+
+msgid "Duplicate schema name detected"
+msgstr ""
+
+msgid "data is not valid json"
+msgstr ""
+
+msgid "Item Not Found"
+msgstr ""
+
+msgid "not a valid update"
+msgstr ""
+
+msgid "Question is locked by other user"
+msgstr ""
+
+msgid "project name is existed"
+msgstr ""
+
+msgid "not found project"
+msgstr ""
+
+msgid "not found tree"
+msgstr ""
+
+msgid "not found origin tree"
+msgstr ""
+
+msgid "not found upload document"
+msgstr ""
+
+msgid "can't find the tree"
+msgstr ""
+
+msgid "can't find the project"
+msgstr ""
+
+msgid "not found file"
+msgstr ""
+
+msgid "Login needed."
+msgstr ""
+
+msgid "the pdf file is not ready"
+msgstr ""
+
+msgid "the docx file is not ready"
+msgstr ""
+
+msgid "the pdfinsight file is not ready"
+msgstr ""
+
+msgid "tag already exists"
+msgstr ""
+
+msgid "not found tag"
+msgstr ""
+
+msgid "is in use, cannot be deleted"
+msgstr ""
+
+msgid "Mold bound to tag has assign to file, cannot be deleted."
+msgstr ""
+
+msgid "data not ready"
+msgstr ""
+
+msgid "delete tree failed"
+msgstr ""
+
+msgid "Question comparison complete."
+msgstr ""
+
+msgid "Answer status is not completed."
+msgstr ""
+
+msgid "dup creating UserNotes"
+msgstr ""
+
+msgid "creating UserNotes failed"
+msgstr ""
+
+msgid "update UserNotes failed"
+msgstr ""
+
+msgid "The request format is incorrect"
+msgstr ""
+
+msgid "Unrecognized "
+msgstr ""
+
+msgid "Duplicate permissions in the request"
+msgstr ""
+
+msgid "User already exists."
+msgstr ""
+
+msgid "User not exists."
+msgstr ""
+
+msgid "Name field cannot be empty."
+msgstr ""
+
+msgid "Password should be 6 characters at least."
+msgstr ""
+
+msgid "No data can be updated in the request."
+msgstr ""
+
+msgid "Incorrect password."
+msgstr ""
+
+msgid "Roster callback lack cn or permission field"
+msgstr ""
+
+msgid "Validate roster callback failed"
+msgstr ""
+
+msgid "Standard answers could not be pointed by answered administrator."
+msgstr ""
+
+msgid "doc file is not ready"
+msgstr ""
+
+msgid "Answer not ready yet!"
+msgstr ""
+
+msgid "Project not exists!"
+msgstr ""
+
+msgid "Schema could not be changed"
+msgstr ""
+
+msgid "Incorrect user or password!"
+msgstr ""
+
+msgid "The password input error has reached the upper limit."
+msgstr ""
+
+msgid "Interface access frequency is too fast, please try again later"
+msgstr ""
+
+msgid "The session has expired, please login again"
+msgstr ""
+
+msgid "Your account has reached the max number of logins, please try again later"
+msgstr ""
+
+msgid "The document is being parsed and catalog is not ready."
+msgstr ""
+
+msgid "The document is being parsed and cannot be searched."
+msgstr ""
+
+msgid "The document is being parsed and cannot get text from it."
+msgstr ""
+
+msgid "Unsupported file type detected"
+msgstr ""
+
+msgid "You have no permission"
+msgstr ""
+
+msgid "Undefined routing request"
+msgstr ""
+
+msgid "Cryptographic handshake failed"
+msgstr ""
+
+msgid "Did not recognise text from document"
+msgstr ""
+
+msgid "This column has both migrated & new answer, please delete then label:"
+msgstr ""
+
+msgid "Changing a public project to a private project is not supported"
+msgstr ""
+
+msgid "Tree name is existed"
+msgstr ""
+
+msgid "User is existed"
+msgstr ""
+
+msgid "Not all ids valid."
+msgstr ""
+
+msgid "Schema is in use, cannot be deleted"
+msgstr ""
+
+msgid "Only participants have permission."
+msgstr ""
+
+msgid "Too many files downloaded at once."
+msgstr ""
+
+msgid "Mold is not the same"
+msgstr ""
+
+msgid "Chapter-info data only for file.pdf"
+msgstr ""
+
+msgid "Page-info data only for file.pdf"
+msgstr ""
+
+msgid "name is duplicated"
+msgstr ""
+
+msgid "Invalid file format"
+msgstr ""
+
+msgid "The number of label has reached the upper limit."
+msgstr ""
+
+msgid "The system access has expired, please contact the administrator."
+msgstr ""
+
+msgid "The OCR service access has expired, frame annotation failed, please contact the administrator."
+msgstr ""
+
+msgid "rerun task failed"
+msgstr ""
+
+msgid "The model is predicting, please try again later"
+msgstr ""
+
+msgid "Your password must contain at least one ASCII letter"
+msgstr ""
+
+msgid "Your password must contain at least one number"
+msgstr ""
+
+msgid "Your Password must contains at least one special notation"
+msgstr ""
+
+msgid "The password length must be between 6-128. Please re-enter"
+msgstr ""
+
+msgid "The file is being processed, please try again later"
+msgstr ""
+
+msgid "Account has expired."
+msgstr ""
+
+msgid "No enabled develop model version!"
+msgstr ""
+
+msgid "schema cannot be specified for clean documents"
+msgstr ""
+
+msgid "Unsupported file found, ensure the document type is correct."
+msgstr ""
+
+msgid "Invalid answer data detected!"
+msgstr ""
+
+msgid "You have no permission to access this project!"
+msgstr ""
+
+msgid "Project does not exist."
+msgstr ""
+
+msgid "We don't support model management yet"
+msgstr ""
+
+msgid "The specified model version does not exist"
+msgstr ""
+
+msgid "Model training in progress, please wait"
+msgstr ""
+
+msgid "The number of training files is less than 3"
+msgstr ""
+
+msgid "The model is predicting, please try again later"
+msgstr ""
+
+msgid "The input search criteria are invalid"
+msgstr ""
+
+msgid "The model files do not exist"
+msgstr ""
+
+msgid "The parameter 'id' and other parameters cannot be passed simultaneously"
+msgstr ""
+
+msgid "Schema is in use, unable to modify name"
+msgstr ""
+
+msgid "Project defaults invalid"
+msgstr ""
+
+msgid "File tree defaults invalid"
+msgstr ""

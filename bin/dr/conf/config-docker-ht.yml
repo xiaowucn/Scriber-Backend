@@ -1,0 +1,4 @@
+﻿crypto:
+  enable: false
+  aes256: "who-your-daddy-show-me-the-money"
+author: "庖丁科技"

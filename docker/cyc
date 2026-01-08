@@ -1,0 +1,133 @@
+#!/bin/bash
+
+set -e
+set -o pipefail
+
+export CYC_SERVER="cyc-amd64.cheftin.cn:44"
+
+if [[ "$(arch)" == "aarch64" ]]; then
+  export CYC_SERVER="cyc-arm64.cheftin.cn:44"
+fi
+
+if [[ -z "${CYC_SERVER}" ]]; then
+  max_procs=$(grep -c ^processor /proc/cpuinfo)
+else
+  max_procs=40
+  mkdir -p /tmp/cyc
+fi
+
+BIN_DIR=$(dirname "$0")
+PROJECT_ROOT=$(python3 -c "import os; print(os.path.abspath('$BIN_DIR/..'))")
+SRC_DIR="$1"
+pushd "${PROJECT_ROOT}"
+
+if [[ "${SRC_DIR}" ]]; then
+  [[ -d "${SRC_DIR}" ]] && rm -r "${SRC_DIR}"
+  rsync -av --exclude=__pycache__ --exclude=/data --exclude=/tests --exclude=.git --include='*/' \
+    --include='*.txt' --include='*.py' --exclude='*' ./ "${SRC_DIR}/"
+fi
+
+# ------------------
+# py2so
+# ------------------
+compile_py_to_so() {
+  if [[ -z "${CYC_SERVER}" ]]; then
+    echo "----- compile: ${1}"
+    # cython: .py -> .c
+    if ! cython -X language_level=3 -X annotation_typing=False --directive always_allow_keywords=true "$1"; then
+      echo "compile ${1} to c file error!!!"
+      exit 1
+    fi
+
+    # gcc: .c -> .so
+    if ! gcc -shared -pthread -fPIC -fwrapv -O2 -Wall -fno-strict-aliasing $(python3-config --includes) -o "${1%.py*}".so "${1%.py*}".c; then
+      echo "-!!!! compile ${1%.py*}.c to shared object error!!!"
+      exit 1
+    fi
+  else
+    # cyc_service: .py -> .so# cyc_service: .py -> .so
+    rst=$(mktemp -p /tmp/cyc)
+    py_md5=$(md5sum -b "${1}" | awk '{print $1}')
+    if [[ $(curl --location -w "%{http_code}" --request POST "http://${CYC_SERVER}/api/cyc_check" \
+      --form "path=${1}" \
+      --form "token=da3d0110-daa1-11ea-9208-8fc2150ed896" \
+      --form "md5=${py_md5}" \
+      --form "py_version=python3.12" \
+      -s --output "${rst}") == "200" ]]; then
+      mv "${rst}" "${1%.py*}".so
+    else
+      status_code=$(curl --location -w "%{http_code}" --request POST "http://${CYC_SERVER}/api/cyc" \
+        --form "file=@${1}" \
+        --form "path=${1}" \
+        --form "token=da3d0110-daa1-11ea-9208-8fc2150ed896" \
+        --form "md5=${py_md5}" \
+        --form "py_version=python3.12" \
+        -s --output "${rst}")
+      if [[ "${status_code}" == "200" ]]; then
+        test "$(du -sbL "${rst}" | awk '{print $1}')" = "0" && exit 1
+        mv "${rst}" "${1%.py*}.so"
+      elif [[ "${status_code}" == "406" ]]; then
+        echo "---------------------------------------------------------------"
+        echo "${1}: Skip cyc compile"
+        echo "---------------------------------------------------------------"
+        exit 0
+      else
+        cat "${rst}"
+        rm -rf "${rst}"
+        exit 1
+      fi
+    fi
+  fi
+
+  rm -rf "${1}"
+  rm -rf "${1%.py*}".c
+}
+
+# ------------------
+# py2bin
+# ------------------
+compile_sh_to_bin() {
+  if ! CFLAGS=-static shc -r -f "${1}"; then
+    echo "compile ${1} to bin failed"
+    exit 1
+  fi
+  mv "${1}".x "${1}"
+  rm -rf "${1}".x.c
+}
+
+# ------------------
+# py2pyc
+# ------------------
+compile_py_to_pyc() {
+  # compileall: .py -> .pyc
+  find "${1}" -name '*.py' ! -path "./${SRC_DIR}/*" | xargs -I {} python3 -m compileall -f {}
+
+  for old in $(find ${1} -name '*.pyc' -path '*/__pycache__/*'); do
+    new=$(echo $old | sed -e 's/^\(.\+\).cpython\-.*.pyc$/\1.pyc/')
+    mv -v "$old" $(dirname "$new")"/../"$(basename "$new")
+  done
+
+  find "${1}" -name '*.py' -delete
+  find "${1}" -name '__pycache__' -type d -exec rm -r {} \; || true
+}
+
+# ------------------
+# main
+# ------------------
+export -f compile_py_to_so
+
+find remarkable/ -type f -name '*.py' | xargs -I{} -P "${max_procs}" bash -c 'compile_py_to_so {}'
+
+find remarkable -name '__pycache__' -type d -exec rm -r {} \; || true
+
+compile_py_to_pyc ./
+
+if [ -d misc ]; then
+  compile_py_to_pyc misc
+  sed -i 's/\[db\]/[db]\nsourceless = true/' misc/alembic.ini
+fi
+
+compile_sh_to_bin docker/docker-entrypoint.sh
+compile_sh_to_bin docker/patch_installer.sh
+
+popd

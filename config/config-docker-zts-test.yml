@@ -1,0 +1,113 @@
+debug: False
+logging:
+  level: "info"
+
+app:
+  app_id: "zts"
+  secret_key: "hello_remarkable"
+  simple_token: "oLdU3pvF05rWbBVgzgzd"
+  token_expire: 120
+  session_expire: 7200 # session过期时间, 不配置默认600s
+  single_sign_limit: True
+  rate_limit_expire: 7200 # 接口访问频率限制时间, 不配默认60s(暂未启用)
+  max_fail_count: 100 # session有效期内最大尝试登录次数, 不配默认10次, 超过限制次数继续登录会被持续封禁
+  auth:
+    pdfinsight:
+      app_id: "pdfinsight"
+      secret_key: "show-me-the-money"
+      token_expire: 120
+      url: "http://pdfinsight:8096"
+      doc_as_docx: True
+web:
+  http_port: 8080
+  domain: "scriber:8000"
+  plugins:
+    - "fileapi"
+    - "debug"
+    - "zts"
+  mode_unlimited_answers: True # 无限答题模式（答题次数不受限制）
+  pdf_converter: "{project_root}/bin/converter/word2pdf.exe"
+  tmp_dir: "{project_root}/data/tmp/"
+  data_dir: "{project_root}/data/files/"
+  prompter_dir: "{project_root}/data/prompter/"
+  default_question_health: 1
+  preset_answer: True
+  limit_of_preset_num: 10 # 限制预测答案的个数
+  limit_of_crude_elts: 5 # 限制读取预测元素块的个数
+  show_merge_answer: True # 前端是否显示"合并的答案"按钮
+  record_manual: False # 前端是否显示"采用答案"按钮
+  show_marker: False
+  model_manage: True # 模型版本管理
+  chapter_assist: True # 是否开启章节辅助标注功能
+  table_association: True # 是否开启表格辅助标注功能
+  table_association_postfix: True  # 表格辅助标注时是否可标后缀
+  predict_crude_elements: True
+
+db:
+  host: "postgres"
+  port: 5432
+  dbname: "scriber"
+  user: "postgres"
+  password: "yT5yW8iJ5nH8"
+
+redis:
+  host: redis
+  port: 6379
+  db: 1
+  password: "yYkhX5mM3sL9"
+
+client:
+  name: "zts"
+  remark_progress_type: "level1" # all
+  language: "zh_CN" # en_US
+  file_size_limit: 50  # 文件大小限制(单位MB)
+  support_multiple_molds: False
+  hide_rough_fields: True
+  show_prompt_element_button: True # 是否显示AI位置推荐按钮
+  check_schema_base_type: False
+  export_single_answer: False # 是否显示导出标注/预测答案按钮
+  stat_accuracy: True # 是否支持统计模型正确率
+  show_all_predict_items: True
+  answer_default_display_level: 1 # 答案默认展开级别, 数字代表展开到第n级
+  ocr:
+    enable: False
+    service: "pai"
+
+data_flow:
+  post_pipe_after_preset: True
+  file_answer:
+    generate: True # 生成文件级的答案
+
+worker:
+  app_name: "remarkable"
+  default_queue: "celery"
+
+prompter:
+  mode: "v2"
+  use_syllabuses: True
+  tokenization: "jieba"
+  context_length: 1
+  workers: 4
+  batch_size: 100
+  auto_build_ignores: "*"
+  answer_version: 2.2
+  training_data_status: "2, 5, 10, 100"
+
+inspector:
+  package_name: "zts_checker"
+
+prophet:
+  package_name: "zts_predictor"
+  config_map:
+    上交所企业债: "zts_sse_corporate_bond"
+    深交所企业债: "zts_szse_corporate_bond"
+
+
+build:
+  docker:
+    cli_pipe: # 部署命令
+      - 'inv op.deploy-model 上交所企业债  --enable  --name=zts_sse_corporate_bond'
+      - 'inv op.deploy-model 深交所企业债  --enable  --name=cmbchina_fund_liquidate'
+
+zts:
+  push_api: "https://api-echo.ferstar.org/bond-report/compare/task/save"

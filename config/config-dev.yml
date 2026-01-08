@@ -1,0 +1,142 @@
+debug: True
+logging:
+  level: "info"
+
+app:
+  app_id: "remarkable"
+  secret_key: "hello_remarkable"
+  simple_token: "3tML65YQ4FcJsNdqynkZ"
+  token_expire: 120
+  session_expire: 7200  # session过期时间, 不配置默认600s
+  rate_limit_expire: 7200  # 接口访问频率限制时间, 不配默认60s(暂未启用)
+  max_fail_count: 100  # session有效期内最大尝试登录次数, 不配默认10次, 超过限制次数继续登录会被持续封禁
+  auth:
+    label:
+      app_id: "internal"
+      secret_key: "show-me-the-money"
+      token_expire: 300
+    roster:
+      app_id: "cheftin-roster"
+      secret_key: "you-never-know-it"
+      token_expire: 300
+      url: "http://tl.bondowner.cn:13333"
+    pdfinsight:
+      app_id: "pdfinsight"
+      secret_key: "show-me-the-money"
+      token_expire: 120
+      url: "http://100.64.0.2:28076"
+web:
+  http_port: 8087
+  domain: "0.0.0.0:8087"
+  plugins:
+    - "fileapi" # 文件管理(核心功能插件)
+    - "diff" # 文档对比功能(目前海通系统专用, port自Calliper项目)
+    - "sse" # 上交所
+    - "ecitic" # 中信证券
+    - "rule" # 海通证券
+    - "hkex" # 港交所
+    - "ccxi"
+    - "stronghold"
+  classes:
+    answer_converter: "remarkable.converter.sse.AnswerWorkShop"  # 转换&推送答案
+    
+    answer_predictor:
+      科创板招股说明书信息抽取POC: "remarkable.plugins.sse.sse_predictor.SsePredictor"
+      变更证券简称公告信息抽取POC: "remarkable.plugins.predict.config.sse_rename_announcement.SSERemaneAnnouncementPredictor"
+      科创板招股说明书信息抽取: "remarkable.plugins.predict.config.sse_anno.SSEAnnoPredictor"
+      科创板招股说明书信息导出json: "remarkable.plugins.sse.sse_proex_predictor.SSEProExPredictor"
+      银华基金信息抽取POC: "remarkable.plugins.predict.config.yhfoud_poc.YHFoudPocPredictor"
+  apis:
+    sso: "http://tl.bondowner.cn/op/admin/login/subsys"
+    login_callback: "http://localhost:8087/api/v1/user/login/by_token"
+    get_label_user: "http://localhost:9081/adminuser/%d"
+    get_label_user_by_cn_list: "http://localhost:9081/adminuser"
+    sync_host: "http://192.168.1.50:8080"
+  pdf_converter: '{project_root}/bin/converter/word2pdf.exe'
+  tmp_dir: "{project_root}/data/tmp/"
+  data_dir: '{project_root}/data/files/'
+  prompter_dir: '{project_root}/data/prompter/'
+  attr_dir: '{project_root}/data/attrs/'
+  default_question_health: 2
+  preset_answer: True
+  preset_from_cache: False
+  preset_answer_models:
+    - name: "none"
+      label: "无"
+      model: null
+    - name: "rule"
+      label: "规则1"
+      model: null
+  limit_of_preset_num: 10  # 限制预测答案的个数
+  limit_of_crude_elts: 5  # 限制读取预测元素块的个数
+  predict_from_memory:
+    switch: True
+    data_dir: '{project_root}/data/tbl_headers/'
+  show_merge_answer: True
+  record_manual: True
+  show_export_answer: True
+  table_association: True  # 是否开启表格辅助标注功能
+
+db:
+  host: "localhost"
+  port: 5432
+  dbname: "scriber_dev"
+  user: "postgres"
+  password: ""
+redis:
+  host: "localhost"
+  port: 6379
+  db: 1
+client:
+  name: "foundry" # hkex, szse
+  remark_progress_type: "level1" # all
+  language: "zh_CN" # en_US
+  
+  hide_rough_fields: False
+  show_prompt_element_button: True
+  export_label_data: True  # 是否支持"导出标注json"
+  export_answer_csv: True  # 是否支持"导出答案csv"
+  stat_accuracy: True  # 是否支持统计模型正确率
+  answer_default_display_level: 1  # 答案默认展开级别, 数字代表展开到第n级
+
+worker:
+  app_name: "remarkable"
+  default_queue: "celery"
+
+prompter:
+  workers: 4
+  batch_size: 100
+  auto_build_ignores: "*"
+  training_data_status: "1, 2, 5, 10, 100"
+  answer_version: 2.2
+
+dpp:
+  farm_env: "farm_prod"
+  farm: "http://192.168.1.30:9003"
+  roster: "https://u.paodingai.com/api/user/login_and_getoff"
+  data_hub: "{project_root}/data"
+  tags:
+    hunter_json_from_scriber_kcb: 169  # pdfinsight
+    scriber_kcb_answer: 170  # 答案
+    scriber_kcb_pdf: 171  # pdf
+
+ecitic:
+  report_types:
+    small_scattered:
+      name: "“小而分散”类资产"
+      molds:
+        - "“小而分散”类资产"
+    not_small_scattered:
+      name: "非“小而分散”类资产"
+      molds:
+        - "非“小而分散”类资产"
+
+playwright:
+  executable: "{project_root}/data/ms-playwright/chromium/chrome-linux/chrome"
+
+build:
+  docker:
+    cli_pipe: # 部署命令
+    dot_ignore:  # docker ignore list
+_new_entry:
+  "prompter.training_data_status": "prompter.trainning_data_status"

@@ -1,0 +1,76 @@
+debug: False
+logging:
+  level: "info"
+
+app:
+  app_id: "remarkable"
+  secret_key: "hello_remarkable"
+  token_expire: 120
+  session_expire: 7200  # session过期时间, 不配置默认600s
+  rate_limit_expire: 7200  # 接口访问频率限制时间, 不配默认60s(暂未启用)
+  max_fail_count: 100  # session有效期内最大尝试登录次数, 不配默认10次, 超过限制次数继续登录会被持续封禁
+  auth:
+    label:
+      app_id: "internal"
+      secret_key: "show-me-the-money"
+      token_expire: 300
+    roster:
+      app_id: "cheftin-roster"
+      secret_key: "you-never-know-it"
+      token_expire: 300
+      url: "http://u.paodingai.com"
+    pdfinsight:
+      app_id: "pdfinsight"
+      secret_key: "show-me-the-money"
+      token_expire: 120
+      url: "http://192.168.1.50:28096"
+web:
+  http_port: 7004
+  domain: "100.64.0.1:4085"
+  classes:
+    # 
+    
+  plugins:
+    - "fileapi"
+    - "hkex"
+  apis:
+    sso: "http://tl.paodingai.com/op/admin/login/subsys"
+    login_callback: "http://tl.paodingai.com/lrcapi/v1/user/login/by_token"
+    get_label_user: "http://tl.paodingai.com/adminuser/%d"
+    get_label_user_by_cn_list: "https://tl.paodingai.com/adminuser"
+  pdf_converter: '{project_root}/bin/converter/word2pdf.exe'
+  tmp_dir: "/data/tmp/"
+  data_dir: '{project_root}/data/files/'
+  prompter_dir: '{project_root}/data/prompter/'
+  default_question_health: 2
+  preset_answer: True
+db:
+  host: "localhost"
+  port: 35336
+  dbname: "draft"
+  user: "postgres"
+  password: ""
+redis:
+  host: 127.0.0.1
+  port: 16379
+  db: 5
+  password: "scriber"
+
+client:
+  
+  export_label_data: False  # 是否支持"导出标注json"
+  export_answer_csv: False  # 是否支持"导出答案csv"
+  stat_accuracy: False  # 是否支持统计模型正确率
+
+worker:
+  app_name: "remarkable"
+  default_queue: "celery"
+
+prompter:
+  workers: 4
+  batch_size: 100
+  auto_build_ignores: "3,*"
+  training_data_status: "1, 2, 5, 10, 100"
+  answer_version: 2.2
+_new_entry:
+  "prompter.training_data_status": "prompter.trainning_data_status"

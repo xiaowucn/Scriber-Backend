@@ -1,0 +1,126 @@
+debug: False
+logging:
+  level: "info"
+
+app:
+  app_id: "scriber_cjzq"
+  secret_key: "hello_remarkable"
+  token_expire: 120
+  single_sign_limit: True
+  session_expire: 7200
+  rate_limit_expire: 7200
+  max_fail_count: 100
+  multiprocessing: "enable"
+  auth:
+    label:
+      app_id: ""
+      secret_key: ""
+      token_expire: 300
+    roster:
+      app_id: ""
+      secret_key: ""
+      token_expire: 300
+      url: ""
+    pdfinsight:
+      app_id: "pdfinsight"
+      secret_key: "show-me-the-money"
+      token_expire: 120
+      url: "http://192.168.1.50:28096"
+    trident:
+      app_id: "trident"
+      secret_key: "show-me-the-money"
+      token_expire: 120
+      url: ""
+web:
+  http_port: 8080
+  domain: "100.64.0.5:44050"
+  http_headers:
+    Server: "*"
+  plugins:
+    - "fileapi"
+    - "debug"
+    - "ext_api"
+  classes:
+    
+  apis:
+    sso: ""
+    login_callback: ""
+    get_label_user: ""
+    get_label_user_by_cn_list: ""
+    sync_file: ""
+    sync_host: ""
+  pdf_converter: "{project_root}/bin/converter/word2pdf.exe"
+  tmp_dir: "/data/tmp/"
+  data_dir: "{project_root}/data/files/"
+  prompter_dir: "{project_root}/data/prompter/"
+  default_question_health: 1
+  preset_answer: True
+  preset_from_cache: False
+  user_answer_black_list: "" # 这些用户的答案不会作为缓存答案(uid)
+  limit_of_preset_num: 10 # 限制预测答案的个数
+  limit_of_crude_elts: 5 # 限制读取预测元素块的个数
+  auto_merge_answers: False # 答案分段合并
+  sleep_when_match_cache: True
+  table_association: True # 是否开启表格辅助标注功能
+  table_association_postfix: True
+  predict_from_memory:
+    switch: True
+    data_dir: "{project_root}/data/tbl_headers/"
+  show_export_answer: False # 显示/隐藏"导出的答案"按钮(上交所)
+  show_marker: False
+  model_manage: True # 模型版本管理
+  enable_remote_model: True # 提取模型配置中，启用对接远程模型选项
+  data_abroad: False # 数据生产（对接外部数据库）
+  model_abroad: True # 模型接入（接入外部模型）
+  customer_answer: False # 生成客户定制化答案
+
+  score_filter_threshold: 0.05  # score_filter模型分数阈值
+
+db:
+  host: "postgres"
+  port: 5432
+  dbname: "scriber"
+  user: "postgres"
+  password: ""
+
+redis:
+  host: redis
+  port: 6379
+  db: 1
+  password: "scriber"
+
+client:
+  name: "cjzq" # hkex, szse
+  remark_progress_type: "level1" # all
+  language: "zh_CN" # en_US
+  hide_rough_fields: True
+  show_prompt_element_button: True # 是否显示AI位置推荐按钮
+  check_schema_base_type: False
+  export_label_data: True # 是否支持"导出标注json"
+  export_label_txt: False # 是否支持"导出标注txt"
+  export_answer_csv: True # 是否支持"导出答案csv"
+  export_single_answer: False
+  stat_accuracy: True # 是否支持统计模型正确率
+  
+  show_all_predict_items: False
+  answer_default_display_level: 1 # 答案默认展开级别, 数字代表展开到第n级
+  ocr:
+    enable: False
+    service: "pai"
+
+worker:
+  app_name: "remarkable"
+  default_queue: "celery"
+
+prompter:
+  mode: "v2"
+  use_syllabuses: True
+  tokenization: "jieba"
+  context_length: 1
+  workers: 4
+  batch_size: 100
+  auto_build_ignores: "*"
+  answer_version: 2.2
+  training_data_status: "1, 2, 5, 10, 100"
+_new_entry:
+  "prompter.training_data_status": "prompter.trainning_data_status"

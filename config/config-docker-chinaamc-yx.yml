@@ -1,0 +1,303 @@
+debug: False
+logging:
+  level: "info"
+
+app:
+  app_id: "remarkable_chinaamc_yx"
+  secret_key: "hello_remarkable"
+  simple_token: "5Y2O5aSP55qEdG9rZW4="
+  jwt_secret_key: "4fe1ae23ae6f4b4d81df5e6e3567205f"
+  token_expire: 120
+  session_expire: 7200 # session过期时间, 不配置默认600s
+  rate_limit_expire: 7200 # 接口访问频率限制时间, 不配默认60s(暂未启用)
+  max_fail_count: 100 # session有效期内最大尝试登录次数, 不配默认10次, 超过限制次数继续登录会被持续封禁
+  auth:
+    pdfinsight:
+      app_id: "pdfinsight"
+      secret_key: "show-me-the-money"
+      token_expire: 120
+      url: "http://pdfinsight:8096"
+      doc_as_docx: True
+
+web:
+  http_port: 8080
+  domain: "scriber:8000"
+  redirect_subpath: "scriber/"
+  plugins:
+    - "fileapi"
+    - "ext_api"
+    - "chinaamc_yx"
+    - "debug"
+  customer_answer: True # 生成客户定制化答案
+  classes:
+    answer_converter: "remarkable.converter.chinaamc_yx.ChinaAmcYxAnswerWorkShop"  # 转换&推送答案
+
+  apis:
+    sso: ""
+    login_callback: ""
+    get_label_user: ""
+    get_label_user_by_cn_list: ""
+    sync_file: ""
+  pdf_converter: "{project_root}/bin/converter/word2pdf.exe"
+  tmp_dir: "/data/tmp/"
+  data_dir: "{project_root}/data/files/"
+  prompter_dir: "{project_root}/data/prompter/"
+  default_question_health: 1
+  preset_answer: True
+  preset_from_cache: False
+  user_answer_black_list: "" # 这些用户的答案不会作为缓存答案(uid)
+  limit_of_preset_num: 10 # 限制预测答案的个数
+  limit_of_crude_elts: 5 # 限制读取预测元素块的个数
+  show_merge_answer: False # 前端是否显示"合并的答案"按钮
+  record_manual: False # 前端是否显示"采用答案"按钮
+  predict_from_memory:
+    switch: True
+    data_dir: "{project_root}/data/tbl_headers/"
+  show_export_answer: False # 显示/隐藏"导出的答案"按钮(上交所)
+  show_marker: False
+  model_manage: True # 模型版本管理
+  enable_remote_model: True # 提取模型配置中，启用对接远程模型选项
+  data_abroad: False # 数据生产（对接外部数据库）
+  model_abroad: False # 模型接入（接入外部模型）
+  chapter_assist: True # 是否开启章节辅助标注功能
+  score_filter_threshold: 0.3  # score_filter模型分数阈值
+  enable_pdf2word: false # 是否开启 pdf转word工具栏 https://gitpd.paodingai.com/cheftin/docs_scriber/-/issues/4487
+  default_page: '/chinaamc_yx/tasks'   # 进入系统后展示的页面形式
+  use_pdfinsight_cache_limit_hours: 86400 # 24*3600
+
+db:
+  host: "postgres"
+  port: 5432
+  dbname: "scriber"
+  user: "postgres"
+  password: "zUEOXlFRKmqfJRP7"
+
+redis:
+  host: redis
+  port: 6379
+  db: 1
+  password: "zUEOXlFRKmqfJRP7"
+
+client:
+  name: "chinaamc_yx" # hkex, szse
+  remark_progress_type: "level1" # all
+  language: "zh_CN" # en_US
+  content_language: "zh_CN" # 文档的语言, zh_CN/en_US
+  hide_rough_fields: True
+  show_prompt_element_button: True # 是否显示AI位置推荐按钮
+  check_schema_base_type: False
+  export_label_data: False # 是否支持"导出标注json"
+  export_label_txt: False  # 是否支持"导出标注txt"
+  export_answer_csv: True # 是否支持"导出答案csv"
+  export_single_answer: False # 是否显示导出标注/预测答案按钮
+  stat_accuracy: True # 是否支持统计模型正确率
+  
+  show_all_predict_items: True
+  answer_default_display_level: 1 # 答案默认展开级别, 数字代表展开到第n级
+  ocr:
+    enable: False
+    service: "pai"
+
+  cron_task_switch: # 定时任务开关
+    run_chinaamc_yx_user_sync: false
+
+feature:
+  batch_delete: True  # 批量删除功能
+  toolbar: True  # 顶部菜单栏显示【工具栏】
+
+worker:
+  app_name: "remarkable"
+  default_queue: "celery"
+
+prompter:
+  mode: "v2"
+  use_syllabuses: True
+  tokenization: "jieba"
+  context_length: 1
+  workers: 4
+  batch_size: 100
+  auto_build_ignores: "*"
+  answer_version: 2.2
+  training_data_status: "2, 5, 10, 100"
+
+chinaamc_yx:
+  sample_project: "【华夏基金营销线】一致性比对项目范文文件"
+  file_types:
+    - name: 基金合同
+      serial: 1
+      require: True
+      quantity_limit: 1
+      molds:
+        - name: "基金合同V1"
+        - name: "标注章节对比 基金合同V1"
+    - name: 招募说明书
+      serial: 2
+      require: True
+      quantity_limit: 1
+      molds:
+        - name: "招募说明书V1"
+        - name: "标注章节比对 招募说明书V1"
+    - name: 托管协议
+      serial: 3
+      require: True
+      quantity_limit: 1
+      molds:
+        - name: "托管协议V1"
+        - name: "标注章节比对 托管协议V1"
+    - name: 风险评估报告
+      serial: 4
+      require: False
+      quantity_limit: 1
+      molds:
+        - name: "风险评估报告V1"
+    - name: 核心要素表
+      serial: 5
+      require: False
+      quantity_limit: 1
+      molds:
+        - name: "核心要素表V1"
+    - name: 请示函
+      serial: 6
+      require: False
+      quantity_limit: 1
+      molds:
+        - name: "请示函V1"
+    - name: 港股人员说明
+      serial: 7
+      require: False
+      quantity_limit: 1
+      molds:
+        - name: "港股人员说明V1"
+    - name: 承诺函
+      serial: 8
+      require: False
+      quantity_limit: 5
+      molds:
+        - name: "承诺函V1"
+  sync:
+    user:
+      url: "http://10.16.4.145/plcm-api/publish/get_sys_org/getBaseInfo"
+      token: "A7F5DA5317424D3296BC2277D38D1AEF"
+  check_points:  # TODO: 字段映射可维护设计
+    - name: "基金份额持有人、基金管理人和基金托管人的权利、义务"
+      left_mold: "标注章节比对 招募说明书V1"
+      left_key: "001基金份额持有人、基金管理人和基金托管人的权利、义务"
+      right_mold: "标注章节对比 基金合同V1"
+      right_key: "001基金合同当事人及权利义务"
+    - name: "基金份额持有人大会召集、议事及表决的程序和规则"
+      left_mold: "标注章节比对 招募说明书V1"
+      left_key: "002基金份额持有人大会召集、议事及表决的程序和规则"
+      right_mold: "标注章节对比 基金合同V1"
+      right_key: "002基金份额持有人大会"
+    - name: "基金收益分配原则、执行方式"
+      left_mold: "标注章节比对 招募说明书V1"
+      left_key: "003基金收益分配原则、执行方式"
+      right_mold: "标注章节对比 基金合同V1"
+      right_key: "003基金的收益与分配"
+    - name: "与基金财产管理、运用有关费用的提取、支付方式与比例"
+      left_mold: "标注章节比对 招募说明书V1"
+      left_key: "004与基金财产管理、运用有关费用的提取、支付方式与比例"
+      right_mold: "标注章节对比 基金合同V1"
+      right_key: "004基金费用与税收"
+    - name: "基金财产的投资方向和投资限制"
+      left_mold: "标注章节比对 招募说明书V1"
+      left_key: "005基金财产的投资方向和投资限制"
+      right_mold: "标注章节对比 基金合同V1"
+      right_key: "005基金的投资"
+    - name: "基金资产净值的计算方法和公告方式"
+      left_mold: "标注章节比对 招募说明书V1"
+      left_key: "006基金资产净值的计算方法和公告方式"
+      right_mold: "标注章节对比 基金合同V1"
+      right_key: "006基金的财产"
+    - name: "基金合同解除和终止的事由、程序以及基金财产清算方式"
+      left_mold: "标注章节比对 招募说明书V1"
+      left_key: "007基金合同解除和终止的事由、程序以及基金财产清算方式"
+      right_mold: "标注章节对比 基金合同V1"
+      right_key: "007基金合同的变更、终止与基金财产的清算"
+    - name: "争议解决方式"
+      left_mold: "标注章节比对 招募说明书V1"
+      left_key: "008争议解决方式"
+      right_mold: "标注章节对比 基金合同V1"
+      right_key: "008争议的处理和适用的法律"
+    - name: "基金合同存放地和投资者取得基金合同的方式"
+      left_mold: "标注章节比对 招募说明书V1"
+      left_key: "009基金合同存放地和投资者取得基金合同的方式"
+      right_mold: "标注章节对比 基金合同V1"
+      right_key: "009基金合同的效力"
+    - name: "托管协议当事人"
+      left_mold: "标注章节比对 招募说明书V1"
+      left_key: "010托管协议当事人"
+      right_mold: "标注章节比对 托管协议V1"
+      right_key: "001托管协议当事人"
+    - name: "基金托管人对基金管理人的业务监督和核查"
+      left_mold: "标注章节比对 招募说明书V1"
+      left_key: "011基金托管人对基金管理人的业务监督和核查"
+      right_mold: "标注章节比对 托管协议V1"
+      right_key: "002基金托管人对基金管理人的业务监督和核查"
+    - name: "基金管理人对基金托管人的业务核查"
+      left_mold: "标注章节比对 招募说明书V1"
+      left_key: "012基金管理人对基金托管人的业务核查"
+      right_mold: "标注章节比对 托管协议V1"
+      right_key: "003基金管理人对基金托管人的业务核查"
+    - name: "基金财产的保管"
+      left_mold: "标注章节比对 招募说明书V1"
+      left_key: "013基金财产的保管"
+      right_mold: "标注章节比对 托管协议V1"
+      right_key: "004基金财产的保管"
+    - name: "基金资产净值计算与复核"
+      left_mold: "标注章节比对 招募说明书V1"
+      left_key: "014基金资产净值计算与复核"
+      right_mold: "标注章节比对 托管协议V1"
+      right_key: "005基金资产净值计算和会计核算"
+    - name: "基金份额持有人名册的登记与保管"
+      left_mold: "标注章节比对 招募说明书V1"
+      left_key: "015基金份额持有人名册的登记与保管"
+      right_mold: "标注章节比对 托管协议V1"
+      right_key: "006基金份额持有人名册的保管"
+    - name: "争议解决方式"
+      left_mold: "标注章节比对 招募说明书V1"
+      left_key: "016争议解决方式"
+      right_mold: "标注章节比对 托管协议V1"
+      right_key: "007争议解决方式"
+    - name: "托管协议的变更、终止"
+      left_mold: "标注章节比对 招募说明书V1"
+      left_key: "017托管协议的变更、终止"
+      right_mold: "标注章节比对 托管协议V1"
+      right_key: "008托管协议的变更、终止与基金财产的清算"
+  crypt:
+    decrypt_url: "http://127.0.0.1:8080/api/v1/plugins/chinaamc_yx/sec-server/s/rs/uni/"
+    force_decrypt: false
+
+prophet:
+  package_name: "chinaamc_predictor"
+  config_map:
+    基金合同V1: "chinaamc_yx_fund"
+    托管协议V1: "chinaamc_yx_custody"
+    招募说明书V1: "chinaamc_yx_prospectus"
+    风险评估报告V1: "chinaamc_yx_risk"
+    核心要素表V1: "chinaamc_yx_core_table"
+    请示函V1: "chinaamc_yx_request_letter"
+    承诺函V1: "chinaamc_yx_promise"
+    港股人员说明V1: "chinaamc_yx_person_description"
+    标注章节比对 托管协议V1: "chinaamc_yx_custody_chapter"
+    标注章节对比 基金合同V1: "chinaamc_yx_fund_chapter"
+    标注章节比对 招募说明书V1: "chinaamc_yx_prospectus_chapter"
+
+build:
+  docker:
+    cli_pipe: # 部署命令
+      - 'inv op.import-schema -n chinaamc_yx'
+      - 'inv dev.import-chinaamc-yx-samples'
+      - 'inv op.deploy-model "基金合同V1" --enable --name=chinaamc_yx_fund'
+      - 'inv op.deploy-model "招募说明书V1" --enable --name=chinaamc_yx_prospectus'
+      - 'inv op.deploy-model "风险评估报告V1" --enable --name=chinaamc_yx_risk'
+      - 'inv op.deploy-model "请示函V1" --enable --name=chinaamc_yx_request_letter'
+      - 'inv op.deploy-model "承诺函V1" --enable --name=chinaamc_yx_promise'
+      - 'inv op.deploy-model "托管协议V1" --enable --name=chinaamc_yx_custody'
+      - 'inv op.deploy-model "核心要素表V1" --enable --name=chinaamc_yx_core_table'
+      - 'inv op.deploy-model "港股人员说明V1" --enable --name=chinaamc_yx_person_description'
+      - 'inv op.deploy-model "标注章节比对 托管协议V1" --enable --name=chinaamc_yx_custody_chapter'
+      - 'inv op.deploy-model "标注章节对比 基金合同V1" --enable --name=chinaamc_yx_fund_chapter'
+      - 'inv op.deploy-model "标注章节比对 招募说明书V1" --enable --name=chinaamc_yx_prospectus_chapter'
+    dot_ignore:
+      - "!data/chinaamc_yx"  # 范文

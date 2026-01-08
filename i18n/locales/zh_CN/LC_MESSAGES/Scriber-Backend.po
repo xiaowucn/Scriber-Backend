@@ -1,0 +1,375 @@
+# Chinese (Simplified, China) translations for PROJECT.
+# Copyright (C) 2018 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2018.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2018-09-29 11:04+0800\n"
+"PO-Revision-Date: 2018-09-27 12:58+0800\n"
+"Last-Translator: \n"
+"Language: zh_Hans_CN\n"
+"Language-Team: \n"
+"Plural-Forms: nplurals=1; plural=0\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.9.1\n"
+
+msgid "Empty data cannot be saved."
+msgstr "无法保存空数据。"
+
+msgid ""
+"Answers could not added when question's status under already feedback or "
+"compare finished."
+msgstr "当问题的状态在已经反馈或比较完成时, 无法添加答案。"
+
+msgid "No more answers can be added to which questions completed."
+msgstr "问题状态已完成时将不能添加其他答案。"
+
+msgid "Undefined question status."
+msgstr "未定义的问题状态。"
+
+msgid ""
+"The question is not under the answer status therefore answers could not "
+"be saved."
+msgstr "问题状态不在待回答状态下, 因此无法保存答案。"
+
+msgid "The status is not to be reviewed and feedback of the question."
+msgstr "问题不在待反馈审核状态。"
+
+msgid "Invalid http code when getting group member"
+msgstr "获取组成员时 http 状态码无效。"
+
+msgid "Invalid status when getting group member"
+msgstr "获取组成员时状态无效"
+
+msgid "The question does not exists."
+msgstr "问题不存在。"
+
+msgid ""
+"The question is unfinished, or the answer is not in conflict and could "
+"not be marked."
+msgstr "问题尚未完成, 或者答案没有冲突, 无法标记。"
+
+msgid "The user has not given an answer to the question yet."
+msgstr "用户还没有给出这个问题的答案。"
+
+msgid "The status user's answers to the question are invalid."
+msgstr "用户的回答状态对问题无效。"
+
+msgid "Invalid input parameters."
+msgstr "输入参数无效。"
+
+msgid "Invalid format input: "
+msgstr "输入格式无效: "
+
+msgid "The id do not have corresponding questions: "
+msgstr "如下id没有相应的问题: "
+
+msgid "Payload is not dict"
+msgstr "有效载荷不是字典"
+
+msgid " is required"
+msgstr " 是必需的"
+
+msgid "name should be str"
+msgstr "名称应为字符串"
+
+msgid "empty name is not allowed"
+msgstr "不允许使用空名称"
+
+msgid "Duplicate schema name detected"
+msgstr "Schema名称重复"
+
+msgid "data is not valid json"
+msgstr "无效的json数据"
+
+msgid "Item Not Found"
+msgstr "操作对象不存在"
+
+msgid "not a valid update"
+msgstr "无效的更新"
+
+msgid "Question is locked by other user"
+msgstr "问题已被其他用户锁定"
+
+msgid "project name is existed"
+msgstr "项目名称已存在"
+
+msgid "not found project"
+msgstr "未找到项目"
+
+msgid "not found tree"
+msgstr "未找到目录"
+
+msgid "not found origin tree"
+msgstr "未找到原目录"
+
+msgid "not found upload document"
+msgstr "未找到上传的文件"
+
+msgid "can't find the tree"
+msgstr "未找到目录"
+
+msgid "can't find the project"
+msgstr "未找到项目"
+
+msgid "not found file"
+msgstr "未找到文件"
+
+msgid "Login needed."
+msgstr "需要登陆。"
+
+msgid "the pdf file is not ready"
+msgstr "pdf文件未准备好"
+
+msgid "the docx file is not ready"
+msgstr "docx文件未准备好"
+
+msgid "the pdfinsight file is not ready"
+msgstr "pdfinsight 文件未准备好"
+
+msgid "tag already exists"
+msgstr "标记已存在"
+
+msgid "not found tag"
+msgstr "未找到标记"
+
+msgid "is in use, cannot be deleted"
+msgstr "正在使用中,不能被删除"
+
+msgid "Mold bound to tag has assign to file, cannot be deleted."
+msgstr "绑定的schema已经被指定给文件,不能被删除."
+
+msgid "data not ready"
+msgstr "数据未准备好"
+
+msgid "delete tree failed"
+msgstr "删除目录失败"
+
+msgid "Question comparison complete."
+msgstr "问题比较已完成"
+
+msgid "Answer status is not completed."
+msgstr "答案的状态是未完成"
+
+msgid "dup creating UserNotes"
+msgstr "重复创建UserNotes"
+
+msgid "creating UserNotes failed"
+msgstr "创建UserNotes失败"
+
+msgid "update UserNotes failed"
+msgstr "更新UserNotes失败"
+
+msgid "The request format is incorrect"
+msgstr "请求格式不正确"
+
+msgid "Unrecognized "
+msgstr "不被识别 "
+
+msgid "Duplicate permissions in the request"
+msgstr "请求中存在重复的权限"
+
+msgid "User already exists."
+msgstr "用户已存在"
+
+msgid "User not exists."
+msgstr "用户不存在"
+
+msgid "Name field cannot be empty."
+msgstr "名称字段不能为空"
+
+msgid "Password should be 6 characters at least."
+msgstr "密码需要至少6位字符"
+
+msgid "No data can be updated in the request."
+msgstr "请求中没有可以更新的字段"
+
+msgid "Incorrect password."
+msgstr "密码不正确"
+
+msgid "Roster callback lack cn or permission field"
+msgstr "Roster缺少cn或权限字段"
+
+msgid "Validate roster callback failed"
+msgstr "验证Roster回调失败"
+
+msgid "Standard answers could not be pointed by answered administrator."
+msgstr "已作答管理员不允许设置正确答案"
+
+msgid "doc file is not ready"
+msgstr "word文件未准备好"
+
+msgid "Answer not ready yet!"
+msgstr "答案还没准备好，请标注后再试。"
+
+msgid "Project not exists!"
+msgstr "项目不存在"
+
+msgid "Schema could not be changed"
+msgstr "文档已被标注无法变更schema"
+
+msgid "Incorrect user or password!"
+msgstr "用户名或密码错误"
+
+msgid "The password input error has reached the upper limit."
+msgstr "密码输入错误已达到上限，请稍后再试"
+
+msgid "Interface access frequency is too fast, please try again later"
+msgstr "接口访问频率过快，请稍后再试"
+
+msgid "The session has expired, please login again"
+msgstr "会话已过期, 请重新登录"
+
+msgid "Your account has reached the max number of logins, please try again later"
+msgstr "当前用户已达到最大登录次数，请稍后再试"
+
+msgid "The document is being parsed and catalog is not ready."
+msgstr "文档正在解析中,目录信息还未准备好"
+
+msgid "The document is being parsed and cannot be searched."
+msgstr "文档正在解析中,暂时无法搜索"
+
+msgid "The document is being parsed and cannot get text from it."
+msgstr "文档正在解析中,暂时无法标注"
+
+msgid "Unsupported file type detected"
+msgstr "检测到不支持的文件类型，请重新上传"
+
+msgid "You have no permission"
+msgstr "您没有操作权限"
+
+msgid "Undefined routing request"
+msgstr "未定义的路由请求"
+
+msgid "Cryptographic handshake failed"
+msgstr "加密握手失败"
+
+msgid "Did not recognise text from document"
+msgstr "文字提取失败"
+
+msgid "This column has both migrated & new answer, please delete then label:"
+msgstr "该字段既有迁移来的答案，又有新标注的答案，请先删掉再标注"
+
+msgid "Changing a public project to a private project is not supported"
+msgstr "不支持将公开项目更改为私密项目"
+
+msgid "Tree name is existed"
+msgstr "文件夹名称已存在"
+
+msgid "User is existed"
+msgstr "用户已存在"
+
+msgid "Not all ids valid."
+msgstr "并非所有 ID 都有效."
+
+msgid "Schema is in use, cannot be deleted"
+msgstr "schema正在使用中,不能被删除"
+
+msgid "Only participants have permission."
+msgstr "仅参与者有该权限"
+
+msgid "Too many files downloaded at once."
+msgstr "一次下载太多文件"
+
+msgid "Mold is not the same"
+msgstr "Mold不相同"
+
+msgid "Chapter-info data only for file.pdf"
+msgstr "仅pdf文件提供章节缓存"
+
+msgid "Page-info data only for file.pdf"
+msgstr "仅pdf文件提供页面缓存"
+
+msgid "name is duplicated"
+msgstr "名称重复"
+
+msgid "Invalid file format"
+msgstr "非法的文件格式"
+
+msgid "The number of label has reached the upper limit."
+msgstr "标注次数已达上限"
+
+msgid "The system access has expired, please contact the administrator."
+msgstr "您的系统授权已到期，请联系您的客户经理授权！"
+
+msgid ""
+"The OCR service access has expired, frame annotation failed, please "
+"contact the administrator."
+msgstr "OCR服务已过期，画框标注失败，请联系管理员"
+
+msgid "rerun task failed"
+msgstr "重跑任务失败"
+
+msgid "The model is predicting, please try again later"
+msgstr "模型正在预测，请稍后再试"
+
+msgid "Your password must contain at least one ASCII letter"
+msgstr "您的密码必须至少包含一个英文字母"
+
+msgid "Your password must contain at least one number"
+msgstr "您的密码必须至少包含一个数字"
+
+msgid "Your Password must contains at least one special notation"
+msgstr "您的密码必须包含至少一个特殊符号"
+
+msgid "The password length must be between 6-128. Please re-enter"
+msgstr "密码长度必须在6-128位之间，请重新输入"
+
+msgid "The file is being processed, please try again later"
+msgstr "正在处理中，请稍后再试"
+
+msgid "Account has expired."
+msgstr "账号已过期"
+
+msgid "No enabled develop model version!"
+msgstr "没有已启用的定制模型"
+
+msgid "schema cannot be specified for clean documents"
+msgstr "清稿文档不支持指定 schema"
+
+msgid "Unsupported file found, ensure the document type is correct."
+msgstr "发现不支持的文件，请确保文档类型正确。"
+
+msgid "Invalid answer data detected!"
+msgstr "检测到无效的答案数据！"
+
+msgid "You have no permission to access this project!"
+msgstr "您没有权限访问该项目！"
+
+msgid "Project does not exist."
+msgstr "项目不存在。"
+
+msgid "We don't support model management yet"
+msgstr "我们暂不支持模型管理"
+
+msgid "The specified model version does not exist"
+msgstr "指定的模型版本不存在"
+
+msgid "Model training in progress, please wait"
+msgstr "模型训练中，请稍后"
+
+msgid "The number of training files is less than 3"
+msgstr "训练文件数量少于3个"
+
+msgid "The input search criteria are invalid"
+msgstr "您输入的搜索条件无效"
+
+msgid "The model files do not exist"
+msgstr "模型文件不存在"
+
+msgid "The parameter 'id' and other parameters cannot be passed simultaneously"
+msgstr "参数id和其他参数不可同时传入"
+
+msgid "Schema is in use, unable to modify name"
+msgstr "无法修改使用中的schema名称"
+
+msgid "Project defaults invalid"
+msgstr "项目默认配置不合法"
+
+msgid "File tree defaults invalid"
+msgstr "文件夹默认配置不合法"

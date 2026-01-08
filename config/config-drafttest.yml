@@ -1,0 +1,112 @@
+debug: False
+logging:
+  level: "info"
+
+app:
+  app_id: "remarkable"
+  secret_key: "hello_remarkable"
+  token_expire: 7200
+  session_expire: 7200  # session过期时间, 不配置默认600s
+  rate_limit_expire: 7200  # 接口访问频率限制时间, 不配默认60s(暂未启用)
+  max_fail_count: 100  # session有效期内最大尝试登录次数, 不配默认10次, 超过限制次数继续登录会被持续封禁
+  auth:
+    label:
+      app_id: "internal"
+      secret_key: "show-me-the-money"
+      token_expire: 300
+    roster:
+      app_id: "cheftin-roster"
+      secret_key: "you-never-know-it"
+      token_expire: 300
+      url: "http://u.paodingai.com"
+    pdfinsight:
+      app_id: "pdfinsight"
+      secret_key: "show-me-the-money"
+      token_expire: 120
+      url: "http://192.168.1.50:28096"
+    trident:
+      app_id: "trident"
+      secret_key: "show-me-the-money"
+      token_expire: 120
+      url: "http://100.64.0.1:4090"
+web:
+  http_port: 8185
+  domain: "100.64.0.1:4080"
+  plugins:
+    - "fileapi"
+    - "ext_api"
+    - "debug"
+    - "diff"
+    - "ccxi"
+  classes:
+    
+    answer_predictor:
+      科创板招股说明书信息抽取POC: "remarkable.plugins.sse.sse_predictor.SsePredictor"
+  apis:
+    sso: "http://tl.paodingai.com/op/admin/login/subsys"
+    login_callback: "http://tl.paodingai.com/lrcapi/v1/user/login/by_token"
+    get_label_user: "http://tl.paodingai.com/adminuser/%d"
+    get_label_user_by_cn_list: "https://tl.paodingai.com/adminuser"
+  pdf_converter: '{project_root}/bin/converter/word2pdf.exe'
+  tmp_dir: "/data/tmp/"
+  data_dir: '{project_root}/data/files/'
+  default_question_health: 1
+  preset_answer: True
+  limit_of_preset_num: 10  # 限制预测答案的个数
+  limit_of_crude_elts: 5  # 限制读取预测元素块的个数
+  predict_from_memory:
+    switch: True
+    data_dir: '{project_root}/data/tbl_headers/'
+  model_manage: True
+  show_merge_answer: True
+  record_manual: True
+  mode_conflict_treatment: 3  # 冲突处理方式：1-人工处理、2-以最新为准、3-合并答案
+  mode_unlimited_answers: True  # 无限答题模式（答题次数不受限制）
+  model_abroad: True  # 模型接入（接入外部模型）
+  trust_routes:  # 跳过auth check的路由列表
+    - "/config"
+  enable_remote_model: True  # 提取模型配置中，启用对接远程模型选项
+  table_association: True  # 是否开启表格辅助标注功能
+
+  show_marker: True  # 显示标注人员信息
+
+db:
+  host: "localhost"
+  port: 35330
+  dbname: "draft"
+  user: "postgres"
+  password: ""
+redis:
+  host: "127.0.0.1"
+  port: 16379
+  password: "scriber"
+  db: 4
+client:
+  name: "szse" # hkex, szse
+  remark_progress_type: "level1" # all
+  language: "zh_CN" # en_US
+  hide_rough_fields: True
+  show_prompt_element_button: True
+  check_schema_base_type: False
+  
+  export_label_data: True  # 是否支持"导出标注json"
+  export_answer_csv: True  # 是否支持"导出答案csv"
+  stat_accuracy: True  # 是否支持统计模型正确率
+  confirm_needed_cols:
+    - "*|收购标的情况|收购标的"
+worker:
+  app_name: "remarkable"
+  default_queue: "celery"
+
+prompter:
+  workers: 1
+  batch_size: 100
+  auto_build_ignores: "*"
+  answer_version: 2.2
+  training_data_status: "1, 2, 5, 10, 100"
+  mode: "v2"  # 定位模型版本: v1 or v2
+  use_syllabuses: True    # 是否使用目录信息
+  tokenization: "jieba"   # 分词方法，为 null 则按空白分词（英文）
+  context_length: 1       # 上下文范围
+_new_entry:
+  "prompter.training_data_status": "prompter.trainning_data_status"

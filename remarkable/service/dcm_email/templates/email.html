@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Email Template</title>
+  <style>
+    @media print, screen {
+      @page {
+        size: A4;
+        margin: 0;
+      }
+
+      body {
+        margin: 0;
+        padding: 0;
+
+        --gray-text-color: #808080;
+      }
+
+      ul {
+        list-style: none;
+        margin: 0;
+        padding-left: 0;
+      }
+
+      header {
+        padding: 0.2cm;
+        opacity: 0.8;
+        border-radius: 0.5rem;
+        border-bottom: 2px dashed #dcdcdc;
+      }
+
+      .email-header {
+        margin-top: 0.7em;
+        display: flex;
+        align-items: center;
+      }
+
+      .email-subject {
+        font-size: 1.6em;
+      }
+
+      .email-address {
+        display: inline-block;
+        padding: 0.1cm 0.3cm;
+        background: #ebf7ff;
+        border: 1px solid #aed1e5;
+        border-radius: 1.5em;
+      }
+
+      .email-address__spec {
+        color: var(--gray-text-color);
+      }
+
+      .email-header__name {
+        color: var(--gray-text-color);
+        padding-right: 0.2cm;
+        text-align: right;
+        font-weight: bold;
+        width: 5em;
+      }
+
+      .email-header__name::after {
+        content: ":";
+      }
+
+      .email-attachment-filename {
+        color: var(--gray-text-color);
+      }
+
+      .link {
+        color: #1b6a9a;
+      }
+
+      .email-body {
+        padding: 1em;
+      }
+
+      table {
+        border-collapse: collapse;
+        border: 2px solid #8c8c8c;
+        font-size: 0.8rem;
+        letter-spacing: 1px;
+      }
+
+      caption {
+        caption-side: bottom;
+        padding: 10px;
+        font-weight: bold;
+      }
+
+      thead,
+      tfoot {
+        background-color: #e4f0f5;
+      }
+
+      th,
+      td {
+        border: 1px solid #a0a0a0;
+        padding: 8px 10px;
+      }
+
+      td:last-of-type {
+        text-align: center;
+      }
+
+      tbody > tr:nth-of-type(even) {
+        background-color: #ffffff;
+      }
+
+      tfoot th {
+        text-align: right;
+      }
+
+      tfoot td {
+        font-weight: bold;
+      }
+    }
+  </style>
+</head>
+<body>
+<header>
+  <h1 class="email-subject">{{ email.subject }}</h1>
+  <ul class="email-headers">
+    <li class="email-header">
+      <div class="email-header__name">发件人</div>
+      <div class="email-header__value">
+        {% for address in email.from_.addresses %}
+        <span class="email-address">
+          <span class="email-address__display-name">"{{ address.display_name }}"</span>
+          <span class="email-address__spec">&lt;{{ address.addr_spec }}&gt;</span>
+        </span>
+        {% endfor %}
+      </div>
+    </li>
+    <li class="email-header">
+      <div class="email-header__name">收件人</div>
+      <div class="email-header__value">
+        {% for address in email.to.addresses %}
+        <span class="email-address">
+          <span class="email-address__display-name">"{{ address.display_name }}"</span>
+          <span class="email-address__spec">&lt;{{ address.addr_spec }}&gt;</span>
+        </span>
+        {% endfor %}
+      </div>
+    </li>
+    <li class="email-header">
+      <div class="email-header__name">发送时间</div>
+      <div>{{ email.sent_at.strftime('%Y-%m-%d %H:%M:%S') }}</div>
+    </li>
+    {% if email.attachments %}
+    <li class="email-header">
+      <div class="email-header__name">附件</div>
+      <div class="email-header__value">
+        {{ email.attachments|length }} 个
+        ({% for attachment in email.attachments %}
+        <span class="email-attachment-filename">{%if not loop.first %}、{% endif %}{{ attachment.filename }} </span>
+        {% endfor %})
+        <a class="link">查看附件</a>
+      </div>
+    </li>
+    {% endif %}
+  </ul>
+</header>
+<main class="email-body">
+  {{ email.body | safe }}
+</main>
+</body>
+</html>

@@ -1,0 +1,134 @@
+# 富国基金
+debug: False
+logging:
+  level: "info"
+
+app:
+  app_id: "remarkable"
+  secret_key: "hello_remarkable"
+  simple_token: "oLdU3pvF05rWbBVgzgzd"
+  token_expire: 120
+  session_expire: 7200 # session过期时间, 不配置默认600s
+  rate_limit_expire: 7200 # 接口访问频率限制时间, 不配默认60s(暂未启用)
+  max_fail_count: 20 # session有效期内最大尝试登录次数, 不配默认10次, 超过限制次数继续登录会被持续封禁
+  auth:
+    pdfinsight:
+      app_id: "pdfinsight"
+      secret_key: "show-me-the-money"
+      token_expire: 120
+      url: "http://pdfinsight:8096"
+      force_ocr: 1
+
+web:
+  http_port: 8080
+  domain: "scriber:8000"
+  plugins:
+    - "fileapi"
+    - "ext_api"
+    - "debug"
+  mode_unlimited_answers: True # 无限答题模式（答题次数不受限制）
+  pdf_converter: "{project_root}/bin/converter/word2pdf.exe"
+  tmp_dir: "{project_root}/data/tmp/"
+  data_dir: "{project_root}/data/files/"
+  prompter_dir: "{project_root}/data/prompter/"
+  default_question_health: 1
+  preset_answer: True
+  limit_of_preset_num: 10 # 限制预测答案的个数
+  limit_of_crude_elts: 5 # 限制读取预测元素块的个数
+  show_merge_answer: False # 前端是否显示"合并的答案"按钮
+  record_manual: False # 前端是否显示"采用答案"按钮
+  predict_from_memory:
+    switch: True
+    data_dir: "{project_root}/data/tbl_headers/"
+  show_export_answer: False # 显示/隐藏"导出的答案"按钮(上交所)
+  show_marker: False
+  model_manage: True # 模型版本管理
+  chapter_assist: False # 是否开启章节辅助标注功能
+  table_association: False # 是否开启表格辅助标注功能
+  table_association_postfix: False # 表格辅助标注时是否可标后缀
+  predict_crude_elements: True
+
+db:
+  host: "postgres"
+  port: 5432
+  dbname: "scriber"
+  user: "postgres"
+  password: "3hMTugLXnHGTJ"
+
+redis:
+  host: redis
+  port: 6379
+  db: 1
+  password: "4cnk5zjPO6P1"
+
+client:
+  name: "fullgoal"
+  remark_progress_type: "level1" # all
+  language: "zh_CN" # en_US
+  hide_rough_fields: True
+  show_prompt_element_button: True # 是否显示AI位置推荐按钮
+  check_schema_base_type: False
+  export_label_data: False # 是否支持"导出标注json"
+  export_label_txt: False # 是否支持"导出标注txt"
+  export_answer_csv: True # 是否支持"导出答案csv"
+  export_single_answer: False # 是否显示导出标注/预测答案按钮
+  stat_accuracy: True # 是否支持统计模型正确率
+  
+  show_all_predict_items: True
+  answer_default_display_level: 1 # 答案默认展开级别, 数字代表展开到第n级
+  ocr:
+    enable: False
+    service: "pai"
+
+worker:
+  app_name: "remarkable"
+  default_queue: "celery"
+
+feature:  # 功能特性相关配置
+  batch_delete: True  # 批量删除功能
+
+prompter:
+  mode: "v2"
+  use_syllabuses: True
+  tokenization: "jieba"
+  context_length: 1
+  workers: 4
+  batch_size: 100
+  auto_build_ignores: "*"
+  answer_version: 2.2
+  training_data_status: "2, 5, 10, 100"
+
+prophet:
+  multi_packages:
+    - "china_stock_predictor"
+    - "fullgoal_predictor"
+  config_map:
+    公募-基金合同: "public_fund"
+    公募-基金合同-二: "public_fund_2"
+    年金计划: "fullgoal_pension_plan"
+    基金合同POC: "fund"
+    富国基金: "fullgoal_fund"
+
+build:
+  docker:
+    cli_pipe: # 部署命令
+      - "inv op.import-schema --name=china_stock --overwrite --only=公募-基金合同"
+      - "inv op.import-schema --name=china_stock --overwrite --only=公募-基金合同-二"
+      - 'inv op.deploy-model "公募-基金合同" --name=china_stock_public_fund'
+      - 'inv op.deploy-model "公募-基金合同-二" --name=china_stock_public_fund_2'
+      - 'inv op.deploy-model "年金计划" --name=fullgoal_pension_plan'
+      - 'inv op.deploy-model 富国基金 --enable --name=fullgoal_fund'
+
+
+available_models:
+  partial_text: True
+  cell_partial_text: True
+  score_filter: True
+  syllabus_elt_v2: True
+  table_kv: True
+  table_row: True
+  config_in_code: True
+  table_tuple: True
+  fixed_position: True
+  auto: True
+  middle_paras: True

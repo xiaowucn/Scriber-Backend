@@ -1,0 +1,112 @@
+version: "2.4"
+
+services:
+  redis:
+    restart: on-failure
+    container_name: scriber_redis
+    image: redis:latest
+    command: ["redis-server", "--requirepass", "scriber"]
+    networks:
+      - scriber_network
+
+  postgres:
+    restart: on-failure
+    container_name: scriber_pg
+    image: postgres_pd:0.1
+    volumes:
+      - "./scriber_pg:/data"
+    environment:
+      - DEBUG=false
+      - POSTGRES_DB=scriber
+      - POSTGRES_PASSWORD=xzsDwlk3LqaY
+    networks:
+      - scriber_network
+
+  cerebro:
+    restart: on-failure
+    container_name: scriber_cerebro
+    image: cerebro:0.0.1
+    volumes:
+      - "./scriber_cerebro:/data"
+    networks:
+      - scriber_network
+
+  pdfoutline:
+    restart: on-failure
+    container_name: scriber_pdfoutline
+    image: pdfinsight:0.0.1
+    runtime: nvidia
+    volumes:
+      - "./scriber_pdfoutline:/data"
+    environment:
+      - MODE=pdfoutline
+      - NVIDIA_VISIBLE_DEVICES=0
+    networks:
+      - scriber_network
+
+  pdfinline:
+    restart: on-failure
+    container_name: scriber_pdfinline
+    image: pdfinsight:0.0.1
+    runtime: nvidia
+    volumes:
+      - "./scriber_pdfinline:/data"
+    environment:
+      - MODE=pdfinline
+      - NVIDIA_VISIBLE_DEVICES=0
+    networks:
+      - scriber_network
+
+  pdftitle:
+    restart: on-failure
+    container_name: scriber_pdftitle
+    image: pdfinsight:0.0.1
+    runtime: nvidia
+    volumes:
+      - "./scriber_pdftitle:/data"
+    environment:
+      - MODE=pdftitle
+      - NVIDIA_VISIBLE_DEVICES=0
+    networks:
+      - scriber_network
+
+  pdfinsight:
+    restart: on-failure
+    container_name: scriber_pdfinsight
+    image: pdfinsight:0.0.1
+    volumes:
+      - "./scriber_pdfinsight:/data"
+    environment:
+      - MODE=autodoc
+      - PDFINSIGHT_CONFIG_WORKER_BROKER="redis://:scriber@redis:6379"
+    networks:
+      - scriber_network
+    depends_on:
+      - redis
+      - cerebro
+      - pdfoutline
+      - pdfinline
+      - pdftitle
+
+  scriber:
+    restart: on-failure
+    container_name: scriber_web
+    image: scriber:0.0.1
+    ports:
+      - "8000:8000"
+    volumes:
+      - "./scriber_web:/data"
+    environment:
+      - SCRIBER_CONFIG_WEB_DOMAIN="scriber"
+      - SCRIBER_CONFIG_WEB_PRESET_ANSWER=True
+      - SCRIBER_CONFIG_APP_APP_ID="scriber_demo"
+      - SCRIBER_CONFIG_DB_PASSWORD="xzsDwlk3LqaY"
+    networks:
+      - scriber_network
+    depends_on:
+      - redis
+      - postgres
+      - pdfinsight
+
+networks:
+  scriber_network:

@@ -1,0 +1,134 @@
+debug: False
+logging:
+  level: "info"
+
+app:
+  app_id: "scriber_csc_poc"
+  secret_key: "hello_remarkable"
+  token_expire: 7200
+  single_sign_limit: False
+  session_expire: 7200
+  rate_limit_expire: 7200
+  max_fail_count: 100
+  multiprocessing: "enable"
+  auth:
+    pdfinsight:
+      app_id: "pdfinsight"
+      secret_key: "show-me-the-money"
+      token_expire: 120
+      url: "http://pdfinsight:8096"
+      force_ocr_pages: "0,1,2"  # 强制OCR的页码，多个页码用英文逗号分隔，如"0,1,2"
+      max_ocr_page_idx: 50  # 60页之后的页面强制不走OCR
+      max_pages: 50
+    trident:
+      app_id: "trident"
+      secret_key: "show-me-the-money"
+      token_expire: 120
+      url: ""
+web:
+  http_port: 8080
+  domain: "scriber:8000"
+  user_system_provider: "self"
+  http_headers:
+    Server: "*"
+  plugins:
+    - "fileapi"
+    - "ext_api"
+    - "debug"
+  classes:
+    
+  apis:
+    sso: ""
+    login_callback: ""
+    get_label_user: ""
+    get_label_user_by_cn_list: ""
+    sync_file: ""
+    sync_host: ""
+  pdf_converter: "{project_root}/bin/converter/word2pdf.exe"
+  tmp_dir: "/data/tmp/"
+  data_dir: "{project_root}/data/files/"
+  prompter_dir: "{project_root}/data/prompter/"
+  mode_unlimited_answers: True  # 无限答题模式（答题次数不受限制）
+  default_question_health: 1
+  preset_answer: True
+  preset_from_cache: False
+  user_answer_black_list: ""
+  limit_of_preset_num: 10
+  limit_of_crude_elts: 5
+  show_merge_answer: False
+  record_manual: False
+  table_association: True
+  predict_from_memory:
+    switch: True
+    data_dir: "{project_root}/data/tbl_headers/"
+  show_export_answer: False
+  show_marker: False
+  model_manage: True
+  enable_remote_model: True
+  model_abroad: True
+  customer_answer: True
+
+
+db:
+  host: "postgres"
+  port: 5432
+  dbname: "scriber"
+  user: "postgres"
+  password: ""
+
+redis:
+  host: redis
+  port: 6379
+  db: 1
+  password: "scriber"
+
+client:
+  name: "csc_poc"
+  remark_progress_type: "level1"
+  language: "zh_CN"
+  content_language: "en_US" # 文档的语言, zh_CN/en_US
+  hide_rough_fields: True
+  show_prompt_element_button: True
+  check_schema_base_type: False
+  export_label_data: False
+  export_label_txt: False
+  export_answer_csv: False
+  export_single_answer: False
+  stat_accuracy: True
+  
+  show_all_predict_items: True
+  answer_default_display_level: 1
+  support_multiple_molds: True # 是否支持多schema
+  ocr:
+    enable: False
+    service: "pai"
+
+worker:
+  app_name: "remarkable"
+  default_queue: "celery"
+
+prompter:
+  mode: "v2"
+  use_syllabuses: True
+  tokenization: "jieba"
+  context_length: 1
+  workers: 4
+  batch_size: 100
+  auto_build_ignores: "*"
+  answer_version: 2.2
+  training_data_status: "1, 2, 5, 10, 100"
+
+prophet:
+  package_name: "csc_poc_predictor"
+  config_map:
+    美元债债项评级字段抽取: "dollar_debt"
+    美元债债项评级: "dollar_debt"
+
+build:
+  docker:
+    cli_pipe: # 部署命令
+      - 'inv op.import-schema --name=csc_dollar_debt'
+
+      - 'inv op.deploy-model 美元债债项评级字段抽取 --name=csc_dollar_debt'
+_new_entry:
+  "prompter.training_data_status": "prompter.trainning_data_status"

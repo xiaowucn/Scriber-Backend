@@ -1,0 +1,128 @@
+debug: False
+logging:
+  level: "info"
+
+app:
+  app_id: "remarkable_cib"
+  secret_key: "hello_remarkable"
+  simple_token: "5Y2O5aSP55qEdG9rZW4="
+  jwt_secret_key: "4fe1ae23ae6f4b4d81df5e6e3567205f"
+  token_expire: 120
+  session_expire: 7200 # session过期时间, 不配置默认600s
+  rate_limit_expire: 7200 # 接口访问频率限制时间, 不配默认60s(暂未启用)
+  max_fail_count: 100 # session有效期内最大尝试登录次数, 不配默认10次, 超过限制次数继续登录会被持续封禁
+  auth:
+    pdfinsight:
+      app_id: "pdfinsight"
+      secret_key: "show-me-the-money"
+      token_expire: 120
+      url: "http://pdfinsight:8096"
+      doc_as_docx: True
+
+web:
+  http_port: 8080
+  domain: "scriber:8000"
+  redirect_subpath: "scriber/"
+  plugins:
+    - "fileapi"
+    - "ext_api"
+    - "debug"
+  customer_answer: True # 生成客户定制化答案
+  classes:
+
+  apis:
+    sso: ""
+    login_callback: ""
+    get_label_user: ""
+    get_label_user_by_cn_list: ""
+    sync_file: ""
+  pdf_converter: "{project_root}/bin/converter/word2pdf.exe"
+  tmp_dir: "/data/tmp/"
+  data_dir: "{project_root}/data/files/"
+  prompter_dir: "{project_root}/data/prompter/"
+  default_question_health: 1
+  preset_answer: True
+  preset_from_cache: False
+  user_answer_black_list: "" # 这些用户的答案不会作为缓存答案(uid)
+  limit_of_preset_num: 10 # 限制预测答案的个数
+  limit_of_crude_elts: 5 # 限制读取预测元素块的个数
+  show_merge_answer: False # 前端是否显示"合并的答案"按钮
+  record_manual: False # 前端是否显示"采用答案"按钮
+  predict_from_memory:
+    switch: True
+    data_dir: "{project_root}/data/tbl_headers/"
+  show_export_answer: False # 显示/隐藏"导出的答案"按钮(上交所)
+  show_marker: False
+  model_manage: True # 模型版本管理
+  enable_remote_model: True # 提取模型配置中，启用对接远程模型选项
+  data_abroad: False # 数据生产（对接外部数据库）
+  model_abroad: False # 模型接入（接入外部模型）
+  chapter_assist: True # 是否开启章节辅助标注功能
+  score_filter_threshold: 0.3  # score_filter模型分数阈值
+  enable_pdf2word: false # 是否开启 pdf转word工具栏 https://gitpd.paodingai.com/cheftin/docs_scriber/-/issues/4487
+  use_pdfinsight_cache_limit_hours: 86400 # 24*3600
+
+db:
+  host: "postgres"
+  port: 5432
+  dbname: "scriber"
+  user: "postgres"
+  password: "abw9LjON"
+
+redis:
+  host: redis
+  port: 6379
+  db: 1
+  password: "abw9LjON"
+
+client:
+  name: "cib" # hkex, szse
+  remark_progress_type: "level1" # all
+  language: "zh_CN" # en_US
+  content_language: "zh_CN" # 文档的语言, zh_CN/en_US
+  hide_rough_fields: True
+  show_prompt_element_button: True # 是否显示AI位置推荐按钮
+  check_schema_base_type: False
+  export_label_data: False # 是否支持"导出标注json"
+  export_label_txt: False  # 是否支持"导出标注txt"
+  export_answer_csv: True # 是否支持"导出答案csv"
+  export_single_answer: False # 是否显示导出标注/预测答案按钮
+  stat_accuracy: True # 是否支持统计模型正确率
+
+  show_all_predict_items: True
+  answer_default_display_level: 1 # 答案默认展开级别, 数字代表展开到第n级
+  ocr:
+    enable: False
+    service: "pai"
+
+
+
+feature:
+  batch_delete: True  # 批量删除功能
+  toolbar: True  # 顶部菜单栏显示【工具栏】
+
+worker:
+  app_name: "remarkable"
+  default_queue: "celery"
+
+prompter:
+  mode: "v2"
+  use_syllabuses: True
+  tokenization: "jieba"
+  context_length: 1
+  workers: 4
+  batch_size: 100
+  auto_build_ignores: "*"
+  answer_version: 2.2
+  training_data_status: "2, 5, 10, 100"
+
+prophet:
+  package_name: "cib_predictor"
+  config_map:
+#    基金合同V1: "chinaamc_yx_fund"
+
+build:
+  docker:
+    cli_pipe: # 部署命令
+#      - 'inv op.import-schema -n chinaamc_yx'
+#      - 'inv op.deploy-model "基金合同V1" --enable --name=chinaamc_yx_fund'

@@ -1,0 +1,16 @@
+app:
+  secret: "I come from zhengtong"
+  appid: 1
+
+api:
+#  host: "http://100.64.0.5:44014"
+  host: "http://100.64.0.5:44015"
+#  host: "http://localhost:8000"
+  url: "{}/api/v1/ipo_output/result"
+
+mysql:
+  host: "127.0.0.1"
+  port: 3306
+  dbname: "test_20200414"
+  user: "duguangting"
+  password: "123456"

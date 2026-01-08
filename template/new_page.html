@@ -1,0 +1,137 @@
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <style>
+            *{margin: 0; padding: 0; list-style: none;}
+            .num_cell_class {mso-number-format:"@";}
+        </style>
+    </head>
+    <body>
+        <div style="width:100%;font-size:12px;">
+            % for block in all_block_list:
+                % if block[-1] == "table":
+                    <%
+                    style_body = block[0]
+                    t_style_list = []
+                    anchor_id = style_body.get("anchor_id")
+                    t_style_list.append("margin-left:{}".format(style_body.get('margin-left', '0px')))
+                    t_style_list.append("margin-right:{}".format(style_body.get('margin-right', '0px')))
+                    t_style_list.append("margin-top:{}".format(style_body.get('margin-top', '3px')))
+                    t_style_list.append("margin-bottom:{}".format(style_body.get('margin-bottom', '3px')))
+                    t_style_str = ";".join(t_style_list)
+                    %>
+                    <table id="${anchor_id}" style="${t_style_str};width:100%;border-collapse:collapse;border-spacing:0;outline:none;border:1px solid #474747;">
+                        % for row in block[1]:
+                        <tr style="vertical-align:middle;">
+                            % for cell in row:
+                                % if cell:
+                                    <%
+                                    block_style_list = []
+                                    if cell.get('rowspan'):
+                                        rowspan = '''rowspan="{}"'''.format(cell['rowspan'])
+                                    else:
+                                        rowspan = ''
+
+                                    if cell.get('colspan'):
+                                        colspan = '''colspan="{}"'''.format(cell['colspan'])
+                                    else:
+                                        colspan = ''
+
+                                    font_size = int(cell.get('styles',{}).get('fontsize', '1'))
+                                    if font_size < 12:
+                                        font_size = 12
+                                    block_style_list.append("font-size:{}px".format(font_size))
+
+                                    block_style_list.append("color:{}".format(cell.get('styles',{}).get('fontcolor', '#000000')))
+                                    block_style_list.append("font-style:{}".format(cell.get('styles',{}).get('italic','normal')))
+                                    block_style_list.append("background-color:{}".format(cell.get('styles',{}).get('bg_color', '#FFFFFF')))
+                                    block_style_list.append("font-family:{}".format(cell.get('styles',{}).get('fontname', 'SimSun')))
+                                    block_style_list.append("text-align:{}".format(cell.get('styles',{}).get('align', 'left')))
+                                    block_style_list.append("padding-left:{}".format(cell.get('styles',{}).get('padding-left', [0])[0]))
+                                    block_style = ';'.join(block_style_list)
+
+                                    attrs = []
+                                    if cell.get('is_num'):
+                                        attrs.append('sdnum="2052;0;@"')
+                                        attrs.append('class=num_cell_class')
+                                        attrs.append('x:str')
+                                    attrs_text = ' '.join(attrs)
+                                    %>
+
+                                    <td ${attrs_text} ${rowspan} ${colspan} style="${block_style};height:16px;outline:none;border:1px solid #474747;">
+                                        <%
+                                        cell_text = cell.get('text').strip() if cell.get('text') else cell.get('value', '')
+                                        %>
+                                        % if cell.get('styles',{}).get('fontweight','bold') == 'bold':
+                                            <span style="white-space:pre-line;font-weight:bold;">${cell_text}</span>
+                                        % else:
+                                            <span style="white-space:pre-line;">${cell_text}</span>
+                                        % endif
+                                    </td>
+                                % endif
+                            % endfor
+                        </tr>
+                        % endfor
+                    </table>
+                % elif block[-1] in ['paragraphs', 'page_headers', 'page_footers']:
+                    <%
+                    style_body = block[0]
+                    p_style_list = []
+                    anchor_id = style_body.get("anchor_id")
+                    p_style_list.append("text-indent:{}".format(style_body.get('text-indent', '0px')))
+                    p_style_list.append("font-size:{}".format(style_body.get('font-size', '12px')))
+                    p_style_list.append("margin-left:{}".format(style_body.get('margin-left', '0px')))
+                    p_style_list.append("margin-right:{}".format(style_body.get('margin-right', '0px')))
+                    p_style_list.append("margin-top:{}".format(style_body.get('margin-top', '5px')))
+                    p_style_list.append("margin-bottom:{}".format(style_body.get('margin-bottom', '5px')))
+
+                    text_align = style_body.get('text-align', 'left')
+                    if text_align == 'left':
+                        text_align = 'justify'
+                    p_style_list.append("text-align:{}".format(text_align))
+
+                    p_style_str = ";".join(p_style_list)
+                    %>
+                    <p id="${anchor_id}" style="${p_style_str};">
+                        % for span in block[2]:
+                            <%
+                            span_style_list = []
+                            span_style = span.get("style", {})
+
+                            if span_style.get('italic'):
+                                span_style_list.append("font-style:italic")
+                            else:
+                                span_style_list.append("font-style:normal")
+                            span_style_list.append("font-family:{}".format(span_style.get('familyname')))
+
+                            font_size = int(span_style.get('fontsize', '1'))
+                            if font_size < 12:
+                                font_size = 12
+                            span_style_list.append("font-size:{}px".format(font_size))
+
+                            if span_style.get('bold'):
+                                span_style_list.append("font-weight:bold")
+                            if span_style.get('fontcolor'):
+                                span_style_list.append("color:#{0:06x}".format(span_style.get('fontcolor')))
+
+                            span_style = ";".join(span_style_list)
+                            text = span.get("text", "")
+                            %>
+                            <span style="${span_style};">${text}</span>
+                        % endfor
+                    </p>
+                % elif block[-1] == 'image':
+                    <%
+                    style_body = block[0]
+                    anchor_id = style_body.get("anchor_id")
+                    i_style_list = []
+                    i_style_list.append("margin-top:{}".format(style_body.get('margin-top', '3px')))
+                    i_style_list.append("margin-bottom:{}".format(style_body.get('margin-bottom', '3px')))
+                    i_style_str = ";".join(i_style_list)
+                    %>
+                    <img id="${anchor_id}" style="display:block;${i_style_str};margin-left:auto;margin-right:auto;" src="data:image/png;base64,${block[1]}">
+                % endif
+            % endfor
+        </div>
+    </body>
+</html>

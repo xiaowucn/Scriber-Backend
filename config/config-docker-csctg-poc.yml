@@ -1,0 +1,293 @@
+debug: False
+logging:
+  level: "info"
+
+app:
+  app_id: "remarkable"
+  secret_key: "hello_remarkable"
+  jwt_secret_key: "8f30526caf7218250c2549e996ac2083"
+  token_expire: 120
+  session_expire: 7200 # session过期时间, 不配置默认600s
+  rate_limit_expire: 7200 # 接口访问频率限制时间, 不配默认60s(暂未启用)
+  max_fail_count: 100 # session有效期内最大尝试登录次数, 不配默认10次, 超过限制次数继续登录会被持续封禁
+  uname: scriber
+  auth:
+    label:
+      app_id: ""
+      secret_key: ""
+      token_expire: 300
+    roster:
+      app_id: ""
+      secret_key: ""
+      token_expire: 300
+      url: ""
+    pdfinsight:
+      app_id: "pdfinsight"
+      secret_key: "show-me-the-money"
+      token_expire: 120
+      url: "http://pdfinsight:8096"
+      doc_as_docx : True
+      need_origin_docx: True
+    trident:
+      app_id: "trident"
+      secret_key: "show-me-the-money"
+      token_expire: 120
+      url: "http://trident"
+    calliper:
+      app_id: "calliper"
+      secret_key: "hello_calliper"
+      token_expire:
+      url: "http://trident/calliper"
+      compare_api: "/api/v1/diff/upload"
+      exclude_domain: True
+    glazer:
+      app_id: "glazer"
+      secret_key: "hello_glazer"
+      token_expire:
+      url: "http://100.64.0.8:65270"
+    chatdoc:
+      url: "http://100.64.0.9:55850/chatdoc"
+      hkey: "X-Ext-Uname"
+      timeout: 60
+      public_api: "/api/cgs/external/knowledge/public?codes=external&codes=internal"
+      public_api_cache_seconds: 3600
+      personal_api: "/api/cgs/external/knowledge/personal"
+      # personal_file_api: "/api/cgs/external/knowledge/personal/file"
+      ask_question_api: "/api/cgs/external/question/completions"
+      ai_timeout: 300
+      model: "deepseek/deepseek-v3.2-exp"
+
+      api_pdf_with_interdoc: "/api/external/v3/documents/upload-with-interdoc"
+      api_upload_record_info: "/api/external/v3/documents/%s"
+      api_download_interdoc: "/api/external/v3/documents/%s/download-interdoc"
+      api_download_origin: "/api/external/v3/documents/download-origin"
+      api_detail_trace: "/api/external/v3/questions/completions/detail-trace"
+      api_key: "ak-csSovRAQraYFnnygBwMhtyfvtejFT2OWEMIOMIW-dqI"
+
+speedy:
+  sub_path: scriber/
+
+web:
+  http_port: 8080
+  domain: "scriber:8000"
+  redirect_subpath: "scriber/"
+  plugins:
+    - "fileapi"
+    - "ext_api"
+    - "debug"
+    - "cgs"
+    - "diff"
+  binary_key: "hkx85vMOBSM7M7W"
+  encrypted_routes:
+    - "/login"
+    - "/user"
+    - "/user/[0-9]+"
+  classes:
+
+    answer_converter: "remarkable.converter.china_stock.ChinaStockWorkShop" # 转换&推送答案
+
+  apis:
+    sso: ""
+    login_callback: ""
+    get_label_user: ""
+    get_label_user_by_cn_list: ""
+    sync_file: ""
+    sync_host: ""
+  pdf_converter: "{project_root}/bin/converter/word2pdf.exe"
+  revision_tools: "{project_root}/bin/dr/docx_revision" # docx 批注工具
+  store_revise_docx: True
+  tmp_dir: "/data/tmp/"
+  data_dir: "{project_root}/data/files/"
+  prompter_dir: "{project_root}/data/prompter/"
+  default_question_health: 1
+  cut_subpath_for_token: True # 计算token时是否切掉subpath
+  preset_answer: True
+  preset_from_cache: False
+  user_answer_black_list: "" # 这些用户的答案不会作为缓存答案(uid)
+  limit_of_preset_num: 10 # 限制预测答案的个数
+  limit_of_crude_elts: 5 # 限制读取预测元素块的个数
+  show_merge_answer: False # 前端是否显示"合并的答案"按钮
+  record_manual: False # 前端是否显示"采用答案"按钮
+  predict_from_memory:
+    switch: True
+    data_dir: "{project_root}/data/tbl_headers/"
+  mode_unlimited_answers: True # 无限答题模式（答题次数不受限制）
+  show_export_answer: False # 显示/隐藏"导出的答案"按钮(上交所)
+  customer_answer: True # 生成客户定制化答
+  show_marker: False
+  model_manage: True # 模型版本管理
+  enable_remote_model: True # 提取模型配置中，启用对接远程模型选项
+  data_abroad: False # 数据生产（对接外部数据库）
+  model_abroad: False # 模型接入（接入外部模型）
+  chapter_assist: True # 是否开启章节辅助标注功能
+
+db:
+  type: "gaussdb"
+  host: "100.64.0.167"
+  port: 5432
+  dbname: ""
+  user: ""
+  password: ""
+
+redis:
+  host: redis
+  port: 6379
+  db: 1
+  password: "scriber"
+
+client:
+  name: "cgs" # hkex, szse
+  remark_progress_type: "level1" # all
+  language: "zh_CN" # en_US
+  support_multiple_molds: True # 是否支持多schema
+  calliper_diff: True # 是否支持选择两个文件发送到calliper进行对比
+  hide_rough_fields: True
+  show_prompt_element_button: True # 是否显示AI位置推荐按钮
+  show_ai_score: False # 是否显示预测答案的分数
+  check_schema_base_type: False
+  export_label_data: True # 是否支持"导出标注json"
+  export_label_txt: False # 是否支持"导出标注txt"
+  export_answer_csv: True # 是否支持"导出答案csv"
+  export_single_answer: False # 是否显示导出标注/预测答案按钮
+  stat_accuracy: True # 是否支持统计模型正确率
+  show_questions: True # 打开标注
+  show_all_predict_items: True
+  answer_default_display_level: 1 # 答案默认展开级别, 数字代表展开到第n级
+  ocr:
+    enable: True
+    service: "pai"
+  show_file_scenario: True  # 打开文件场景
+
+feature:  # 功能特性相关配置
+  batch_delete: False  # 批量删除功能
+  zip_upload: False  # 上传文件压缩包
+  project_for_external_file: "Glazer上传"  # 外部文件所属项目名
+  answer_batch_edit: True # 答案树支持"批量修改"
+  file_list_page: # 文件列表页相关
+    customization_columns: True  # 文件列表支持自定义列（仅前端交互）
+    option_type_column: True  # 文件列表显示 【操作类型】列
+    re_predict_button: True  # 文件列表操作列显示【重新提取】按钮
+    stat_board_foldable: True  # 文件列表支持 收回/展开 项目统计数据（仅前端交互）
+  additional_permissions: # 额外添加的用户权限
+    customer_rule_participate:
+      name: "规则管理-自定义规则-经办"
+      definition: "可创建自定义规则，对提取结果进行审核"
+    customer_rule_review:
+      name: "规则管理-自定义规则-复核"
+      definition: "对自定义规则进行复核"
+    developed_rule_browse:
+      name: "规则管理-研发规则查看"
+      definition: "可查看开发规则"
+    inspect:
+      name: "审核"
+      definition: "可查看规则审核的结果"
+  basic_permissions: # 默认拥有的权限
+    - 'browse'
+  rule_need_review: True
+  allow_different_models: False  # 模型管理页面组合字段跟其子项的配置 是否支持配置不同的模型
+
+worker:
+  app_name: "remarkable"
+  default_queue: "celery"
+
+data_flow:
+  post_pipe_after_preset: True
+  file_answer:
+    generate: True # 生成文件级的答案
+
+prompter:
+  mode: "v2"
+  use_syllabuses: True
+  tokenization: "jieba"
+  context_length: 1
+  workers: 4
+  batch_size: 100
+  auto_build_ignores: "*"
+  answer_version: 2.2
+  training_data_status: "2, 5, 10, 100"
+
+prophet:
+  package_name: "china_stock_predictor"
+  config_map:
+    私募-基金合同: "private_fund"
+    公募-基金合同: "public_fund"
+    公募-托管协议: "public_custody"
+    公募-资产管理合同: "public_asset_management"
+    私募-运营操作备忘录: "private_operation"
+    公募-基金合同-二: "public_fund_2"
+    公募-托管协议-二: "public_custody_2"
+    风险评估协议: "risk_assessment"
+
+
+inspector:
+  package_name: "cgs_checker"
+  audit_molds:
+    - "私募-基金合同"
+    - "公募-基金合同"
+    - "公募-托管协议"
+    - "公募-资产管理合同"
+
+build:
+  docker:
+    cli_pipe: # 部署命令
+      - "inv op.import-schema --name=china_stock --overwrite" # 强制覆盖已有schema
+      - "inv dev.set-mold-master 公募-基金合同-二 公募-基金合同"
+      - "inv dev.set-mold-master 公募-托管协议-二 公募-托管协议"
+      - "inv dev.set-mold-master 私募基金合同-扩展字段 私募-基金合同"
+      - 'inv op.deploy-model "私募-基金合同" --enable --name=china_stock_private_fund'
+      - 'inv op.deploy-model "私募-运营操作备忘录" --enable --name=china_stock_private_operation'
+      - 'inv op.deploy-model "公募-基金合同" --enable --name=china_stock_public_fund'
+      - 'inv op.deploy-model "公募-托管协议" --enable --name=china_stock_public_custody'
+      - 'inv op.deploy-model "公募-资产管理合同" --enable --name=china_stock_public_asset_management'
+      - 'inv op.deploy-model "公募-基金合同-二" --enable --name=china_stock_public_fund_2'
+      - 'inv op.deploy-model "公募-托管协议-二" --enable --name=china_stock_public_custody_2'
+      - 'inv op.deploy-model 风险评估协议 --enable --name=china_stock_risk_assessment'
+
+    dot_ignore:
+      - "!data/schema/china_stock_schema.json" # 导出Schema
+      - "!data/model/china_stock_*" # 定位&提取模型
+
+cgs:
+  auth:
+    app_id: "cgs"
+    secret_key: "069f0ba4d5c635e9b98fb94b7cd98cc4"
+  default:
+    mid: 0 #默认模型id，设置0表示无默认配置
+    tree_id: 1 #默认文档树id
+    clean_file_project: "清稿文件"
+  display_base_url: "" # API接口生成结果地址
+  test_inspect_mode: False  # 审核模块执行测试模式
+  user_perms_from_api:
+    - 'browse'
+    - 'remark'
+    - 'inspect'
+  esb:
+    debug: False # 银河ESB调用调试模式，生产环境设置成False或者删除
+    apis:
+      sda:
+        url: "http://10.4.5.161:22112/apiJson/V2/sda"
+        function_no: "YH0028000400005" # 功能号
+        function_version: "1" # 功能号版本
+        caller_system_code: "SDA" # 调方系统代码，由ESB系统告知
+      manager:
+        url: "http://10.4.5.161:22112/apiJson/V2/sda"
+        function_no: "YH0028000400009" # 功能号
+        function_version: "1" # 功能号版本
+        caller_system_code: "SDA" # 调方系统代码，由ESB系统告知
+    user: "sda" # 用户名，根据对接银河ESB环境需要调整
+    password: "rkTj3v8na2Sg4b" # 密码，根据对接银河ESB环境需要调整
+    call_timeout: 10 # 调用ESB超时时间，单位：秒
+_new_entry:
+  "prompter.training_data_status": "prompter.trainning_data_status"
+
+
+converter:
+  pdf_api: "http://converter/pdf"
+  app_name: "scriber_chinastock"
+
+ai:
+  openai:
+    base_url: "http://100.64.0.9:55850/chatdoc/api/external/v3/questions"
+    api_key: "ak-csSovRAQraYFnnygBwMhtyfvtejFT2OWEMIOMIW-dqI"
+    model: "deepseek/deepseek-v3.2-exp"
+    timeout: 60

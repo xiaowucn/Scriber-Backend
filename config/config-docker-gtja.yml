@@ -1,0 +1,126 @@
+debug: False # 测试环境可以打开以方便调试
+logging:
+  level: "info"
+
+app:
+  app_id: "remarkable_gtja" # scriber应用id, 充当cookie前缀字段, 如remarkable_user_id, 以标识应用类型, 默认值: remarkable
+  secret_key: "hello_gtja" # 密钥, 用于加密token
+  simple_token: "" # 配置external_api接口验证，缺省则不验证
+  token_expire: 120 # token过期时间, 单位(秒)
+  single_sign_limit: False # 单点登录限制，默认不限制
+  session_expire: 7200 # session过期时间, 不配置默认600s
+  rate_limit_expire: 7200 # 接口访问频率限制时间, 不配默认60s(暂未启用)
+  max_fail_count: 100 # session有效期内最大尝试登录次数, 不配默认10次, 超过限制次数继续登录会被持续封禁
+  multiprocessing: "disable"  # 多进程开关, enable/disable
+  auth:
+    pdfinsight:
+      app_id: "pdfinsight"
+      secret_key: "show-me-the-money"
+      token_expire: 120
+      url: "http://pdfinsight:8096"
+      prediction: False  # 模型预测, 默认打开, 如关闭则文档的全部内容都在paragraphs里
+    trident:
+      app_id: "trident"
+      secret_key: "show-me-the-money"
+      token_expire: 120
+      url: "http://trident:8000"
+
+web:
+  http_port: 8080 # 服务监听端口
+  domain: "scriber:8000" # 绑定主机名
+  redirect_subpath: ""
+  rpc_port: 10051  # rpc 服务监听端口
+  scheme: http # http or https
+  http_headers:
+    X-Frame-Options: 'DENY'
+    Server: '*'
+  encoding_gzip: False  # 允许前端用gzip提交数据
+  plugins: # 各种功能插件, 位于remarkable/plugins目录下
+    - "fileapi" # 文件管理(核心功能插件)
+    - "debug"
+  classes: # 自定义规则检查类方法, 不同客户环境指向不同
+    answer_converter: "remarkable.converter.sse.AnswerWorkShop"  # 转换&推送答案
+    
+    answer_inspector: # 合规检查
+      完备性审核: "remarkable.rule.csrc.inspect.CompleteCsrcInspector"
+  inspect_rules: True # 完备性审核开关
+  parser: # 文档解析类型, 目前有pdf/docx两种
+    mode: "pdf" # 默认pdf, 只有海通环境才是docx
+  doc2docx_converter: "{project_root}/bin/converter/doc2docx.exe" # doc 转 docx 工具
+  pdf_converter: "{project_root}/bin/converter/word2pdf.exe" # doc/docx 转 pdf 工具
+  pdf_convert_provider: "pdfinsight" # 可选 local 或 pdfinsight local 使用本地转换工具生成 pdf，再调用 pdfinsight 预处理接口
+  wordinsight: "{project_root}/bin/wordinsight/wordinsight.dll" # wordinsight 工具
+  revision_tools: "{project_root}/bin/dr/docx_revision" # docx 批注工具
+  tmp_dir: "/data/tmp/" # 用于文档处理的临时目录（比如文档转换）
+  data_dir: "{project_root}/data/files/" # 存储文件夹
+  prompter_dir: "{project_root}/data/prompter/" # 位置推荐模型目录
+  default_question_health: 1 # 几人答题
+  preset_answer: False # 预测答案开关
+  preset_from_cache: False # 读取缓存答案开关
+  user_answer_black_list: "" # uid， 这些用户的答案不会作为缓存答案
+  show_merge_answer: False # 前端是否显示"合并的答案"按钮
+  record_manual: False # 前端是否显示"采用答案"按钮
+  compare_term_template: True # 科创板完备性审核答案是否跟模板比较
+  table_association: True # 是否开启表格辅助标注功能
+  table_association_postfix: True  # 表格辅助标注时是否可标后缀
+  mode_unlimited_answers: False # 无限答题模式（答题次数不受限制）
+  mode_conflict_treatment: 2 # 冲突处理方式：1-人工处理、2-以最新为准、3-合并答案
+  show_export_answer: True # 显示/隐藏"导出的答案"按钮(上交所)
+  show_marker: True # 显示/隐藏标记人员（上交所）
+  model_manage: False # 模型版本管理
+  user_system_provider: "self" # 用户系统 `self` or `trident`
+  unsure_warnning_score: 0.0005 # 答案中提示 “此项不确定” 的分数阈值
+  push_autodoc: False # 是否将合规结果推送至autodoc
+  data_abroad: False # 数据生产（对接外部数据库）
+  model_abroad: False # 模型接入（接入外部模型）
+  xsrf_cookies: False # xsrf验证，默认关闭
+  trust_routes: # 跳过auth&xsrf check的路由列表
+    - "/config"
+    - "/login"
+    - "/files/[0-9]+/hash/[0-9a-fA-F]+/preprocess_complete"
+  binary_key: "hkx85vMOBSM7M7W" # 加密接口密钥
+  encrypted_routes: # 加密的接口(默认不开)
+  #    - '/login'
+  #    - '/user'
+  #    - '/user/[0-9]+/put'
+
+  default_page: 'default'   # 进入系统后展示的页面形式
+
+db:
+  host: "postgres"
+  port: 5432
+  dbname: "scriber"
+  user: "postgres"
+  password: "ilNifrTrz6E3"
+
+redis: # redis 数据库，目前用于模型训练
+  host: "redis"
+  port: 6379
+  db: 0
+  password: "scriber"
+
+client:
+  name: "szse" # hkex, szse等区分不同客户环境
+  remark_progress_type: "level1" # all
+  language: "zh_CN" # en_US
+  support_multiple_molds: False # 是否支持多schema
+  show_prompt_element_button: False # 前端AI推荐位置按钮开关
+  check_schema_base_type: False # TODO: ?
+  export_label_data: False # 是否支持"导出标注json"
+  export_label_txt: False  # 是否支持"导出标注txt"
+  export_answer_csv: True # 是否支持"导出答案csv"
+  stat_accuracy: True # 是否支持统计模型正确率
+  
+  show_all_predict_items: True # 是否展示多个预测答案（指多选）
+  show_ai_modules: False # 是否展示ai相关的功能, AI预测,推荐答案,预测中,预测完成 等
+  answer_default_display_level: 1 # 答案默认展开级别, 数字代表展开到第n级(上交所)
+  export_single_answer: False # 是否显示导出标注/预测答案按钮(上交所)
+  ocr: # ocr服务, 用于对扫描件进行标注画框
+    enable: False # 默认不开启
+    service: "pai"  # 默认使用pai, 可选aliyun, onlyou等
+
+worker: # celery worker 相关配置
+  app_name: "remarkable"
+  default_queue: "celery"
+_new_entry:
+  "prompter.training_data_status": "prompter.trainning_data_status"

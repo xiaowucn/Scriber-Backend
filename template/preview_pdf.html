@@ -1,0 +1,430 @@
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                list-style: none;
+                outline: none;
+                box-sizing: border-box;
+                text-decoration: none;
+            }
+
+            .num_cell_class {
+                mso-number-format: '@';
+            }
+
+            html {
+                font-family: PingFang SC, Hiragino Sans GB, Microsoft YaHei, SimSun,
+                sans-serif;
+                font-size: 12px;
+            }
+
+            body {
+                width: 100vw;
+                height: 100vh;
+                overflow: hidden;
+                display: flex;
+            }
+
+            aside {
+                width: 300px;
+                min-width: 300px;
+                height: 100%;
+                background-color: #f7f6f3;
+            }
+
+            aside.is-collapse {
+                width: 60px;
+                min-width: 60px;
+                background: #fff;
+            }
+
+            aside.is-collapse .operation-group {
+                height: auto;
+            }
+
+            aside.is-collapse .operation-group .outline-collapse i {
+                background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgdmlld0JveD0iMCAwIDIwIDIwIj4KICAgIDxwYXRoIGZpbGw9IiM2QjZDNkYiIGZpbGwtcnVsZT0iZXZlbm9kZCIgZD0iTTYgMThoMTR2LTJINnYyek0wIDRoMTRWMkgwdjJ6bTAgN2gyMFY5SDB2MnoiLz4KPC9zdmc+Cg==');
+            }
+
+            aside.is-collapse .outline-details {
+                display: none;
+            }
+
+            aside.is-collapse .operation-group .zoom-in,
+            aside.is-collapse .operation-group .zoom-out {
+                height: 60px;
+            }
+
+            aside .operation-group button {
+                display: block;
+                padding: 0 10px;
+                width: 60px;
+                height: 60px;
+                background-color: #f7f6f3;
+                border: none;
+                font-size: 14px;
+                font-weight: 500;
+                color: #6b6c6f;
+            }
+
+            aside .operation-group button:hover {
+                background-color: #e8e7e5;
+            }
+
+            aside .operation-group i {
+                display: block;
+                width: 20px;
+                height: 20px;
+                background-repeat: no-repeat;
+                background-size: contain;
+            }
+
+            aside .operation-group .outline-collapse {
+                padding: 20px;
+            }
+
+            aside .operation-group .outline-collapse i {
+                background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgdmlld0JveD0iMCAwIDIwIDIwIj4KICAgIDxnIGZpbGw9IiM2QjZDNkYiIGZpbGwtcnVsZT0iZXZlbm9kZCI+CiAgICAgICAgPHBhdGggZD0iTTEwLjYzNC4yOTJhMS4wNjMgMS4wNjMgMCAwIDAtMS40NjQgMEwuNjA3IDguNTU2YTEuOTUgMS45NSAwIDAgMCAwIDIuODI3bDguNjI1IDguMzI1Yy40LjM4NSAxLjA0OC4zOSAxLjQ1NC4wMWEuOTc2Ljk3NiAwIDAgMCAuMDEtMS40MjVsLTcuODkzLTcuNjE3YS45NzUuOTc1IDAgMCAxIDAtMS40MTRsNy44My03LjU1N2EuOTc0Ljk3NCAwIDAgMCAwLTEuNDEzIi8+CiAgICAgICAgPHBhdGggZD0iTTE5LjYzNC4yOTJhMS4wNjMgMS4wNjMgMCAwIDAtMS40NjQgMEw5LjYwNyA4LjU1NmExLjk1IDEuOTUgMCAwIDAgMCAyLjgyN2w4LjYyNSA4LjMyNWMuNC4zODUgMS4wNDguMzkgMS40NTQuMDFhLjk3Ni45NzYgMCAwIDAgLjAxLTEuNDI1bC03Ljg5My03LjYxN2EuOTc1Ljk3NSAwIDAgMSAwLTEuNDE0bDcuODMtNy41NTdhLjk3NC45NzQgMCAwIDAgMC0xLjQxMyIvPgogICAgPC9nPgo8L3N2Zz4K');
+            }
+
+            aside .operation-group .zoom-in,
+            aside .operation-group .zoom-out {
+                height: 0;
+                overflow: hidden;
+            }
+
+            aside .operation-group .zoom-in::after {
+                content: '+';
+                display: inline-block;
+                vertical-align: super;
+            }
+
+            aside .operation-group .zoom-out::after {
+                content: '-';
+                display: inline-block;
+                vertical-align: sub;
+            }
+
+            aside .outline-details {
+                padding-bottom: 16px;
+                height: calc(100% - 60px);
+                overflow: auto;
+            }
+
+            aside .outline-details > ul > ul {
+                padding-left: 16px;
+            }
+
+            aside .outline-details > ul:first-of-type {
+                margin-bottom: 32px;
+            }
+
+            aside .outline-details > ul li {
+                position: relative;
+                display: flex;
+                align-items: center;
+                padding: 0 16px;
+            }
+
+            aside .outline-details > ul li:hover {
+                background-color: #e8e7e5;
+            }
+
+            aside .outline-details > ul li a {
+                flex: 1;
+                display: inline-block;
+                margin-left: 8px;
+                line-height: 2;
+                color: #3e3f4a;
+                font-size: 12px;
+                font-weight: normal;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                overflow: hidden;
+            }
+
+            aside .outline-details > ul li a:visited {
+                color: inherit;
+            }
+
+            aside .outline-details > ul li span {
+                display: inline-block;
+                width: 9px;
+                height: 9px;
+            }
+
+            aside .outline-details > ul li span.collapse-arrow {
+                background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMCIgaGVpZ2h0PSI4IiB2aWV3Qm94PSIwIDAgMTAgOCI+CiAgICA8cGF0aCBmaWxsPSIjNkI2QzZGIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik01IDhsNS04SDB6Ii8+Cjwvc3ZnPgo=') no-repeat;
+                background-size: contain;
+            }
+
+            aside .outline-details > ul li[data-level='1'] a {
+                line-height: 3;
+                font-size: 16px;
+                font-weight: 500;
+            }
+
+            aside .outline-details > ul li[data-level='2'] a {
+                font-size: 14px;
+                font-weight: 500;
+            }
+
+            aside .outline-details > ul li[data-level='3'] a {
+                font-size: 14px;
+            }
+
+            aside .outline-details > ul li.is-collapse > span {
+                transform: rotate(-90deg);
+            }
+
+            aside .outline-details > ul li.is-collapse + ul {
+                display: none;
+            }
+
+            #rightContainer {
+                flex: 1;
+                padding: 60px 40px;
+                height: 100%;
+                overflow: auto;
+                color: #3e3f42;
+            }
+
+            #rightContainer .table-container {
+                width: 100%;
+                overflow: auto;
+            }
+
+            .translate.hide,
+            .original.hide {
+                display: none;
+            }
+
+            .tip {
+                position: fixed;
+                z-index: 10;
+                visibility: hidden;
+                padding: 4px;
+                background: #eff0f0;
+                border-radius: 4px;
+                line-height: 16px;
+                font-size: 12px;
+                color: #3e3f4a;
+                white-space: nowrap;
+                box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.2),
+                0 0 0 0.5px rgba(0, 0, 0, 0.2);
+            }
+
+            .article-contents {
+                display: flex;
+                flex-flow: row;
+                align-items: center;
+            }
+
+            .article-contents > span:nth-child(2) {
+                flex: 1;
+                margin: 0 8px;
+                height: 1px;
+                border-bottom: 1px dashed #000;
+            }
+
+            .article-contents > span:nth-child(1) {
+                text-align: left;
+            }
+        </style>
+    </head>
+    <body>
+        <div style="font-size:12px;" class="right-container" id="rightContainer">
+            % for block in all_block_list:
+                % if block[-1] == "table":
+                <%
+                style_body = block[0]
+                anchor_id = style_body.get("anchor_id")
+                t_style_list = []
+                t_style_list.append("margin-left:{}".format(style_body.get('margin-left', '0px')))
+                t_style_list.append("margin-right:{}".format(style_body.get('margin-right', '0px')))
+                t_style_list.append("margin-top:{}".format(style_body.get('margin-top', '3px')))
+                t_style_list.append("margin-bottom:{}".format(style_body.get('margin-bottom', '3px')))
+                t_style_str = ";".join(t_style_list)
+                %>
+                <div class="table-container">
+                    <table id="${anchor_id}" style="${t_style_str};width:100%;border-collapse:collapse;border-spacing:0;outline:none;border:1px solid #474747;" class="original">
+                        % for row in block[1]:
+                        <tr style="vertical-align:middle;">
+                            % for cell in row:
+                                % if cell:
+                                    <%
+                                    block_style_list = []
+                                    if cell.get('rowspan'):
+                                        rowspan = '''rowspan="{}"'''.format(cell['rowspan'])
+                                    else:
+                                        rowspan = ''
+
+                                    if cell.get('colspan'):
+                                        colspan = '''colspan="{}"'''.format(cell['colspan'])
+                                    else:
+                                        colspan = ''
+
+                                    font_size = int(cell.get('styles',{}).get('fontsize', '1'))
+                                    if font_size < 12:
+                                        font_size = 12
+                                    block_style_list.append("font-size:{}rem".format(font_size / 10))
+
+                                    block_style_list.append("color:{}".format(cell.get('styles',{}).get('fontcolor', '#000000')))
+                                    block_style_list.append("font-style:{}".format(cell.get('styles',{}).get('italic','normal')))
+                                    block_style_list.append("background-color:{}".format(cell.get('styles',{}).get('bg_color', '#FFFFFF')))
+                                    block_style_list.append("font-family:{}".format(cell.get('styles',{}).get('fontname', 'SimSun')))
+                                    block_style_list.append("text-align:{}".format(cell.get('styles',{}).get('align', 'left')))
+                                    block_style = ';'.join(block_style_list)
+
+                                    attrs = []
+                                    if cell.get('is_num'):
+                                        attrs.append('sdnum="2052;0;@"')
+                                        attrs.append('class=num_cell_class')
+                                        attrs.append('x:str')
+                                    attrs_text = ' '.join(attrs)
+                                    related_cell = str(cell.get("related_cell", ""))
+                                    %>
+
+                                    <td related_cell="${related_cell}" ${attrs_text} ${rowspan} ${colspan} style="${block_style};padding:1px 3px;outline:none;border:1px solid #474747;">
+                                        <%
+                                        cell_text = cell.get('text').strip() if cell.get('text') else cell.get('value', '')
+                                        %>
+                                        % if cell.get('styles',{}).get('fontweight','bold') == 'bold':
+                                            <span style="white-space:pre-line;font-weight:bold;">${cell_text}</span>
+                                        % else:
+                                            <span style="white-space:pre-line;">${cell_text}</span>
+                                        % endif
+                                    </td>
+                                % endif
+                            % endfor
+                        </tr>
+                        % endfor
+                    </table>
+                </div>
+                    % if all_block_list[-1][0] is True:
+                        <div class="table-container">
+                            <table style="${t_style_str};width:100%;border-collapse:collapse;border-spacing:0;outline:none;border:1px solid #474747;" class="translate">
+                                % for row in block[1]:
+                                <tr style="vertical-align:middle;">
+                                    % for cell in row:
+                                        % if cell:
+                                            <%
+                                            block_style_list = []
+                                            if cell.get('rowspan'):
+                                                rowspan = '''rowspan="{}"'''.format(cell['rowspan'])
+                                            else:
+                                                rowspan = ''
+
+                                            if cell.get('colspan'):
+                                                colspan = '''colspan="{}"'''.format(cell['colspan'])
+                                            else:
+                                                colspan = ''
+
+                                            font_size = int(cell.get('styles',{}).get('fontsize', '1'))
+                                            if font_size < 12:
+                                                font_size = 12
+                                            block_style_list.append("font-size:{}rem".format(font_size / 10))
+
+                                            block_style_list.append("color:{}".format(cell.get('styles',{}).get('fontcolor', '#000000')))
+                                            block_style_list.append("font-style:{}".format(cell.get('styles',{}).get('italic','normal')))
+                                            block_style_list.append("background-color:{}".format(cell.get('styles',{}).get('bg_color', '#FFFFFF')))
+                                            block_style_list.append("font-family:{}".format(cell.get('styles',{}).get('fontname', 'SimSun')))
+                                            block_style_list.append("text-align:{}".format(cell.get('styles',{}).get('align', 'left')))
+                                            block_style = ';'.join(block_style_list)
+
+                                            attrs = []
+                                            if cell.get('is_num'):
+                                                attrs.append('sdnum="2052;0;@"')
+                                                attrs.append('class=num_cell_class')
+                                                attrs.append('x:str')
+                                            attrs_text = ' '.join(attrs)
+                                            related_cell = str(cell.get("related_cell", ""))
+                                            %>
+                                            <td id=${related_cell} ${attrs_text} ${rowspan} ${colspan} style="${block_style};padding:1px 3px;outline:none;border:1px solid #474747;">
+                                                <%
+                                                cell_text = cell.get('translate_text').strip() if cell.get('translate_text') else ''
+                                                %>
+                                                % if cell.get('styles',{}).get('fontweight','bold') == 'bold':
+                                                    <span style="white-space:pre-line;font-weight:bold;">${cell_text}</span>
+                                                % else:
+                                                    <span style="white-space:pre-line;">${cell_text}</span>
+                                                % endif
+                                            </td>
+                                        % endif
+                                    % endfor
+                                </tr>
+                                % endfor
+                            </table>
+                        </div>
+                    % endif
+                % elif block[-1] in ['paragraphs', 'page_headers', 'page_footers']:
+                    <%
+                    style_body = block[0]
+                    p_style_list = []
+                    anchor_id = style_body.get("anchor_id")
+                    p_style_list.append("text-indent:{}".format(style_body.get('text-indent', '0px')))
+                    p_style_list.append("font-size:{}".format(style_body.get('font-size', '12px')))
+                    p_style_list.append("margin-left:{}".format(style_body.get('margin-left', '0px')))
+                    p_style_list.append("margin-right:{}".format(style_body.get('margin-right', '0px')))
+                    p_style_list.append("margin-top:{}".format(style_body.get('margin-top', '5px')))
+                    p_style_list.append("margin-bottom:{}".format(style_body.get('margin-bottom', '5px')))
+
+                    text_align = style_body.get('text-align', 'left')
+                    if text_align == 'left':
+                        text_align = 'justify'
+                    p_style_list.append("text-align:{}".format(text_align))
+
+                    p_style_str = ";".join(p_style_list)
+                    style_class = style_body.get("style_class", "original")
+                    %>
+                    <p id="${anchor_id}" style="${p_style_str};" class="${style_class}">
+                        % for span in block[2]:
+                            <%
+                            span_style_list = []
+                            span_style = span.get("style", {})
+
+                            if span_style.get('italic'):
+                                span_style_list.append("font-style:italic")
+                            else:
+                                span_style_list.append("font-style:normal")
+                            span_style_list.append("font-family:{}".format(span_style.get('familyname')))
+
+                            font_size = int(span_style.get('fontsize', '1'))
+                            if font_size < 12:
+                                font_size = 12
+                            span_style_list.append("font-size:{}rem".format(font_size / 10))
+
+                            if span_style.get('bold'):
+                                span_style_list.append("font-weight:bold")
+                            if span_style.get('fontcolor'):
+                                span_style_list.append("color:#{0:06x}".format(span_style.get('fontcolor')))
+
+                            span_style = ";".join(span_style_list)
+                            text = span.get("text", "")
+                            %>
+                            <span style="${span_style};">${text}</span>
+                        % endfor
+                    </p>
+                    % if all_block_list[-1][0] is True:
+                        <p id="${anchor_id}" style="${p_style_str};" class="translate">
+                            <span style="${span_style};">${block[3]}</span>
+                        </p>
+                    % endif
+                % elif block[-1] == 'image':
+                    <%
+                    style_body = block[0]
+                    anchor_id = style_body.get("anchor_id")
+                    i_style_list = []
+                    i_style_list.append("margin-top:{}".format(style_body.get('margin-top', '3px')))
+                    i_style_list.append("margin-bottom:{}".format(style_body.get('margin-bottom', '3px')))
+                    i_style_str = ";".join(i_style_list)
+                    %>
+                    <img id="${anchor_id}" style="display:block;${i_style_str};margin-left:auto;margin-right:auto;" src="data:image/png;base64,${block[1]}">
+                % endif
+            % endfor
+        </div>
+    </body>
+</html>

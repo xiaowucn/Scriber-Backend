@@ -1,0 +1,133 @@
+debug: False
+logging:
+  level: "info"
+
+app:
+  app_id: "scriber_ccxi_market"
+  secret_key: "hello_remarkable"
+  single_sign_limit: False
+  token_expire: 7200
+  session_expire: 7200
+  rate_limit_expire: 7200
+  max_fail_count: 100
+  multiprocessing: "enable"
+  auth:
+    pdfinsight:
+      app_id: "pdfinsight"
+      secret_key: "show-me-the-money"
+      token_expire: 120
+      url: "http://pdfinsight:8096"
+
+web:
+  http_port: 8080
+  domain: "scriber:8000"
+  user_system_provider: "self"
+  http_headers:
+    Server: "*"
+  plugins:
+    - "fileapi"
+    - "ext_api"
+    - "debug"
+    - "diff"
+    - "ccxi"
+  classes:
+    answer_converter: "remarkable.converter.ccxi.CCXIContractConverter"
+  apis:
+    sso: ""
+    login_callback: ""
+    get_label_user: ""
+    get_label_user_by_cn_list: ""
+    sync_file: ""
+    sync_host: ""
+  pdf_converter: "{project_root}/bin/converter/word2pdf.exe"
+  tmp_dir: "/data/tmp/"
+  data_dir: "{project_root}/data/files/"
+  prompter_dir: "{project_root}/data/prompter/"
+  default_question_health: 1
+  preset_answer: True
+  limit_of_preset_num: 10
+  limit_of_crude_elts: 5
+  predict_from_memory:
+    switch: True
+    data_dir: "{project_root}/data/tbl_headers/"
+  model_manage: True
+  show_merge_answer: False
+  record_manual: True
+  mode_conflict_treatment: 3
+  mode_unlimited_answers: True
+  model_abroad: True
+  trust_routes:
+    - "/config"
+  enable_remote_model: True
+  table_association: True
+
+  show_marker: True
+  customer_answer: True
+  allow_same_name_file_in_project: False
+  project_meta:
+    prj_type: "合同管理"
+  check_before_submit: True  # 点提交答案后,就对答案能否满足answer_converter里的要求进行检查
+
+data_flow:
+  post_pipe_after_preset: False
+
+db:
+  host: "postgres"
+  port: 5432
+  dbname: "scriber"
+  user: "postgres"
+  password: ""
+
+redis:
+  host: redis
+  port: 6379
+  db: 1
+  password: "scriber"
+
+client:
+  name: "ccxi_market"
+  remark_progress_type: "level1"
+  language: "zh_CN"
+  hide_rough_fields: True
+  show_prompt_element_button: True
+  check_schema_base_type: False
+  
+  export_label_data: False
+  export_answer_csv: False
+  stat_accuracy: True
+
+feature:  # 功能特性相关配置
+  batch_delete: True  # 批量删除功能
+  new_project_popup_default_molds: False  # 新建项目时选择默认Schema
+  additional_permissions:
+    ccxi_manage_contract:
+      name: "合同管理"
+
+worker:
+  app_name: "remarkable"
+  default_queue: "celery"
+
+prompter:
+  workers: 4
+  batch_size: 100
+  auto_build_ignores: "*"
+  answer_version: 2.2
+  training_data_status: "1, 2, 5, 10, 100"
+  mode: "v2"
+  use_syllabuses: True
+  tokenization: "jieba"
+  context_length: 1
+
+prophet:
+  package_name: "ccxi_market_predictor"
+  config_map:
+    合同提取: "contract"
+
+build:
+  docker:
+    cli_pipe: # 部署命令
+      - 'inv op.import-schema --name=ccxi-market'
+
+      - 'inv op.deploy-model 合同提取 --name=ccxi_market_contract'
+_new_entry:
+  "prompter.training_data_status": "prompter.trainning_data_status"

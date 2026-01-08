@@ -1,0 +1,124 @@
+#+TITLE: The Customizable Front-End of 'Remarkable'
+
+** Concepts
+
+- path: a way to select one or more json nodes, like xpath to XML. Here we follow the syntax of `jq`'s filter.
+
+
+** Schema
+
+#+BEGIN_SRC javascript
+  {
+      "extensible": {
+          "path:.preattributes": {
+              "mode": "subtext(path:.text)"
+          }
+      },    // 用户可以自己添加的东西
+      "label": {
+          "time": "path:.times[]",
+          "prea": "path:[.preattributes[]]",
+          "attr": "path:.attributes[]",
+          "value": "path:.values[]"
+      },
+      "ui": {
+          "material": {
+              "path:/source_text": {
+                  "description": "原句"
+              },
+              "path:/text": {
+                  "description": "展开后文本"
+              }
+          },
+          "label": {
+              "time": {
+                  "description": "时间",
+                  "show": "path:.value"
+              },
+              "prea": {
+                  "description": "定语",
+                  "show": "path:.value"
+              },
+              "attr": {
+                  "description": "属性",
+                  "show": "path:.value"
+              },
+              "value": {
+                  "description": "值",
+                  "show": "path:.value"
+              }
+          }
+      }
+
+  }
+#+END_SRC
+
+
+#+BEGIN_SRC javascript
+  {
+      "extensible": {
+          "path:.text_fragments": {
+              "mode": "subtext(path:.text)"
+          },
+          "path:.links": {
+              "mode": "subtext(path:.text)"
+          }
+
+      },    // 用户可以自己添加的东西
+      "label": {
+          "cause": "path:.text_fragments[]",
+          "link": "path:.links[]",
+          "result": "path:.text_fragments[]"
+      },
+      "ui": {
+          "material": {
+              "path:/text": {
+                  "description": "句子文本"
+              }
+          },
+          "label": {
+              "cause": {
+                  "description": "原因",
+                  "show": "path:.value"
+              },
+              "link": {
+                  "description": "连词",
+                  "show": "path:.value"
+              },
+              "result": {
+                  "description": "结果",
+                  "show": "path:.value"
+              }
+          }
+      }
+
+  }
+
+#+END_SRC
+
+
+#+BEGIN_SRC javascript
+  {
+      "extensible": {
+      },    // 用户可以自己添加的东西
+      "label": {
+          "break_type": "path:.type_choice[]"
+      },
+      "ui": {
+          "material": {
+              "path:/para1": {
+                  "description": "段落一"
+              },
+              "path:/para2": {
+                  "description": "段落二"
+              }
+          },
+          "label": {
+              "break_type": {
+                  "description": "是否断开",
+                  "show": "path:.label"
+              }
+          }
+      }
+  }
+
+#+END_SRC

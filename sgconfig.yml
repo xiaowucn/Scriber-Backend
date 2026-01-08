@@ -1,0 +1,11 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/ast-grep/ast-grep/main/schemas/project.json
+
+# ast-grep project configuration
+# See: https://ast-grep.github.io/guide/project/project-config.html
+
+ruleDirs:
+  - ci/ast-grep/rules
+
+testConfigs:
+  - testDir: ci/ast-grep/tests
+
