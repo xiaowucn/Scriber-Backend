@@ -1,0 +1,8 @@
+*
+.*
+!docker/fix_permission.sh
+!pyproject.toml
+!uv.lock
+**/*.md
+**/.gitignore
+**/.git
