@@ -1,0 +1,65 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/ast-grep/ast-grep/main/schemas/test.json
+
+id: no-match-case
+
+valid:
+  - |
+    # Valid: Using if-elif-else instead of match-case
+    def process_value(value):
+        if value == 1:
+            return "one"
+        elif value == 2:
+            return "two"
+        else:
+            return "other"
+  
+  - |
+    # Valid: Regular function without pattern matching
+    def calculate(x, y):
+        return x + y
+  
+  - |
+    # Valid: Using dictionary for dispatch
+    def handle_command(cmd):
+        handlers = {
+            'start': start_handler,
+            'stop': stop_handler,
+        }
+        return handlers.get(cmd, default_handler)()
+
+invalid:
+  - |
+    # Invalid: Basic match-case statement
+    def process_value(value):
+        match value:
+            case 1:
+                return "one"
+            case 2:
+                return "two"
+            case _:
+                return "other"
+  
+  - |
+    # Invalid: Match-case with multiple patterns
+    def handle_point(point):
+        match point:
+            case (0, 0):
+                print("Origin")
+            case (0, y):
+                print(f"Y-axis at {y}")
+            case (x, 0):
+                print(f"X-axis at {x}")
+            case (x, y):
+                print(f"Point at ({x}, {y})")
+  
+  - |
+    # Invalid: Match-case with guards
+    def categorize_number(num):
+        match num:
+            case n if n < 0:
+                return "negative"
+            case 0:
+                return "zero"
+            case n if n > 0:
+                return "positive"
+

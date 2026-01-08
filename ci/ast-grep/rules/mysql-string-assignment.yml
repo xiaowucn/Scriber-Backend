@@ -1,0 +1,27 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/ast-grep/ast-grep/main/schemas/rule.json
+
+id: mysql-string-assignment
+language: Python
+message: "sa.String assignment should specify length parameter for MySQL compatibility"
+severity: error
+
+rule:
+  any:
+    - pattern: $VAR = sa.Column(sa.String)
+    - pattern: $VAR = sa.Column(sa.String())
+    - pattern: $VAR = sa.Column(sa.String, $$$OPTIONS)
+    - pattern: $VAR = sa.Column(sa.String(), $$$OPTIONS)
+
+note: |
+  For MySQL compatibility, sa.String must specify a length parameter.
+  
+  Examples that WILL trigger this rule:
+  - name = sa.Column(sa.String)
+  - name = sa.Column(sa.String())
+  - name = sa.Column(sa.String, nullable=False)
+  - name = sa.Column(sa.String(), nullable=False)
+  
+  Use instead:
+  - name = sa.Column(sa.String(255))
+  - name = sa.Column(sa.String(100), nullable=False)
+

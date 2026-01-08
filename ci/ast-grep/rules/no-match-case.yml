@@ -1,0 +1,28 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/ast-grep/ast-grep/main/schemas/rule.json
+
+id: no-match-case
+message: "Structural pattern matching (match/case) is not allowed"
+severity: error
+language: Python
+
+rule:
+  pattern: |
+    match $VAR:
+        $$$
+
+note: |
+  This rule is mainly because Cython does not currently support match/case statements.
+  
+  Example that WILL trigger this rule:
+    match value:
+        case 1:
+            print("one")
+        case _:
+            print("other")
+  
+  Use if-elif-else instead:
+    if value == 1:
+        print("one")
+    else:
+        print("other")
+

@@ -1,0 +1,32 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/ast-grep/ast-grep/main/schemas/rule.json
+
+id: mysql-string-array
+language: Python
+message: "create_array_field should be used for MySQL ARRAY compatibility"
+severity: error
+
+rule:
+  all:
+    - pattern: sa.ARRAY($$$)
+    - not:
+        inside:
+          pattern: create_array_field($$$)
+          stopBy: end
+
+note: |
+  For MySQL compatibility, sa.ARRAY should use create_array_field() from remarkable.common.migrate_util
+  which automatically handles MySQL compatibility by converting sa.ARRAY to sa.JSON in MySQL environments.
+  
+  Examples that WILL trigger this rule:
+  - sa.ARRAY(sa.String)
+  - sa.Column("field", sa.ARRAY(sa.String))
+  - sa.ARRAY(sa.String(255))
+  - op.add_column("table", sa.Column("field", sa.ARRAY(sa.String)))
+  
+  Examples that will NOT trigger this rule (correctly excluded):
+  - create_array_field("field_name", sa.ARRAY(sa.String), nullable=True)
+  - create_array_field("field_name", sa.ARRAY(sa.String()))
+  
+  Note: create_array_field() automatically handles MySQL compatibility by converting
+  sa.ARRAY to sa.JSON in MySQL environments, so these cases are safely excluded.
+

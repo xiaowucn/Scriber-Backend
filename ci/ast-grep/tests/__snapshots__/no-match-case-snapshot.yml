@@ -1,0 +1,72 @@
+id: no-match-case
+snapshots:
+  ? |
+    # Invalid: Basic match-case statement
+    def process_value(value):
+        match value:
+            case 1:
+                return "one"
+            case 2:
+                return "two"
+            case _:
+                return "other"
+  : labels:
+    - source: |-
+        match value:
+                case 1:
+                    return "one"
+                case 2:
+                    return "two"
+                case _:
+                    return "other"
+      style: primary
+      start: 68
+      end: 205
+  ? |
+    # Invalid: Match-case with guards
+    def categorize_number(num):
+        match num:
+            case n if n < 0:
+                return "negative"
+            case 0:
+                return "zero"
+            case n if n > 0:
+                return "positive"
+  : labels:
+    - source: |-
+        match num:
+                case n if n < 0:
+                    return "negative"
+                case 0:
+                    return "zero"
+                case n if n > 0:
+                    return "positive"
+      style: primary
+      start: 66
+      end: 228
+  ? |
+    # Invalid: Match-case with multiple patterns
+    def handle_point(point):
+        match point:
+            case (0, 0):
+                print("Origin")
+            case (0, y):
+                print(f"Y-axis at {y}")
+            case (x, 0):
+                print(f"X-axis at {x}")
+            case (x, y):
+                print(f"Point at ({x}, {y})")
+  : labels:
+    - source: |-
+        match point:
+                case (0, 0):
+                    print("Origin")
+                case (0, y):
+                    print(f"Y-axis at {y}")
+                case (x, 0):
+                    print(f"X-axis at {x}")
+                case (x, y):
+                    print(f"Point at ({x}, {y})")
+      style: primary
+      start: 74
+      end: 312

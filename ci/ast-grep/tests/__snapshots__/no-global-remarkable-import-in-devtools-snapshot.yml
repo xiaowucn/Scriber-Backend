@@ -1,0 +1,85 @@
+id: no-global-remarkable-import-in-devtools
+snapshots:
+  ? |
+    # Invalid: Global import of remarkable.config
+    from remarkable.config import get_config
+
+    def my_function():
+        config = get_config()
+        return config
+  : labels:
+    - source: from remarkable.config import get_config
+      style: primary
+      start: 46
+      end: 86
+  ? |
+    # Invalid: Global import of remarkable.models
+    from remarkable.models.user import User
+
+    def get_users():
+        return User.query.all()
+  : labels:
+    - source: from remarkable.models.user import User
+      style: primary
+      start: 46
+      end: 85
+  ? |
+    # Invalid: Global import of remarkable.models (not whitelisted)
+    from remarkable.models.user import User
+
+    def get_users():
+        return User.query.all()
+  : labels:
+    - source: from remarkable.models.user import User
+      style: primary
+      start: 64
+      end: 103
+  ? |
+    # Invalid: Global import of remarkable.service
+    import remarkable.service.deploy
+
+    def deploy():
+        return remarkable.service.deploy.deploy_model()
+  : labels:
+    - source: import remarkable.service.deploy
+      style: primary
+      start: 47
+      end: 79
+  ? |
+    # Invalid: Global import of remarkable.service.predictor
+    from remarkable.service.predictor import train_model
+
+    def train():
+        return train_model()
+  : labels:
+    - source: from remarkable.service.predictor import train_model
+      style: primary
+      start: 57
+      end: 109
+  ? |
+    # Invalid: Global import of remarkable.worker
+    from remarkable.worker.tasks import process_file
+
+    def process():
+        return process_file.delay(123)
+  : labels:
+    - source: from remarkable.worker.tasks import process_file
+      style: primary
+      start: 46
+      end: 94
+  ? |
+    # Invalid: Multiple global imports from remarkable
+    from remarkable.config import get_config
+    from remarkable.db import get_session
+    from remarkable.models.user import User
+
+    async def process():
+        config = get_config()
+        async with get_session() as session:
+            users = await session.query(User).all()
+            return users
+  : labels:
+    - source: from remarkable.config import get_config
+      style: primary
+      start: 51
+      end: 91

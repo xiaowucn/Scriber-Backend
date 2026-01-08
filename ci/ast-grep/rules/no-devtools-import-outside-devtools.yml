@@ -1,0 +1,39 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/ast-grep/ast-grep/main/schemas/rule.json
+
+id: no-devtools-import-outside-devtools
+language: Python
+message: "Importing devtools modules outside of devtools/ is prohibited. devtools/ is for development tasks only."
+severity: error
+
+note: |
+  devtools/ contains development and operational tools (database migrations, model training, deployment scripts).
+  These should NOT be imported by production code to maintain clear architectural boundaries.
+  
+  This rule prevents:
+  - Production code depending on development tools
+  - Accidental deployment of dev-only dependencies
+  - Circular dependencies between business logic and tooling
+  
+  Examples that WILL trigger this rule:
+  - from remarkable.devtools.task_db import migrate_data
+  - import remarkable.devtools.task_predictor
+  - from remarkable.devtools import task_export
+  
+  If you need shared functionality:
+  - Move it to remarkable/common/ or remarkable/service/
+  - Create a proper abstraction layer
+  - Don't mix tooling with business logic
+
+rule:
+  any:
+    - pattern: from remarkable.devtools.$MODULE import $$$
+    - pattern: from remarkable.devtools import $$$
+    - pattern: import remarkable.devtools.$MODULE
+    - pattern: import remarkable.devtools
+
+ignores:
+  # Exclude devtools directory itself (devtools can import from devtools)
+  - "remarkable/devtools/**/*.py"
+  # Exclude root tasks.py (invoke tasks file that legitimately uses devtools)
+  - "tasks.py"
+

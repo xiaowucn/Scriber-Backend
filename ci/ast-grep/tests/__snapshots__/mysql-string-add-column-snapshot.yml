@@ -1,0 +1,42 @@
+id: mysql-string-add-column
+snapshots:
+  ? |
+    # Invalid: add_column with String without length
+    import sqlalchemy as sa
+    from alembic import op
+    op.add_column("users", sa.Column("name", sa.String()))
+  : labels:
+    - source: op.add_column("users", sa.Column("name", sa.String()))
+      style: primary
+      start: 96
+      end: 150
+  ? |
+    # Invalid: add_column with String without length but with options
+    import sqlalchemy as sa
+    from alembic import op
+    op.add_column("users", sa.Column("email", sa.String, nullable=False))
+  : labels:
+    - source: op.add_column("users", sa.Column("email", sa.String, nullable=False))
+      style: primary
+      start: 113
+      end: 182
+  ? |
+    # Invalid: add_column with String without parentheses
+    import sqlalchemy as sa
+    from alembic import op
+    op.add_column("users", sa.Column("name", sa.String))
+  : labels:
+    - source: op.add_column("users", sa.Column("name", sa.String))
+      style: primary
+      start: 101
+      end: 153
+  ? |
+    # Invalid: add_column with String() without length but with options
+    import sqlalchemy as sa
+    from alembic import op
+    op.add_column("users", sa.Column("description", sa.String(), nullable=True))
+  : labels:
+    - source: op.add_column("users", sa.Column("description", sa.String(), nullable=True))
+      style: primary
+      start: 115
+      end: 191

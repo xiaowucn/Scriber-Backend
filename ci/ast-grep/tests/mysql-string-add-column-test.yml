@@ -1,0 +1,48 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/ast-grep/ast-grep/main/schemas/test.json
+
+id: mysql-string-add-column
+
+valid:
+  - |
+    # Valid: add_column with String length specified
+    import sqlalchemy as sa
+    from alembic import op
+    op.add_column("users", sa.Column("name", sa.String(255)))
+  
+  - |
+    # Valid: add_column with String length and options
+    import sqlalchemy as sa
+    from alembic import op
+    op.add_column("users", sa.Column("email", sa.String(100), nullable=False))
+  
+  - |
+    # Valid: add_column with other types
+    import sqlalchemy as sa
+    from alembic import op
+    op.add_column("users", sa.Column("age", sa.Integer))
+
+invalid:
+  - |
+    # Invalid: add_column with String without length
+    import sqlalchemy as sa
+    from alembic import op
+    op.add_column("users", sa.Column("name", sa.String()))
+  
+  - |
+    # Invalid: add_column with String without parentheses
+    import sqlalchemy as sa
+    from alembic import op
+    op.add_column("users", sa.Column("name", sa.String))
+  
+  - |
+    # Invalid: add_column with String without length but with options
+    import sqlalchemy as sa
+    from alembic import op
+    op.add_column("users", sa.Column("email", sa.String, nullable=False))
+  
+  - |
+    # Invalid: add_column with String() without length but with options
+    import sqlalchemy as sa
+    from alembic import op
+    op.add_column("users", sa.Column("description", sa.String(), nullable=True))
+

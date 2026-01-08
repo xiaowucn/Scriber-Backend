@@ -1,0 +1,27 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/ast-grep/ast-grep/main/schemas/rule.json
+
+id: mysql-string-add-column
+language: Python
+message: "sa.String in add_column should specify length parameter for MySQL compatibility"
+severity: error
+
+rule:
+  any:
+    - pattern: op.add_column($TABLE, sa.Column($NAME, sa.String))
+    - pattern: op.add_column($TABLE, sa.Column($NAME, sa.String()))
+    - pattern: op.add_column($TABLE, sa.Column($NAME, sa.String, $$$OPTIONS))
+    - pattern: op.add_column($TABLE, sa.Column($NAME, sa.String(), $$$OPTIONS))
+
+note: |
+  For MySQL compatibility, sa.String must specify a length parameter in Alembic migrations.
+  
+  Examples that WILL trigger this rule:
+  - op.add_column("users", sa.Column("name", sa.String))
+  - op.add_column("users", sa.Column("name", sa.String()))
+  - op.add_column("users", sa.Column("name", sa.String, nullable=False))
+  - op.add_column("users", sa.Column("name", sa.String(), nullable=False))
+  
+  Use instead:
+  - op.add_column("users", sa.Column("name", sa.String(255)))
+  - op.add_column("users", sa.Column("name", sa.String(100), nullable=False))
+

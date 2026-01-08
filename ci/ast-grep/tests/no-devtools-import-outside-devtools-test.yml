@@ -1,0 +1,66 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/ast-grep/ast-grep/main/schemas/test.json
+
+id: no-devtools-import-outside-devtools
+
+valid:
+  - |
+    # Valid: Standard library imports
+    import os
+    import sys
+    from pathlib import Path
+
+  - |
+    # Valid: Third-party imports
+    import numpy as np
+    from sqlalchemy import Column, String
+
+  - |
+    # Valid: Other remarkable modules
+    from remarkable.config import get_config
+    from remarkable.service.deploy import deploy_model
+    from remarkable.models.user import User
+
+  - |
+    # Valid: Relative imports
+    from .utils import helper_function
+    from ..common import constants
+
+invalid:
+  - |
+    # Invalid: Direct import of devtools module
+    import remarkable.devtools.task_db
+
+  - |
+    # Invalid: From import of devtools module
+    from remarkable.devtools.task_db import migrate_data
+
+  - |
+    # Invalid: Import specific task module
+    from remarkable.devtools import task_predictor
+
+  - |
+    # Invalid: Import multiple items from devtools
+    from remarkable.devtools.task_export import export_answers, export_schema
+
+  - |
+    # Invalid: Nested devtools import
+    from remarkable.devtools.task_predictor import train_model
+
+  - |
+    # Invalid: Import in function (still not allowed outside devtools)
+    def process_data():
+        from remarkable.devtools.task_db import migrate_data
+        migrate_data()
+
+  - |
+    # Invalid: Import in class method
+    class DataProcessor:
+        def migrate(self):
+            from remarkable.devtools import task_db
+            task_db.run()
+
+  - |
+    # Invalid: Conditional import
+    if DEBUG:
+        from remarkable.devtools.task_debug import debug_tool
+

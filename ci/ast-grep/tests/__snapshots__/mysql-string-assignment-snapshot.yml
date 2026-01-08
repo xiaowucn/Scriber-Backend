@@ -1,0 +1,38 @@
+id: mysql-string-assignment
+snapshots:
+  ? |
+    # Invalid: String without length
+    import sqlalchemy as sa
+    name = sa.Column(sa.String())
+  : labels:
+    - source: name = sa.Column(sa.String())
+      style: primary
+      start: 57
+      end: 86
+  ? |
+    # Invalid: String without length but with options
+    import sqlalchemy as sa
+    email = sa.Column(sa.String, nullable=False)
+  : labels:
+    - source: email = sa.Column(sa.String, nullable=False)
+      style: primary
+      start: 74
+      end: 118
+  ? |
+    # Invalid: String without parentheses
+    import sqlalchemy as sa
+    name = sa.Column(sa.String)
+  : labels:
+    - source: name = sa.Column(sa.String)
+      style: primary
+      start: 62
+      end: 89
+  ? |
+    # Invalid: String() without length but with options
+    import sqlalchemy as sa
+    description = sa.Column(sa.String(), nullable=True)
+  : labels:
+    - source: description = sa.Column(sa.String(), nullable=True)
+      style: primary
+      start: 76
+      end: 127

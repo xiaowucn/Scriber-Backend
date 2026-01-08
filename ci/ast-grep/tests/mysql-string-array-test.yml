@@ -1,0 +1,50 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/ast-grep/ast-grep/main/schemas/test.json
+
+id: mysql-string-array
+
+valid:
+  - |
+    # Valid: Using create_array_field
+    import sqlalchemy as sa
+    from remarkable.common.migrate_util import create_array_field
+    create_array_field("tags", sa.ARRAY(sa.String), nullable=True)
+  
+  - |
+    # Valid: Using create_array_field with length
+    import sqlalchemy as sa
+    from remarkable.common.migrate_util import create_array_field
+    create_array_field("categories", sa.ARRAY(sa.String(100)), nullable=False)
+  
+  - |
+    # Valid: Other column types
+    import sqlalchemy as sa
+    sa.Column("data", sa.JSON)
+    sa.Column("count", sa.Integer)
+
+invalid:
+  - |
+    # Invalid: Direct sa.ARRAY usage
+    import sqlalchemy as sa
+    sa.ARRAY(sa.String)
+  
+  - |
+    # Invalid: sa.ARRAY in Column
+    import sqlalchemy as sa
+    sa.Column("tags", sa.ARRAY(sa.String))
+  
+  - |
+    # Invalid: sa.ARRAY with length in Column
+    import sqlalchemy as sa
+    sa.Column("categories", sa.ARRAY(sa.String(255)))
+  
+  - |
+    # Invalid: sa.ARRAY in add_column
+    import sqlalchemy as sa
+    from alembic import op
+    op.add_column("posts", sa.Column("tags", sa.ARRAY(sa.String)))
+  
+  - |
+    # Invalid: sa.ARRAY with Integer
+    import sqlalchemy as sa
+    sa.Column("numbers", sa.ARRAY(sa.Integer))
+

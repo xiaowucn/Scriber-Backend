@@ -1,0 +1,43 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/ast-grep/ast-grep/main/schemas/test.json
+
+id: mysql-string-column
+
+valid:
+  - |
+    # Valid: String with length specified
+    import sqlalchemy as sa
+    sa.Column("name", sa.String(255))
+  
+  - |
+    # Valid: String with length and options
+    import sqlalchemy as sa
+    sa.Column("email", sa.String(100), nullable=False)
+  
+  - |
+    # Valid: Other column types
+    import sqlalchemy as sa
+    sa.Column("age", sa.Integer)
+    sa.Column("created_at", sa.DateTime)
+    sa.Column("is_active", sa.Boolean)
+
+invalid:
+  - |
+    # Invalid: String without length
+    import sqlalchemy as sa
+    sa.Column("name", sa.String())
+  
+  - |
+    # Invalid: String without parentheses
+    import sqlalchemy as sa
+    sa.Column("name", sa.String)
+  
+  - |
+    # Invalid: String without length but with options
+    import sqlalchemy as sa
+    sa.Column("email", sa.String, nullable=False)
+  
+  - |
+    # Invalid: String() without length but with options
+    import sqlalchemy as sa
+    sa.Column("description", sa.String(), nullable=True)
+

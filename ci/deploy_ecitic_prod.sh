@@ -1,0 +1,47 @@
+#!/bin/bash
+
+set -ex
+
+# pre
+if [[ ${SCRIBER_ECITIC_PROD} == "True" && ${GO_MATERIAL_SCRIBER_BACKEND_STABLE_HAS_CHANGED} == "true" ]] || [[ ${SCRIBER_ECITIC_PROD} == "True" && ${GO_MATERIAL_SCRIBER_FRONT_STABLE_HAS_CHANGED} == "true" ]]; then
+  echo "runing ..."
+else
+  echo "passing ..."
+  exit 0
+fi
+
+# exit
+run() {
+  "$@"
+  _exit_code=$?
+  if [ ${_exit_code} -ne 0 ]; then
+    echo "Error: exec $* with exit code ${_exit_code}"
+    exit ${_exit_code}
+  fi
+}
+
+# git
+run echo "${GO_REVISION_SCRIBER_BACKEND_STABLE:0:8}" >.git_revision
+run echo "${GO_MATERIAL_BRANCH_SCRIBER_BACKEND_STABLE}" >>.git_revision
+
+# frontend
+run rsync -avz --progress --exclude=.git --delete ../dist_ecitic/dist_ecitic/scriber_front/dist_ecitic/ ./remarkable/static/
+
+# backend
+run rsync -avz --progress --delete --safe-links \
+  --exclude=/data/export_answer_data --exclude=/data/files \
+  --exclude=/data/prompter --exclude=/data/training_cache \
+  --exclude=/data/tbl_headers --exclude=/healthcheck.py --exclude=/.version --exclude=/i18n/**.po --exclude=/i18n/**.pot \
+  ./ /data/scriber_ecitic_prod/code_src/Scriber-Backend/
+
+# etcd
+GO_SCRIBER_FRONT_COMMIT=$(ETCDCTL_API=3 etcdctl --user=ci:appwillgoogle --endpoints=100.64.0.1:2379 get GO_SCRIBER_FRONT_COMMIT --print-value-only)
+GO_SCRIBER_FRONT_BRANCH=$(ETCDCTL_API=3 etcdctl --user=ci:appwillgoogle --endpoints=100.64.0.1:2379 get GO_SCRIBER_FRONT_BRANCH --print-value-only)
+
+# restart
+run docker exec -i scriber_ecitic_prod_web ./docker/deploy_upgrade.sh
+
+# mm
+bash /data/ci/fitout/autodoc/send_mm_msg.sh \
+  http://mm.paodingai.com/hooks/xffd4wkndpnjubqd9z9puzoxaa \
+  scriber \[Scriber中信证券POC内部正式环境\(22601\)\]\(http://100.64.0.3:22601/\)已更新\:\ \`前端\:${GO_SCRIBER_FRONT_COMMIT}\(${GO_SCRIBER_FRONT_BRANCH}\)\`\ \`后端\:${GO_REVISION_SCRIBER_BACKEND_STABLE:0:8}\(${GO_MATERIAL_BRANCH_SCRIBER_BACKEND_STABLE}\)\`

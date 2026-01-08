@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+if [[ "$(uname)" == "Darwin" ]]; then
+  LIB_SUFFIX=".dylib"
+else
+  LIB_SUFFIX=".so"
+fi
+
+for d in $(python3 -c "import sys; [print(i) for i in sys.path if i.endswith('-packages')]"); do
+  if [[ -f $d/palladium/libpdfium$LIB_SUFFIX ]]; then
+    export LD_PRELOAD=$d/palladium/libpdfium$LIB_SUFFIX
+    break
+  fi
+done
+# TODO: Remove this once we have a better way to find the pdfparser libs
+# Add some more common environment variables
+
+
+get_unused_port() {
+  python3 -c "import socket;s = socket.socket();s.bind(('127.0.0.1', 0));print(s.getsockname()[1])"
+}

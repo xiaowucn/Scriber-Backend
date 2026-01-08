@@ -1,0 +1,48 @@
+id: mysql-string-array
+snapshots:
+  ? |
+    # Invalid: Direct sa.ARRAY usage
+    import sqlalchemy as sa
+    sa.ARRAY(sa.String)
+  : labels:
+    - source: sa.ARRAY(sa.String)
+      style: primary
+      start: 57
+      end: 76
+  ? |
+    # Invalid: sa.ARRAY in Column
+    import sqlalchemy as sa
+    sa.Column("tags", sa.ARRAY(sa.String))
+  : labels:
+    - source: sa.ARRAY(sa.String)
+      style: primary
+      start: 72
+      end: 91
+  ? |
+    # Invalid: sa.ARRAY in add_column
+    import sqlalchemy as sa
+    from alembic import op
+    op.add_column("posts", sa.Column("tags", sa.ARRAY(sa.String)))
+  : labels:
+    - source: sa.ARRAY(sa.String)
+      style: primary
+      start: 122
+      end: 141
+  ? |
+    # Invalid: sa.ARRAY with Integer
+    import sqlalchemy as sa
+    sa.Column("numbers", sa.ARRAY(sa.Integer))
+  : labels:
+    - source: sa.ARRAY(sa.Integer)
+      style: primary
+      start: 78
+      end: 98
+  ? |
+    # Invalid: sa.ARRAY with length in Column
+    import sqlalchemy as sa
+    sa.Column("categories", sa.ARRAY(sa.String(255)))
+  : labels:
+    - source: sa.ARRAY(sa.String(255))
+      style: primary
+      start: 90
+      end: 114

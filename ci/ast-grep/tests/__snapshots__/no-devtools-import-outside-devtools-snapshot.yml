@@ -1,0 +1,72 @@
+id: no-devtools-import-outside-devtools
+snapshots:
+  ? |
+    # Invalid: Conditional import
+    if DEBUG:
+        from remarkable.devtools.task_debug import debug_tool
+  : labels:
+    - source: from remarkable.devtools.task_debug import debug_tool
+      style: primary
+      start: 44
+      end: 97
+  ? |
+    # Invalid: Direct import of devtools module
+    import remarkable.devtools.task_db
+  : labels:
+    - source: import remarkable.devtools.task_db
+      style: primary
+      start: 44
+      end: 78
+  ? |
+    # Invalid: From import of devtools module
+    from remarkable.devtools.task_db import migrate_data
+  : labels:
+    - source: from remarkable.devtools.task_db import migrate_data
+      style: primary
+      start: 42
+      end: 94
+  ? |
+    # Invalid: Import in class method
+    class DataProcessor:
+        def migrate(self):
+            from remarkable.devtools import task_db
+            task_db.run()
+  : labels:
+    - source: from remarkable.devtools import task_db
+      style: primary
+      start: 86
+      end: 125
+  ? |
+    # Invalid: Import in function (still not allowed outside devtools)
+    def process_data():
+        from remarkable.devtools.task_db import migrate_data
+        migrate_data()
+  : labels:
+    - source: from remarkable.devtools.task_db import migrate_data
+      style: primary
+      start: 91
+      end: 143
+  ? |
+    # Invalid: Import multiple items from devtools
+    from remarkable.devtools.task_export import export_answers, export_schema
+  : labels:
+    - source: from remarkable.devtools.task_export import export_answers, export_schema
+      style: primary
+      start: 47
+      end: 120
+  ? |
+    # Invalid: Import specific task module
+    from remarkable.devtools import task_predictor
+  : labels:
+    - source: from remarkable.devtools import task_predictor
+      style: primary
+      start: 39
+      end: 85
+  ? |
+    # Invalid: Nested devtools import
+    from remarkable.devtools.task_predictor import train_model
+  : labels:
+    - source: from remarkable.devtools.task_predictor import train_model
+      style: primary
+      start: 34
+      end: 92

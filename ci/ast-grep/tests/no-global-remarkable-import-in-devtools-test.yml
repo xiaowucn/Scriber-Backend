@@ -1,0 +1,104 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/ast-grep/ast-grep/main/schemas/test.json
+
+id: no-global-remarkable-import-in-devtools
+
+valid:
+  - |
+    # Valid: Standard library imports
+    import os
+    import sys
+    from pathlib import Path
+    from datetime import datetime
+
+  - |
+    # Valid: Third-party library imports
+    import click
+    import numpy as np
+    from fastapi import FastAPI
+
+  - |
+    # Valid: Local imports inside functions
+    def deploy_model():
+        from remarkable.service.deploy import deploy_model
+        config = get_config()
+        return deploy_model(config)
+
+  - |
+    # Valid: Local imports in async functions
+    async def process_data():
+        from remarkable.models.user import User
+        async with get_session() as session:
+            users = await session.query(User).all()
+            return users
+
+  - |
+    # Valid: Local imports in class methods
+    class DevTool:
+        def run(self):
+            from remarkable.models.user import User
+            return User.query.all()
+
+        async def async_run(self):
+            from remarkable.service.deploy import deploy_model
+            return await deploy_model()
+
+  - |
+    # Valid: Whitelisted imports - remarkable.config (temporary exception)
+    from remarkable.config import get_config
+
+    def my_function():
+        config = get_config()
+        return config
+
+  - |
+    # Valid: Whitelisted imports - remarkable.db (temporary exception)
+    from remarkable.db import peewee_transaction_wrapper, pw_db
+
+    @peewee_transaction_wrapper
+    def my_function():
+        return pw_db.execute_sql("SELECT 1")
+
+  - |
+    # Valid: Whitelisted imports - remarkable.common.storage (temporary exception)
+    from remarkable.common.storage import localstorage
+
+    def save_file():
+        return localstorage.save("key", b"data")
+
+  - |
+    # Valid: Whitelisted specific imports
+    from remarkable.answer.node import AnswerItem
+    from remarkable.schema.special_answer import MultiBox
+
+    def process():
+        return AnswerItem(), MultiBox()
+
+invalid:
+  - |
+    # Invalid: Global import of remarkable.service
+    import remarkable.service.deploy
+
+    def deploy():
+        return remarkable.service.deploy.deploy_model()
+
+  - |
+    # Invalid: Global import of remarkable.models (not whitelisted)
+    from remarkable.models.user import User
+
+    def get_users():
+        return User.query.all()
+
+  - |
+    # Invalid: Global import of remarkable.service.predictor
+    from remarkable.service.predictor import train_model
+
+    def train():
+        return train_model()
+
+  - |
+    # Invalid: Global import of remarkable.worker
+    from remarkable.worker.tasks import process_file
+
+    def process():
+        return process_file.delay(123)
+

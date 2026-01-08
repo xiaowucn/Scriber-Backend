@@ -1,0 +1,78 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/ast-grep/ast-grep/main/schemas/rule.json
+
+id: no-global-remarkable-import-in-devtools
+language: Python
+message: "Global import of remarkable modules is prohibited in devtools/. Use local imports inside functions instead."
+severity: error
+
+note: |
+  devtools/ should remain independent from the main project code to avoid:
+  - Circular dependencies
+  - Side effects during startup
+  - Tight coupling between development tools and production code
+  
+  Instead of global imports like:
+    from remarkable.config import get_config
+    from remarkable.service.deploy import deploy_model
+  
+  Use local imports inside functions:
+    def my_function():
+        from remarkable.config import get_config
+        from remarkable.service.deploy import deploy_model
+        # ... rest of function
+  
+  Examples that WILL trigger this rule:
+  - from remarkable.config import get_config
+  - import remarkable.service.deploy
+  - from remarkable.models.user import User
+  
+  Examples that will NOT trigger this rule (correctly excluded):
+  - def my_function():
+        from remarkable.config import get_config  # local import inside function
+  - import os  # standard library
+  - import numpy  # third-party library
+  - from pathlib import Path  # standard library
+
+rule:
+  all:
+    - any:
+        - pattern: from remarkable.$MODULE import $$$
+        - pattern: import remarkable.$MODULE
+    - not:
+        any:
+          # Exclude imports from remarkable.devtools itself
+          - pattern: from remarkable.devtools import $$$
+          - pattern: import remarkable.devtools
+          # Exclude decorator and utility imports
+          - pattern: from remarkable.db import peewee_transaction_wrapper
+          - pattern: from remarkable.common.util import loop_wrapper
+          # Exclude database connection and constants (used globally in devtools)
+          - pattern: from remarkable.db import $$$
+          # Exclude config imports (commonly used in devtools)
+          - pattern: from remarkable.config import $$$
+          # Exclude storage imports (commonly used in devtools)
+          - pattern: from remarkable.common.storage import $$$
+          # Exclude imports inside functions/methods
+          - pattern: from remarkable.answer.node import AnswerItem
+          - pattern: from remarkable.schema.special_answer import MultiBox
+          - inside:
+              any:
+                - pattern: |
+                    def $FUNC($$$):
+                        $$$
+                - pattern: |
+                    async def $FUNC($$$):
+                        $$$
+                - pattern: |
+                    class $CLASS:
+                        def $METHOD($$$):
+                            $$$
+                - pattern: |
+                    class $CLASS:
+                        async def $METHOD($$$):
+                            $$$
+              stopBy: end
+
+files:
+  - "remarkable/devtools/**/*.py"
+
