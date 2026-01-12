@@ -1,4 +1,4 @@
-FROM registry.cheftin.cn/p/scriber-runtime as builder
+FROM harbor.wujiaxing.top/library/scriber-runtime-arm64:latest as builder
 
 WORKDIR /opt/scriber
 
@@ -21,7 +21,7 @@ RUN --mount=type=bind,source=./,target=/builder cp -a /builder/. /opt/scriber &&
     rm -rf /opt/scriber/data/files /opt/scriber/data/export_answer_data /opt/scriber/data/training_cache
 
 
-FROM registry.cheftin.cn/p/scriber-runtime
+FROM harbor.wujiaxing.top/library/scriber-runtime-arm64:latest 
 
 WORKDIR /opt/scriber
 
