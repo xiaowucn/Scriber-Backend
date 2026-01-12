@@ -10,7 +10,7 @@ cleanup() {
 }
 trap cleanup EXIT INT TERM ERR
 
-TARGET_PLATFORM=${TARGET_PLATFORM:-armd64}
+TARGET_PLATFORM=${TARGET_PLATFORM:-arm64}
 IMAGE_NAME="scriber-runtime"
 IMAGE_VERSION="latest"
 
