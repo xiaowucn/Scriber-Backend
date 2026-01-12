@@ -29,7 +29,7 @@ check_image() {
 
 build_image() {
   if ! docker build --pull --build-arg env="${ENV:-docker}" --squash --no-cache --platform "linux/${TARGET_PLATFORM}" --tag="${IMAGE_NAME}:${IMAGE_VERSION}" .; then
-    echo 'build images error ...'
+    cho 'build images error ...'
     exit 1
   fi
 }
@@ -68,7 +68,7 @@ if [[ $TARGET_PLATFORM == "arm64" && "$(arch)" == "x86_64" && ! -f "/proc/sys/fs
   docker run --pull always --privileged --rm registry.cheftin.cn/hub/linuxkit/binfmt:v1.1.0
 fi
 
-TARGET_PLATFORM=${TARGET_PLATFORM:-amd64}
+TARGET_PLATFORM=${TARGET_PLATFORM:-arm64}
 IMAGE_NAME=${IMAGE_NAME:-'scriber'}
 IMAGE_VERSION="dev"
 ENV=${ENV:=dev}
