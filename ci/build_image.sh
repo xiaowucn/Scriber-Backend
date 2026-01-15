@@ -48,11 +48,23 @@ delete_converter() {
 }
 
 update_front() {
+  echo "Start updating front-end assets..."
+
+  # 1. 清理镜像构建目录下的旧文件
   rm -rf remarkable/static/* || true
   mkdir -pv remarkable/static/
 
-  cp -rf ../Scriber/dist*/* remarkable/static/ || true
-  cp -rf ../dist*/dist*/scriber_front/dist*/* remarkable/static/ || true
+  # 2. 拷贝 dist 文件
+  # PROJECT_ROOT 就是 /opt/go-agent-25.3.0/pipelines/build_scriber/Scriber
+  if [ -d "${PROJECT_ROOT}/dist" ]; then
+      echo "Found dist at: ${PROJECT_ROOT}/dist"
+      cp -rf "${PROJECT_ROOT}/dist/"* remarkable/static/
+      echo "Success: Copied frontend assets."
+  else
+      echo "Error: Directory ${PROJECT_ROOT}/dist does not exist!"
+      # 必须让它报错退出，防止打出空镜像
+      exit 1
+  fi
 }
 
 push_registry() {
